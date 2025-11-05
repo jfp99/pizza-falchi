@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Users, Award, Star, Leaf, Flame, Phone } from 'lucide-react';
+import { Heart, Users, Award, Star, Leaf, Flame, Phone, Gift, Pizza } from 'lucide-react';
 import { ChefIcon, TruckIcon } from '@/components/icons/CategoryIcons';
-import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
+import ProcessSection from '@/components/about/ProcessSection';
 import type { Metadata } from 'next';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/about-img.avif',
+        url: '/images/restaurant/wood-fired-oven.jpg',
         width: 1200,
         height: 630,
         alt: 'Pizza Falchi - Notre Histoire',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Notre Histoire | Pizza Falchi',
     description: 'Une passion transmise de génération en génération, depuis les ruelles de Naples jusqu\'à votre quartier.',
-    images: ['/images/about-img.avif'],
+    images: ['/images/restaurant/wood-fired-oven.jpg'],
   },
   alternates: {
     canonical: '/about',
@@ -36,199 +36,150 @@ export const metadata: Metadata = {
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-warm-cream">
-      {/* Hero Section - Enhanced with Gradient */}
-      <section className="relative bg-gradient-to-br from-charcoal via-gray-700 to-gray-900 py-24 md:py-32 overflow-hidden">
-        {/* Animated Background Shapes */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-red/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary-yellow/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-warm-cream dark:bg-gray-900 transition-colors">
+      {/* Hero Section - Same presentation as homepage */}
+      <section className="relative min-h-screen flex items-center justify-center bg-warm-cream dark:bg-gray-900 overflow-hidden transition-colors">
+        {/* Large Hero Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/hero/about-hero.avif"
+            alt="Pizza Falchi - Notre Histoire"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Clean overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal/70 via-charcoal/50 to-transparent"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-block mb-6 backdrop-blur-sm bg-primary-red/90 rounded-full px-6 py-2 border border-primary-red shadow-lg">
-            <span className="text-white text-sm font-bold uppercase tracking-wider">
-              Notre Histoire
-            </span>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-2xl">
-            L'Art de la <span className="text-primary-yellow drop-shadow-lg">Pizza Italienne</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg font-medium">
-            Une passion transmise de génération en génération, depuis les ruelles de Naples jusqu'à votre quartier
-          </p>
-        </div>
+        <div className="relative max-w-7xl mx-auto px-4 py-20 w-full">
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Info Badge - Main Focus */}
+            <div className="inline-flex items-center gap-6 bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl mb-10 max-w-2xl">
+              {/* Logo */}
+              <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
+                <Image
+                  src="/images/branding/logo-badge.png"
+                  alt="Pizza Falchi Logo"
+                  fill
+                  className="object-contain drop-shadow-2xl"
+                />
+              </div>
 
-        {/* Bottom Wave Effect */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z" fill="#FFF9F0"/>
-          </svg>
-        </div>
-      </section>
-
-      {/* Special Offer Banner */}
-      <SpecialOfferBanner />
-
-      {/* Story Section */}
-      <section className="py-20 bg-warm-cream">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-8 items-stretch">
-            {/* Content */}
-            <div className="flex">
-              <div className="bg-white rounded-3xl p-8 shadow-lg flex flex-col justify-center h-full w-full">
-                <h2 className="text-4xl font-black text-charcoal mb-6">
-                  Une Histoire de Famille
-                </h2>
-                <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
-                  <p>
-                    En 2001, la pizzeria a vu le jour et depuis cette année-là les Falchi servent de délicieuses pizzas sur la commune de Puyricard. J'ai eu l'honneur de me joindre à cette aventure en 2014 et d'apprendre la confection de ces pizzas gourmandes dont je maîtrise désormais les secrets.
-                  </p>
-                  <p>
-                    M. et Mme Falchi me font confiance pour la reprise de cette pizzeria et pour faire perdurer leurs recettes afin de continuer à régaler les habitants de Puyricard et de ses alentours.
-                  </p>
-                  <p>
-                    Chaque pizza est préparée avec des <span className="font-bold text-basil-light">ingrédients importés d'Italie</span> : tomates San Marzano, mozzarella di bufala, basilic frais et huile d'olive extra vierge. Notre pâte fermente pendant 48 heures pour une texture légère et croustillante, exactement comme à Naples.
-                  </p>
+              {/* Info */}
+              <div className="flex flex-col gap-1">
+                <div className="inline-block mb-2">
+                  <span className="bg-primary-red text-white px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg">
+                    Notre Histoire
+                  </span>
                 </div>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                  PIZZA FALCHI
+                </h1>
+                <p className="text-primary-yellow font-bold text-xl md:text-2xl">
+                  depuis 2001
+                </p>
+                <p className="text-white/90 font-medium text-base md:text-lg">
+                  Puyricard Aix-en-Provence
+                </p>
               </div>
             </div>
 
-            {/* Image */}
-            <div className="flex">
-              <div className="bg-white p-8 rounded-3xl shadow-lg flex flex-col h-full w-full">
-                <div className="relative w-16 h-16 mb-6">
-                  <Image
-                    src="/images/logo-pizzafalchi.jpg"
-                    alt="Pizza Falchi Logo"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <div className="relative flex-1 rounded-2xl overflow-hidden min-h-[300px]">
-                  <Image
-                    src="/images/about-img.avif"
-                    alt="Pizza Falchi - Notre Histoire"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent flex items-end justify-center p-6">
-                    <p className="text-white font-bold text-xl italic">Passione • Tradizione • Qualità</p>
-                  </div>
-                </div>
-              </div>
+            <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-medium">
+              Une passion transmise de génération en génération
+            </p>
+
+            {/* Tagline */}
+            <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white/80 leading-relaxed mb-10">
+              L'Art de la
+              <span className="text-primary-yellow"> Pizza Italienne </span>
+              authentique
+            </div>
+
+            {/* CTA Buttons at bottom */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/menu"
+                className="bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-primary-yellow/50 text-center"
+              >
+                Voir le Menu
+              </Link>
+
+              <Link
+                href="/contact"
+                className="border-2 border-white bg-white/10 backdrop-blur text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl text-center"
+              >
+                Nous Contacter
+              </Link>
             </div>
           </div>
         </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
+            <div className="w-1 h-3 bg-white/50 rounded-full"></div>
+          </div>
+        </div>
       </section>
+
+      {/* Process Section */}
+      <ProcessSection />
 
       {/* Values Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-surface dark:bg-surface transition-colors">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-charcoal mb-4">
+            <h2 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-4">
               Nos Valeurs
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
               Ce qui nous anime au quotidien
             </p>
           </div>
 
           <div className={`grid md:grid-cols-2 lg:grid-cols-4 ${SPACING.cardGap}`}>
             {/* Value 1 */}
-            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
+            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
               <div className="bg-primary-red p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Heart className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal">Passion</h3>
-              <p className="text-gray-600 leading-relaxed text-sm">
+              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Passion</h3>
+              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
                 Chaque pizza est préparée avec amour et dévouement, comme si nous la faisions pour notre propre famille
               </p>
             </div>
 
             {/* Value 2 */}
-            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
-              <div className="bg-gray-500 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
+            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
+              <div className="bg-gray-500 dark:bg-gray-600 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Award className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal">Qualité</h3>
-              <p className="text-gray-600 leading-relaxed text-sm">
+              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Qualité</h3>
+              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
                 Ingrédients 100% italiens, sélectionnés avec soin auprès de producteurs de confiance
               </p>
             </div>
 
             {/* Value 3 */}
-            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
+            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
               <div className="bg-primary-red p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Leaf className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal">Authenticité</h3>
-              <p className="text-gray-600 leading-relaxed text-sm">
+              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Authenticité</h3>
+              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
                 Recettes traditionnelles napolitaines respectées à la lettre, sans compromis
               </p>
             </div>
 
             {/* Value 4 */}
-            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
-              <div className="bg-gray-500 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
+            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
+              <div className="bg-gray-500 dark:bg-gray-600 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Users className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal">Proximité</h3>
-              <p className="text-gray-600 leading-relaxed text-sm">
+              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Proximité</h3>
+              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
                 Nous nous déplaçons dans votre quartier pour vous offrir une expérience unique
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-20 bg-warm-cream">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-charcoal mb-4">
-              L'Équipe
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Les artisans derrière vos pizzas préférées
-            </p>
-          </div>
-
-          <div className={`grid md:grid-cols-3 ${SPACING.cardGap}`}>
-            {/* Team Member 1 */}
-            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
-              <div className="w-24 h-24 bg-primary-red rounded-full mx-auto mb-5 flex items-center justify-center">
-                <ChefIcon size={48} className="text-white" aria-hidden="true" />
-              </div>
-              <h3 className="text-xl font-bold text-charcoal mb-2">Marco Falchi</h3>
-              <p className="text-primary-red font-semibold mb-3 text-sm">Chef Pizzaiolo</p>
-              <p className="text-gray-600 leading-relaxed text-sm">
-                15 ans d'expérience, formé à Naples. Gardien de nos recettes familiales traditionnelles.
-              </p>
-            </div>
-
-            {/* Team Member 2 */}
-            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
-              <div className="w-24 h-24 bg-gray-500 rounded-full mx-auto mb-5 flex items-center justify-center">
-                <ChefIcon size={48} className="text-white" aria-hidden="true" />
-              </div>
-              <h3 className="text-xl font-bold text-charcoal mb-2">Mickael Pruvost</h3>
-              <p className="text-gray-600 font-semibold mb-3 text-sm">Gérant</p>
-              <p className="text-gray-600 leading-relaxed text-sm">
-                Expert en pizza italienne, il développe et vous fait découvrir ses plus belles créations avec passion.
-              </p>
-            </div>
-
-            {/* Team Member 3 */}
-            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
-              <div className="w-24 h-24 bg-primary-red rounded-full mx-auto mb-5 flex items-center justify-center">
-                <TruckIcon size={48} className="text-white" aria-hidden="true" />
-              </div>
-              <h3 className="text-xl font-bold text-charcoal mb-2">Luca Bianchi</h3>
-              <p className="text-primary-red font-semibold mb-3 text-sm">Manager</p>
-              <p className="text-gray-600 leading-relaxed text-sm">
-                Responsable de nos déplacements et de l'organisation. Il connaît tous les meilleurs spots !
               </p>
             </div>
           </div>
@@ -288,57 +239,91 @@ export default function About() {
         }}></div>
       </section>
 
-      {/* CTA Section - Hero Style */}
-      <section className="relative bg-gradient-to-br from-charcoal via-gray-700 to-gray-900 py-32 md:py-40 overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 right-20 w-96 h-96 bg-primary-red/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 left-20 w-80 h-80 bg-primary-yellow/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"></div>
+      {/* CTA Section - Elegant with Fidelity Banner */}
+      <section className="py-20 bg-warm-cream dark:bg-gray-900 transition-colors">
+        <div className="max-w-5xl mx-auto px-4">
+          {/* Fidelity Banner Integration */}
+          <div className="bg-gradient-to-r from-soft-red/30 via-soft-yellow/20 to-soft-red/30 dark:from-soft-red/20 dark:via-soft-yellow/10 dark:to-soft-red/20 rounded-3xl p-8 md:p-12 shadow-xl border-2 border-primary-red/20 dark:border-primary-red/30 mb-12">
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center bg-primary-red rounded-2xl p-4 mb-6 shadow-lg">
+                <Gift className="w-12 h-12 text-white" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-charcoal dark:text-gray-100 mb-4 transition-colors">
+                Programme de Fidélité
+              </h2>
+              <p className="text-2xl md:text-3xl font-bold text-primary-red dark:text-primary-red-light mb-6">
+                10 Pizzas Achetées = 11<sup className="text-xl">ème</sup> Offerte
+              </p>
+              <p className="text-lg text-text-secondary dark:text-text-secondary mb-8 max-w-2xl mx-auto">
+                Profitez de notre programme de fidélité et régalez-vous !
+              </p>
+            </div>
+          </div>
+
+          {/* CTA Content */}
+          <div className="text-center">
+            <h3 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-6 transition-colors">
+              Prêt à Commander ?
+            </h3>
+            <p className="text-xl text-text-secondary dark:text-text-secondary mb-10 max-w-2xl mx-auto leading-relaxed transition-colors">
+              Découvrez notre menu et savourez l'authenticité italienne
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/menu"
+                className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-primary-red to-primary-yellow text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                Voir le Menu
+                <Pizza className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-3 border-2 border-charcoal dark:border-gray-300 bg-transparent text-charcoal dark:text-gray-100 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-charcoal hover:text-white dark:hover:bg-gray-100 dark:hover:text-charcoal transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Nous Contacter
+                <span>→</span>
+              </Link>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
-          {/* Icon */}
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-red rounded-full mb-6 shadow-2xl">
-            <Flame className="w-10 h-10 text-white" />
-          </div>
+      {/* Histoire de Famille Section - Bottom */}
+      <section className="py-20 md:py-32 bg-warm-cream dark:bg-gray-900 transition-colors">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-surface dark:bg-surface rounded-3xl p-8 md:p-12 shadow-2xl transition-colors">
+            <div className="text-center mb-8">
+              <div className="inline-block mb-4">
+                <span className="bg-primary-red text-white px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider">
+                  Notre Origine
+                </span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-4">
+                Une Histoire de Famille
+              </h2>
+            </div>
 
-          {/* Badge */}
-          <div className="inline-block mb-6">
-            <span className="bg-primary-red text-white px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-xl">
-              Rejoignez-nous
-            </span>
-          </div>
+            <div className="space-y-6 text-lg text-text-secondary dark:text-text-secondary leading-relaxed">
+              <p>
+                En 2001, la pizzeria a vu le jour et depuis cette année-là les Falchi servent de délicieuses pizzas sur la commune de Puyricard. J'ai eu l'honneur de me joindre à cette aventure en 2014 et d'apprendre la confection de ces pizzas gourmandes dont je maîtrise désormais les secrets.
+              </p>
+              <p>
+                M. et Mme Falchi me font confiance pour la reprise de cette pizzeria et pour faire perdurer leurs recettes afin de continuer à régaler les habitants de Puyricard et de ses alentours.
+              </p>
+              <p>
+                Chaque pizza est préparée avec des <span className="font-bold text-basil-light">ingrédients importés d'Italie</span> : tomates San Marzano, mozzarella di bufala, basilic frais et huile d'olive extra vierge. Notre pâte fermente pendant 48 heures pour une texture légère et croustillante, exactement comme à Naples.
+              </p>
+            </div>
 
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl leading-tight">
-            Prêt à goûter l'authentique <span className="text-primary-yellow drop-shadow-lg">pizza italienne</span> ?
-          </h2>
-          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed drop-shadow-lg">
-            Découvrez nos créations artisanales et commandez dès maintenant
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/menu"
-              className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-2xl hover:shadow-primary-yellow/50 hover:scale-105"
-            >
-              Voir le Menu
-              <span>→</span>
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-3 border-2 border-white bg-white/10 backdrop-blur text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl"
-            >
-              Nous Contacter
-              <Phone className="w-5 h-5" />
-            </Link>
+            {/* Signature */}
+            <div className="mt-8 pt-8 border-t border-border dark:border-border text-center">
+              <p className="text-2xl font-black text-charcoal dark:text-gray-100 italic">
+                Passione • Tradizione • Qualità
+              </p>
+            </div>
           </div>
         </div>
-
-        {/* Decorative pattern */}
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,.05) 20px, rgba(255,255,255,.05) 40px)'
-        }}></div>
       </section>
     </div>
   );
