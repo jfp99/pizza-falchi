@@ -116,3 +116,12 @@ export const readLimiter = createRateLimiter({
   windowMs: 60 * 1000, // 1 minute
   maxRequests: 60,
 });
+
+/**
+ * Rate limiter for write operations
+ * 20 requests per minute
+ */
+export const writeLimiter = createRateLimiter({
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 20,
+});

@@ -248,11 +248,6 @@ export const errorAnalytics = {
 // Type declarations for analytics libraries
 declare global {
   interface Window {
-    gtag?: (
-      command: string,
-      action: string,
-      params?: Record<string, unknown>
-    ) => void;
     plausible?: (
       event: string,
       options?: { props?: Record<string, unknown> }

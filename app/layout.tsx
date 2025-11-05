@@ -8,7 +8,9 @@ import Footer from '@/components/layout/Footer';
 import SkipLink from '@/components/layout/SkipLink';
 import AuthProvider from '@/components/providers/SessionProvider';
 import { CartProvider } from '@/contexts/CartContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -94,16 +96,37 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
-      <body className={`${inter.variable} font-sans antialiased`}>
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  let theme = localStorage.getItem('theme');
+                  if (!theme) {
+                    theme = 'light';
+                  }
+                  document.documentElement.classList.add(theme);
+                  document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+        <meta name="theme-color" content="#FFF9F0" />
+      </head>
+      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
         <AuthProvider>
-          <CartProvider>
-            <SkipLink />
-            <div className="min-h-screen flex flex-col">
+          <ThemeProvider>
+            <CartProvider>
+              <SkipLink />
+              <div className="min-h-screen flex flex-col bg-warm-cream dark:bg-gray-900 transition-colors duration-300">
               <Navigation />
               <main id="main-content" className="flex-1">
                 {children}
               </main>
+              <SpecialOfferBanner />
               <Footer />
             </div>
             <Toaster
@@ -119,6 +142,7 @@ export default function RootLayout({
             <SpeedInsights />
             <GoogleAnalytics />
           </CartProvider>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

@@ -10,7 +10,7 @@ export default function GATestPage() {
   useEffect(() => {
     // Check if GA script loaded
     const checkGA = setInterval(() => {
-      if (typeof window !== 'undefined' && window.gtag) {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
         setGtagAvailable(true);
         clearInterval(checkGA);
       }

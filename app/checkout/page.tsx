@@ -218,21 +218,21 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-warm-cream via-white to-primary-yellow/5 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-warm-cream via-white to-primary-yellow/5 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-12 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
           <Link
             href="/cart"
-            className="inline-flex items-center gap-2 text-primary-red hover:text-primary-red-dark transition font-semibold mb-4 group"
+            className="inline-flex items-center gap-2 text-primary-red dark:text-primary-red-light hover:text-primary-red-dark dark:hover:text-primary-red transition font-semibold mb-4 group"
           >
             <ArrowLeft className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" />
             Retour au panier
           </Link>
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
             Finaliser la <span className="bg-gradient-to-r from-primary-red to-soft-red bg-clip-text text-transparent">Commande</span>
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 dark:text-gray-300 transition-colors duration-300">
             Plus qu'une étape avant de déguster vos délicieuses pizzas !
           </p>
         </div>
@@ -241,10 +241,10 @@ export default function Checkout() {
           {/* Left Column - Order Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Delivery Type Selection */}
-            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="bg-primary-red/10 p-2 rounded-xl">
-                  <ShoppingBag className="w-6 h-6 text-primary-red" />
+            <div className={`bg-white dark:bg-gray-800 ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100 dark:border-gray-700 transition-colors duration-300`}>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-3 transition-colors duration-300">
+                <div className="bg-primary-red/10 dark:bg-primary-red/20 p-2 rounded-xl transition-colors duration-300">
+                  <ShoppingBag className="w-6 h-6 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                 </div>
                 Mode de récupération
               </h2>
@@ -263,24 +263,24 @@ export default function Checkout() {
                       <Check className="w-4 h-4" />
                     </div>
                   )}
-                  <Package className={`w-10 h-10 mb-3 ${deliveryType === 'pickup' ? 'text-primary-red' : 'text-gray-400'}`} />
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">À Emporter</h3>
-                  <p className="text-sm text-gray-600 mb-2">Retrait sur place</p>
-                  <p className="text-primary-red font-bold text-lg">Gratuit</p>
+                  <Package className={`w-10 h-10 mb-3 transition-colors duration-300 ${deliveryType === 'pickup' ? 'text-primary-red dark:text-primary-red-light' : 'text-gray-400 dark:text-gray-500'}`} />
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1 transition-colors duration-300">À Emporter</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 transition-colors duration-300">Retrait sur place</p>
+                  <p className="text-primary-red dark:text-primary-red-light font-bold text-lg transition-colors duration-300">Gratuit</p>
                 </button>
 
                 <button
                   type="button"
                   disabled
-                  className="relative p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+                  className="relative p-6 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 opacity-60 cursor-not-allowed transition-colors duration-300"
                 >
-                  <div className="absolute top-3 right-3 bg-gray-400 text-white px-2 py-1 rounded-full text-xs font-bold">
+                  <div className="absolute top-3 right-3 bg-gray-400 dark:bg-gray-600 text-white px-2 py-1 rounded-full text-xs font-bold">
                     Bientôt
                   </div>
-                  <Truck className="w-10 h-10 mb-3 text-gray-400" />
-                  <h3 className="text-lg font-bold text-gray-500 mb-1">Livraison</h3>
-                  <p className="text-sm text-gray-400 mb-2">Temporairement indisponible</p>
-                  <p className="font-bold text-lg text-gray-400">
+                  <Truck className="w-10 h-10 mb-3 text-gray-400 dark:text-gray-500" />
+                  <h3 className="text-lg font-bold text-gray-500 dark:text-gray-400 mb-1">Livraison</h3>
+                  <p className="text-sm text-gray-400 dark:text-gray-500 mb-2">Temporairement indisponible</p>
+                  <p className="font-bold text-lg text-gray-400 dark:text-gray-500">
                     {subtotal >= 30 ? 'Gratuit !' : '5,00€'}
                   </p>
                 </button>
@@ -296,17 +296,17 @@ export default function Checkout() {
             )}
 
             {/* Customer Information */}
-            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="bg-primary-red/10 p-2 rounded-xl">
-                  <User className="w-6 h-6 text-primary-red" />
+            <div className={`bg-white dark:bg-gray-800 ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100 dark:border-gray-700 transition-colors duration-300`}>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-3 transition-colors duration-300">
+                <div className="bg-primary-red/10 dark:bg-primary-red/20 p-2 rounded-xl transition-colors duration-300">
+                  <User className="w-6 h-6 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                 </div>
                 Vos informations
               </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Nom complet <span className="text-primary-red">*</span>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
+                    Nom complet <span className="text-primary-red dark:text-primary-red-light">*</span>
                   </label>
                   <input
                     type="text"
@@ -314,14 +314,14 @@ export default function Checkout() {
                     value={formData.customerName}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 rounded-xl border-2 ${
-                      errors.customerName ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
-                    } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
+                      errors.customerName ? 'border-red-500 bg-red-50 dark:bg-red-900/30 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700'
+                    } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition-colors duration-300 text-gray-900 dark:text-gray-100`}
                     placeholder="Jean Dupont"
                     aria-invalid={!!errors.customerName}
                     aria-describedby={errors.customerName ? 'customerName-error' : undefined}
                   />
                   {errors.customerName && (
-                    <p id="customerName-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                    <p id="customerName-error" className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-2 bg-red-50 dark:bg-red-900/30 p-2 rounded-lg border border-red-200 dark:border-red-700 transition-colors duration-300">
                       <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                       <span>{errors.customerName}</span>
                     </p>
@@ -330,8 +330,8 @@ export default function Checkout() {
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Téléphone <span className="text-primary-red">*</span>
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
+                      Téléphone <span className="text-primary-red dark:text-primary-red-light">*</span>
                     </label>
                     <input
                       type="tel"
@@ -339,14 +339,14 @@ export default function Checkout() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
-                        errors.phone ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
-                      } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
+                        errors.phone ? 'border-red-500 bg-red-50 dark:bg-red-900/30 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700'
+                      } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition-colors duration-300 text-gray-900 dark:text-gray-100`}
                       placeholder="06 12 34 56 78"
                       aria-invalid={!!errors.phone}
                       aria-describedby={errors.phone ? 'phone-error' : undefined}
                     />
                     {errors.phone && (
-                      <p id="phone-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                      <p id="phone-error" className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-2 bg-red-50 dark:bg-red-900/30 p-2 rounded-lg border border-red-200 dark:border-red-700 transition-colors duration-300">
                         <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                         <span>{errors.phone}</span>
                       </p>
@@ -354,8 +354,8 @@ export default function Checkout() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Email <span className="text-gray-400 text-xs">(optionnel)</span>
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
+                      Email <span className="text-gray-400 dark:text-gray-500 text-xs">(optionnel)</span>
                     </label>
                     <input
                       type="email"
@@ -363,14 +363,14 @@ export default function Checkout() {
                       value={formData.email}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
-                        errors.email ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
-                      } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
+                        errors.email ? 'border-red-500 bg-red-50 dark:bg-red-900/30 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700'
+                      } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition-colors duration-300 text-gray-900 dark:text-gray-100`}
                       placeholder="jean.dupont@email.com"
                       aria-invalid={!!errors.email}
                       aria-describedby={errors.email ? 'email-error' : undefined}
                     />
                     {errors.email && (
-                      <p id="email-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                      <p id="email-error" className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-2 bg-red-50 dark:bg-red-900/30 p-2 rounded-lg border border-red-200 dark:border-red-700 transition-colors duration-300">
                         <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                         <span>{errors.email}</span>
                       </p>
@@ -382,10 +382,10 @@ export default function Checkout() {
 
             {/* Delivery Address (conditional) */}
             {deliveryType === 'delivery' && (
-              <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <div className="bg-primary-red/10 p-2 rounded-xl">
-                    <MapPin className="w-6 h-6 text-primary-red" />
+              <div className={`bg-white dark:bg-gray-800 ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100 dark:border-gray-700 transition-colors duration-300`}>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-3 transition-colors duration-300">
+                  <div className="bg-primary-red/10 dark:bg-primary-red/20 p-2 rounded-xl transition-colors duration-300">
+                    <MapPin className="w-6 h-6 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                   </div>
                   Adresse de livraison
                 </h2>
@@ -468,10 +468,10 @@ export default function Checkout() {
             )}
 
             {/* Payment Method */}
-            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="bg-primary-red/10 p-2 rounded-xl">
-                  <CreditCard className="w-6 h-6 text-primary-red" />
+            <div className={`bg-white dark:bg-gray-800 ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100 dark:border-gray-700 transition-colors duration-300`}>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-3 transition-colors duration-300">
+                <div className="bg-primary-red/10 dark:bg-primary-red/20 p-2 rounded-xl transition-colors duration-300">
+                  <CreditCard className="w-6 h-6 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                 </div>
                 Mode de paiement
               </h2>
@@ -491,10 +491,10 @@ export default function Checkout() {
                     </div>
                   )}
                   <div className="flex items-center justify-center mb-2">
-                    <Banknote className="w-8 h-8 text-primary-red" />
+                    <Banknote className="w-8 h-8 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                   </div>
-                  <p className="font-bold text-gray-900">Espèces</p>
-                  <p className="text-xs text-gray-500 mt-1">À la livraison</p>
+                  <p className="font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">Espèces</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">À la livraison</p>
                 </button>
 
                 <button
@@ -512,25 +512,25 @@ export default function Checkout() {
                     </div>
                   )}
                   <div className="flex items-center justify-center mb-2">
-                    <CreditCard className="w-8 h-8 text-primary-red" />
+                    <CreditCard className="w-8 h-8 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                   </div>
-                  <p className="font-bold text-gray-900">Carte</p>
-                  <p className="text-xs text-gray-500 mt-1">À la livraison</p>
+                  <p className="font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">Carte</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">À la livraison</p>
                 </button>
 
                 <button
                   type="button"
                   disabled
-                  className="relative p-5 rounded-2xl border-2 border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+                  className="relative p-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 opacity-60 cursor-not-allowed transition-colors duration-300"
                 >
-                  <div className="absolute top-2 right-2 bg-gray-400 text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                  <div className="absolute top-2 right-2 bg-gray-400 dark:bg-gray-600 text-white px-2 py-0.5 rounded-full text-xs font-bold">
                     Bientôt
                   </div>
                   <div className="flex items-center justify-center mb-2 opacity-50">
-                    <Globe className="w-8 h-8 text-gray-400" />
+                    <Globe className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                   </div>
-                  <p className="font-bold text-gray-500">En ligne</p>
-                  <p className="text-xs text-gray-400 mt-1">Temporairement indisponible</p>
+                  <p className="font-bold text-gray-500 dark:text-gray-400">En ligne</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Temporairement indisponible</p>
                 </button>
               </div>
 
@@ -551,19 +551,19 @@ export default function Checkout() {
             </div>
 
             {/* Notes */}
-            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div className="bg-primary-red/10 p-2 rounded-xl">
-                  <FileText className="w-6 h-6 text-primary-red" />
+            <div className={`bg-white dark:bg-gray-800 ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100 dark:border-gray-700 transition-colors duration-300`}>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-3 transition-colors duration-300">
+                <div className="bg-primary-red/10 dark:bg-primary-red/20 p-2 rounded-xl transition-colors duration-300">
+                  <FileText className="w-6 h-6 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                 </div>
-                Notes <span className="text-gray-400 text-base font-normal">(optionnel)</span>
+                Notes <span className="text-gray-400 dark:text-gray-500 text-base font-normal">(optionnel)</span>
               </h2>
               <textarea
                 name="notes"
                 value={formData.notes}
                 onChange={handleInputChange}
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:ring-2 focus:ring-primary-red focus:border-primary-red transition resize-none"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-red focus:border-primary-red transition-colors duration-300 resize-none"
                 placeholder="Instructions spéciales, allergies, préférences de cuisson..."
               />
             </div>
@@ -571,23 +571,23 @@ export default function Checkout() {
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 sticky top-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center justify-between">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700 sticky top-6 transition-colors duration-300">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center justify-between transition-colors duration-300">
                 <span>Récapitulatif</span>
-                <div className="bg-primary-red/10 p-2 rounded-xl">
-                  <ShoppingBag className="w-5 h-5 text-primary-red" />
+                <div className="bg-primary-red/10 dark:bg-primary-red/20 p-2 rounded-xl transition-colors duration-300">
+                  <ShoppingBag className="w-5 h-5 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
                 </div>
               </h2>
 
               {/* Items */}
               <div className="space-y-3 mb-6 max-h-80 overflow-y-auto pr-2">
                 {items.map((item, index) => (
-                  <div key={index} className="flex justify-between items-start p-3 bg-gray-50 rounded-xl">
+                  <div key={index} className="flex justify-between items-start p-3 bg-gray-50 dark:bg-gray-700 rounded-xl transition-colors duration-300">
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-900 text-sm">{item.product.name}</p>
-                      <p className="text-xs text-gray-600">Qté: {item.quantity} × {item.product.price.toFixed(2)}€</p>
+                      <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm transition-colors duration-300">{item.product.name}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 transition-colors duration-300">Qté: {item.quantity} × {item.product.price.toFixed(2)}€</p>
                     </div>
-                    <p className="font-bold text-gray-900">
+                    <p className="font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">
                       {(item.product.price * item.quantity).toFixed(2)}€
                     </p>
                   </div>
@@ -595,13 +595,13 @@ export default function Checkout() {
               </div>
 
               {/* Pricing */}
-              <div className="border-t border-gray-200 pt-4 space-y-3 mb-6">
-                <div className="flex justify-between text-gray-600">
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3 mb-6 transition-colors duration-300">
+                <div className="flex justify-between text-gray-600 dark:text-gray-300 transition-colors duration-300">
                   <span>Sous-total (TTC)</span>
                   <span className="font-semibold">{subtotal.toFixed(2)}€</span>
                 </div>
-                <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
-                  <span className="text-xl font-black text-gray-900">Total TTC</span>
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between items-center transition-colors duration-300">
+                  <span className="text-xl font-black text-gray-900 dark:text-gray-100 transition-colors duration-300">Total TTC</span>
                   <span className="text-3xl font-black bg-gradient-to-r from-primary-red to-soft-red bg-clip-text text-transparent">
                     {total.toFixed(2)}€
                   </span>
@@ -629,7 +629,7 @@ export default function Checkout() {
                 </button>
               )}
 
-              <p className="text-xs text-gray-500 text-center mt-4">
+              <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4 transition-colors duration-300">
                 En confirmant, vous acceptez nos conditions générales
               </p>
             </div>

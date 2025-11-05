@@ -1,0 +1,42 @@
+
+> pizza-truck@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.4
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 3.8s
+
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@prisma/instrumentation/dist/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/prisma.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./sentry.server.config.ts
+
+ ✓ Compiled successfully in 6.6s
+   Linting and checking validity of types ...
+ ⨯ ESLint: Invalid Options: - Unknown options: useEslintrc, extensions - 'extensions' has been removed.
+Failed to compile.
+
+.next/types/app/api/wishlist/[productId]/route.ts:244:7
+Type error: Type '{ __tag__: "DELETE"; __param_position__: "second"; __param_type__: { params: { productId: string; }; }; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+  The types of '__param_type__.params' are incompatible between these types.
+    Type '{ productId: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+
+[0m [90m 242 |[39m     [33mDiff[39m[33m<[39m
+ [90m 243 |[39m       [33mParamCheck[39m[33m<[39m[33mRouteContext[39m[33m>[39m[33m,[39m
+[31m[1m>[22m[39m[90m 244 |[39m       {
+ [90m     |[39m       [31m[1m^[22m[39m
+ [90m 245 |[39m         __tag__[33m:[39m [32m'DELETE'[39m
+ [90m 246 |[39m         __param_position__[33m:[39m [32m'second'[39m
+ [90m 247 |[39m         __param_type__[33m:[39m [33mSecondArg[39m[33m<[39m[33mMaybeField[39m[33m<[39m[33mTEntry[39m[33m,[39m [32m'DELETE'[39m[33m>>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

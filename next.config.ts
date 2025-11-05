@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
               "connect-src 'self' *.stripe.com *.vercel-insights.com vitals.vercel-insights.com",
-              "frame-src 'self' *.stripe.com",
+              "frame-src 'self' *.stripe.com *.google.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

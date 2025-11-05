@@ -1,0 +1,514 @@
+'use client';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Search, Filter, Star, Flame, Leaf, Gift, Pizza, ShoppingCart, Sparkles, ChefHat, Eye, Calculator } from 'lucide-react';
+import { Product, Category } from '@/types';
+import { useCart } from '@/contexts/CartContext';
+import ProductCard from '@/components/menu/ProductCard';
+import ProductCardSkeleton from '@/components/menu/ProductCardSkeleton';
+import CartSidebar from '@/components/cart/CartSidebar';
+import CategoryFilterWithIcons from '@/components/menu/CategoryFilterWithIcons';
+import PackageCard from '@/components/packages/PackageCard';
+import ComboSelectionModal from '@/components/packages/ComboSelectionModal';
+import toast from 'react-hot-toast';
+import { SPACING, TYPOGRAPHY, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
+import { motion, AnimatePresence } from 'framer-motion';
+import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations';
+import Link from 'next/link';
+
+// Categories now use React components instead of emoji strings
+const categories: Category[] = [
+  { id: 'all', name: 'Tout le Menu', icon: 'PizzaSliceIcon' },
+  { id: 'pizza', name: 'Pizzas', icon: 'PizzaSliceIcon' },
+  { id: 'boisson', name: 'Boissons', icon: 'DrinkIcon' },
+  { id: 'combo', name: 'Combos', icon: 'GiftBoxIcon' },
+];
+
+interface PackageType {
+  _id: string;
+  name: string;
+  description: string;
+  originalPrice: number;
+  discountedPrice: number;
+  discount: number;
+  items: Array<{
+    type: string;
+    quantity: number;
+    description: string;
+  }>;
+  icon: string;
+  color: string;
+  popular: boolean;
+  badge?: string;
+}
+
+export default function Menu() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [packages, setPackages] = useState<PackageType[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isComboModalOpen, setIsComboModalOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<PackageType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { addItem, getTotalItems } = useCart();
+
+  useEffect(() => {
+    fetchProducts();
+    fetchPackages();
+  }, []);
+
+  const fetchProducts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/products');
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data);
+        setFilteredProducts(data);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      // Keep using mock data if API fails
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPackages = async () => {
+    try {
+      const response = await fetch('/api/packages');
+      if (response.ok) {
+        const data = await response.json();
+        setPackages(data);
+      }
+    } catch (error) {
+      console.error('Error fetching packages:', error);
+    }
+  };
+
+  useEffect(() => {
+    filterProducts();
+  }, [products, selectedCategory, searchTerm]);
+
+  const filterProducts = () => {
+    let filtered = products;
+
+    // Don't show products when 'combo' is selected
+    if (selectedCategory === 'combo') {
+      setFilteredProducts([]);
+      return;
+    }
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => product.category === selectedCategory);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.ingredients.some(ing => ing.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    setFilteredProducts(filtered);
+  };
+
+  const handleAddToCart = (product: Product) => {
+    addItem(product);
+    toast.success(
+      `${product.name} ajouté au panier !`,
+      {
+        duration: 2000,
+        style: {
+          background: '#FFF9F0',
+          color: '#1a1a1a',
+          fontWeight: '600',
+          borderRadius: '16px',
+          border: '1px solid #E30613',
+        },
+      }
+    );
+    setIsCartOpen(true);
+  };
+
+  const handleSelectPackage = (pkg: PackageType) => {
+    setSelectedPackage(pkg);
+    setIsComboModalOpen(true);
+  };
+
+  const handleComboConfirm = (selectedProducts: Product[], totalPrice: number) => {
+    // Add each product to cart with combo pricing logic
+    selectedProducts.forEach(product => {
+      addItem(product);
+    });
+
+    toast.success(
+      `${selectedPackage?.name} ajouté au panier pour ${totalPrice.toFixed(2)}€ !`,
+      {
+        duration: 3000,
+        style: {
+          background: '#FFF9F0',
+          color: '#1a1a1a',
+          fontWeight: '600',
+          borderRadius: '16px',
+          border: '1px solid #E30613',
+        },
+      }
+    );
+    setIsCartOpen(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-warm-cream dark:bg-gray-900 transition-colors duration-300">
+      {/* Hero Section - Same presentation as homepage */}
+      <section className="relative min-h-screen flex items-center justify-center bg-warm-cream dark:bg-gray-900 overflow-hidden transition-colors">
+        {/* Large Hero Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/hero/hero-main.avif"
+            alt="Pizza Falchi - Notre Menu"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Clean overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal/70 via-charcoal/50 to-transparent"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 py-20 w-full">
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Info Badge - Main Focus */}
+            <div className="inline-flex items-center gap-6 bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl mb-10 max-w-2xl">
+              {/* Logo */}
+              <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
+                <Image
+                  src="/images/branding/logo-badge.png"
+                  alt="Pizza Falchi Logo"
+                  fill
+                  className="object-contain drop-shadow-2xl"
+                />
+              </div>
+
+              {/* Info */}
+              <div className="flex flex-col gap-1">
+                <div className="inline-block mb-2">
+                  <span className="bg-primary-red text-white px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg">
+                    Menu Complet
+                  </span>
+                </div>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                  PIZZA FALCHI
+                </h1>
+                <p className="text-primary-yellow font-bold text-xl md:text-2xl">
+                  depuis 2001
+                </p>
+                <p className="text-white/90 font-medium text-base md:text-lg">
+                  Puyricard Aix-en-Provence
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-medium">
+              Pizzas artisanales • Cuisson au feu de bois • Ingrédients italiens
+            </p>
+
+            {/* Tagline */}
+            <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white/80 leading-relaxed mb-10">
+              Découvrez nos
+              <span className="text-primary-yellow"> créations artisanales </span>
+              authentiques
+            </div>
+
+            {/* CTA Button */}
+            <div className="flex justify-center">
+              <button
+                onClick={() => {
+                  const menuSection = document.getElementById('menu-section');
+                  menuSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-primary-yellow/50 text-center"
+              >
+                Voir le Menu
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
+            <div className="w-1 h-3 bg-white/50 rounded-full"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pizza Builder Card - Elegant Design */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <Link href="/pizza-builder">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group cursor-pointer">
+            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+              {/* Icon */}
+              <div className="flex-shrink-0">
+                <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-4 rounded-2xl shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <ChefHat className="w-8 h-8 text-white" />
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-2xl md:text-3xl font-bold text-charcoal dark:text-gray-100 transition-colors">
+                    Créez Votre Pizza Parfaite
+                  </h2>
+                  <span className="bg-primary-red text-white px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    Nouveau
+                  </span>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg mb-4 transition-colors">
+                  Personnalisez chaque ingrédient avec notre créateur de pizza interactif
+                </p>
+
+                {/* Features */}
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                    <Eye className="w-4 h-4 text-primary-red" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Visualisation en temps réel</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                    <Calculator className="w-4 h-4 text-primary-yellow" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Prix calculé automatiquement</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                    <Leaf className="w-4 h-4 text-basil-light" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">50+ ingrédients</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <div className="flex-shrink-0 mt-4 md:mt-0">
+                <div className="bg-gradient-to-r from-primary-red to-primary-yellow text-white px-6 py-3 rounded-xl font-bold text-base shadow-md group-hover:shadow-lg transition-all group-hover:scale-105 flex items-center gap-2">
+                  Commencer
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      <div id="menu-section" className="max-w-7xl mx-auto px-4 pb-20">
+        {/* Filtres et Recherche - Enhanced Design */}
+        <div className="mb-12 space-y-8">
+          {/* Search Bar - Enhanced */}
+          <div className="relative max-w-3xl mx-auto group">
+            <div className="absolute left-4 md:left-5 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
+              <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-2 rounded-xl shadow-md group-focus-within:scale-110 transition-transform duration-300">
+                <Search className="w-5 h-5 text-white" />
+              </div>
+            </div>
+            <input
+              suppressHydrationWarning
+              type="text"
+              placeholder="Rechercher une pizza, un ingrédient..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-16 md:pl-20 pr-14 py-4 md:py-5 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-base md:text-lg font-medium text-charcoal dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 placeholder:font-normal"
+            />
+            {searchTerm && (
+              <button
+                suppressHydrationWarning
+                onClick={() => setSearchTerm('')}
+                className="absolute right-4 md:right-5 top-1/2 transform -translate-y-1/2 bg-gray-100 hover:bg-primary-red text-gray-600 hover:text-white p-2 rounded-xl transition-all duration-300 hover:scale-110 focus:ring-2 focus:ring-primary-red focus:ring-offset-2"
+                aria-label="Effacer la recherche"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {/* Category Filter */}
+          <CategoryFilterWithIcons
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+        </div>
+
+        {/* Product Count & Filters Summary - Enhanced */}
+        {selectedCategory !== 'combo' && (
+          <div className={`flex flex-col sm:flex-row justify-between items-center mb-10 bg-white dark:bg-gray-800 ${ROUNDED.lg} ${SPACING.cardPadding} ${SHADOWS.md} border-2 border-gray-100 dark:border-gray-700 hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
+            <div className="flex items-center gap-4">
+              <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-xl shadow-md">
+                <Filter className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black text-charcoal dark:text-gray-100 transition-colors duration-300">
+                  {filteredProducts.length}
+                </span>
+                <span className="text-sm text-gray-600 dark:text-gray-400 font-medium transition-colors duration-300">
+                  produit{filteredProducts.length !== 1 ? 's' : ''} trouvé{filteredProducts.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+            </div>
+            {(searchTerm || selectedCategory !== 'all') && (
+              <button
+                suppressHydrationWarning
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCategory('all');
+                }}
+                className="mt-3 sm:mt-0 bg-gray-100 dark:bg-gray-700 hover:bg-gradient-to-r hover:from-primary-red hover:to-primary-yellow text-charcoal dark:text-gray-100 hover:text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
+              >
+                Réinitialiser les filtres
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Grille des produits */}
+        <AnimatePresence mode="wait">
+          {selectedCategory !== 'combo' && (
+            <motion.div
+              id="products-section"
+              className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}
+              variants={staggerContainer}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              key={selectedCategory}
+            >
+              {isLoading ? (
+                // Show skeleton loaders while loading
+                Array.from({ length: 6 }).map((_, index) => (
+                  <ProductCardSkeleton key={`skeleton-${index}`} />
+                ))
+              ) : (
+                // Show actual products when loaded
+                filteredProducts.map(product => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Packages Section - Now at bottom or prominent when combo selected */}
+        {packages.length > 0 && (selectedCategory === 'combo' || selectedCategory === 'all') && (
+          <div className={`${selectedCategory === 'combo' ? 'mb-12' : 'mb-16'}`} id="combos-section">
+            {/* Header - More prominent for combo filter, discrete for all */}
+            {selectedCategory === 'combo' ? (
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-2xl shadow-xl">
+                    <Gift className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl md:text-4xl font-black text-gray-900">
+                      Nos <span className="text-primary-red">Combos</span>
+                    </h2>
+                    <p className="text-gray-600 text-lg font-medium">
+                      Des offres exceptionnelles pour régaler tout le monde !
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-gradient-to-br from-primary-red/80 to-primary-yellow/80 p-2.5 rounded-xl shadow-md">
+                  <Gift className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-800">
+                  Nos <span className="text-primary-red">Combos</span>
+                </h3>
+              </div>
+            )}
+
+            {/* Packages Grid */}
+            <div className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap}`}>
+              {packages.map((pkg) => (
+                <PackageCard
+                  key={pkg._id}
+                  package={pkg}
+                  onSelect={handleSelectPackage}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Message si aucun résultat - Enhanced */}
+        {!isLoading && filteredProducts.length === 0 && selectedCategory !== 'combo' && (
+          <div className="text-center py-20">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-gray-100 dark:border-gray-700 hover:shadow-3xl transition-all duration-300">
+              <div className="inline-block bg-soft-red-lighter dark:bg-primary-red/20 rounded-3xl p-6 mb-6 transition-colors duration-300">
+                <Pizza className="w-16 h-16 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
+              </div>
+              <h3 className="text-3xl md:text-4xl font-black text-charcoal dark:text-gray-100 mb-4 transition-colors duration-300">Aucun résultat trouvé</h3>
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed transition-colors duration-300">
+                Nous n'avons trouvé aucun produit correspondant à votre recherche.
+                <br />
+                <span className="text-sm">Essayez de modifier vos critères de recherche</span>
+              </p>
+              <button
+                suppressHydrationWarning
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCategory('all');
+                }}
+                className="bg-gradient-to-r from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white px-10 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Réinitialiser les filtres
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Sidebar Panier */}
+        <CartSidebar
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+        />
+
+        {/* Bouton Panier Mobile - Enhanced */}
+        <button
+          suppressHydrationWarning
+          onClick={() => setIsCartOpen(true)}
+          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-gradient-to-br from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white p-4 md:p-5 rounded-full shadow-2xl md:hidden z-50 transition-all duration-300 transform hover:scale-110 active:scale-95"
+          aria-label={`Ouvrir le panier ${getTotalItems() > 0 ? `(${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''})` : '(vide)'}`}
+        >
+          <div className="relative">
+            <ShoppingCart className="w-6 h-6" />
+            {getTotalItems() > 0 && (
+              <span className="absolute -top-2 -right-2 bg-white text-primary-red rounded-full w-6 h-6 text-xs flex items-center justify-center font-black shadow-xl border-2 border-primary-red animate-pulse">
+                {getTotalItems()}
+              </span>
+            )}
+          </div>
+        </button>
+
+        {/* Combo Selection Modal */}
+        {selectedPackage && (
+          <ComboSelectionModal
+            isOpen={isComboModalOpen}
+            onClose={() => setIsComboModalOpen(false)}
+            package={selectedPackage}
+            onConfirm={handleComboConfirm}
+            allProducts={products}
+          />
+        )}
+      </div>
+    </div>
+  );
+}

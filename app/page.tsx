@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Pizza, Truck, Clock, Star, ChefHat, Award, Heart, MapPin, Timer, Flame } from 'lucide-react';
+import { Pizza, Truck, Clock, Star, ChefHat, Award, Heart, MapPin, Timer, Flame, Gift } from 'lucide-react';
 import StorySection from '@/components/home/StorySection';
 import StructuredData from '@/components/seo/StructuredData';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
@@ -126,16 +126,18 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/menu"
-                className="bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-primary-yellow/50 text-center"
+                className="relative px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl text-center overflow-hidden group bg-primary-red text-white"
               >
-                Voir le Menu
+                <span className="relative z-10 group-hover:text-charcoal transition-colors duration-300">Voir le Menu</span>
+                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
 
               <Link
                 href="/contact"
-                className="border-2 border-white bg-white/10 backdrop-blur text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl text-center"
+                className="relative border-2 border-white bg-white/10 backdrop-blur px-12 py-6 rounded-2xl font-bold text-xl shadow-xl text-center overflow-hidden group text-white"
               >
-                Nous Trouver
+                <span className="relative z-10 group-hover:text-charcoal transition-colors duration-300">Nous Trouver</span>
+                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
             </div>
           </div>
@@ -152,94 +154,68 @@ export default function Home() {
       {/* Story Section */}
       <StorySection />
 
-      {/* Showcase Section - Clean & Simple */}
-      <section className="py-32 bg-surface dark:bg-surface">
+      {/* Showcase Section - Soirée Pizza Style */}
+      <section className="py-20 bg-surface dark:bg-surface transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            {/* Image - Clean & Large */}
-            <div className="relative">
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                <Image
-                  src="/images/fallbacks/home-img.avif"
-                  alt="Pizza Falchi - Nos Pizzas Artisanales"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              {/* Simple badge */}
-              <div className="absolute -bottom-8 -right-8 bg-primary-red text-white px-8 py-4 rounded-2xl font-black text-xl shadow-xl">
-                100% Artisanal
-              </div>
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            {/* Image */}
+            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="/images/fallbacks/home-img.avif"
+                alt="Pizza Falchi - Nos Pizzas Artisanales"
+                fill
+                className="object-cover"
+              />
             </div>
 
             {/* Content */}
             <div>
-              <span className="text-primary-red font-bold uppercase tracking-wider text-sm">
-                Notre Spécialité
-              </span>
-              <h2 className="text-5xl md:text-6xl font-black text-charcoal mt-4 mb-6 leading-tight">
-                Pizzas
-                <span className="block text-primary-red">Authentiques</span>
+              <div className="inline-block mb-4">
+                <div className="bg-primary-red text-white px-4 py-2 rounded-full flex items-center gap-2">
+                  <Pizza className="w-5 h-5" />
+                  <span className="text-sm font-bold uppercase tracking-wider">Notre Spécialité</span>
+                </div>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-6 transition-colors duration-300">
+                Pizzas Authentiques
               </h2>
-              <p className="text-xl text-text-secondary dark:text-text-secondary leading-relaxed mb-8">
+              <p className="text-xl text-text-secondary dark:text-text-secondary leading-relaxed mb-8 transition-colors duration-300">
                 Chaque pizza est préparée avec des ingrédients sélectionnés directement d'Italie. Notre pâte fermente 48 heures pour une texture légère et croustillante.
               </p>
 
-              {/* Clean features */}
-              <div className="space-y-4 mb-10">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-soft-red-lighter rounded-xl flex items-center justify-center">
-                    <Award className="w-6 h-6 text-primary-red" />
-                  </div>
-                  <p className="text-lg font-semibold text-charcoal">Recettes napolitaines authentiques</p>
+              <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="bg-warm-cream dark:bg-gray-700 rounded-2xl p-4 text-center transition-colors duration-300">
+                  <div className="text-3xl font-black text-primary-red mb-1">48h</div>
+                  <div className="text-sm text-charcoal dark:text-gray-300 font-medium">Fermentation</div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-soft-yellow-lighter rounded-xl flex items-center justify-center">
-                    <Timer className="w-6 h-6 text-primary-yellow" />
-                  </div>
-                  <p className="text-lg font-semibold text-charcoal">Pâte fermentée 48h</p>
+                <div className="bg-warm-cream dark:bg-gray-700 rounded-2xl p-4 text-center transition-colors duration-300">
+                  <div className="text-3xl font-black text-primary-yellow mb-1">100%</div>
+                  <div className="text-sm text-charcoal dark:text-gray-300 font-medium">Italien</div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-soft-red-lighter rounded-xl flex items-center justify-center">
-                    <Flame className="w-6 h-6 text-primary-red" />
-                  </div>
-                  <p className="text-lg font-semibold text-charcoal">Cuisson au feu de bois</p>
+                <div className="bg-warm-cream dark:bg-gray-700 rounded-2xl p-4 text-center transition-colors duration-300">
+                  <div className="text-3xl font-black text-basil-light mb-1">Feu</div>
+                  <div className="text-sm text-charcoal dark:text-gray-300 font-medium">De bois</div>
                 </div>
               </div>
 
               <Link
                 href="/menu"
-                className="inline-flex items-center gap-3 bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
+                className="relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-primary-red text-white"
               >
-                Découvrir le Menu
-                <span>→</span>
+                <span className="relative z-10 flex items-center gap-3 group-hover:text-charcoal transition-colors duration-300">
+                  Découvrir le Menu
+                  <span>→</span>
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section - Elegant with Fidelity Banner */}
-      <section className="py-20 bg-warm-cream dark:bg-gray-900 transition-colors">
-        <div className="max-w-5xl mx-auto px-4">
-          {/* Fidelity Banner Integration */}
-          <div className="bg-gradient-to-r from-soft-red/30 via-soft-yellow/20 to-soft-red/30 dark:from-soft-red/20 dark:via-soft-yellow/10 dark:to-soft-red/20 rounded-3xl p-8 md:p-12 shadow-xl border-2 border-primary-red/20 dark:border-primary-red/30 mb-12">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center bg-primary-red rounded-2xl p-4 mb-6 shadow-lg">
-                <Gift className="w-12 h-12 text-white" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-charcoal dark:text-gray-100 mb-4 transition-colors">
-                Programme de Fidélité
-              </h2>
-              <p className="text-2xl md:text-3xl font-bold text-primary-red dark:text-primary-red-light mb-6">
-                10 Pizzas Achetées = 11<sup className="text-xl">ème</sup> Offerte
-              </p>
-              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-                Profitez de notre programme de fidélité et régalez-vous !
-              </p>
-            </div>
-          </div>
-
+      {/* CTA Section */}
+      <section className="py-12 md:py-16 bg-warm-cream dark:bg-gray-900 transition-colors">
+        <div className="max-w-7xl mx-auto px-4">
           {/* CTA Content */}
           <div className="text-center">
             <h3 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-6 transition-colors">
@@ -252,17 +228,23 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/menu"
-                className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-primary-red to-primary-yellow text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                className="relative inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-primary-red text-white"
               >
-                Voir le Menu
-                <Pizza className="w-5 h-5" />
+                <span className="relative z-10 flex items-center gap-3 group-hover:text-charcoal transition-colors duration-300">
+                  Voir le Menu
+                  <Pizza className="w-5 h-5" />
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-3 border-2 border-charcoal dark:border-gray-300 bg-transparent text-charcoal dark:text-gray-100 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-charcoal hover:text-white dark:hover:bg-gray-100 dark:hover:text-charcoal transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="relative inline-flex items-center justify-center gap-3 border-2 border-charcoal dark:border-gray-300 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-transparent text-charcoal dark:text-gray-100"
               >
-                Nous Contacter
-                <span>→</span>
+                <span className="relative z-10 flex items-center gap-3 group-hover:text-white dark:group-hover:text-charcoal transition-colors duration-300">
+                  Nous Contacter
+                  <span>→</span>
+                </span>
+                <span className="absolute inset-0 bg-charcoal dark:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
             </div>
           </div>

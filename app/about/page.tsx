@@ -100,16 +100,18 @@ export default function About() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/menu"
-                className="bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-primary-yellow/50 text-center"
+                className="relative px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl text-center overflow-hidden group bg-primary-red text-white"
               >
-                Voir le Menu
+                <span className="relative z-10 group-hover:text-charcoal transition-colors duration-300">Voir le Menu</span>
+                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
 
               <Link
                 href="/contact"
-                className="border-2 border-white bg-white/10 backdrop-blur text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl text-center"
+                className="relative border-2 border-white bg-white/10 backdrop-blur px-12 py-6 rounded-2xl font-bold text-xl shadow-xl text-center overflow-hidden group text-white"
               >
-                Nous Contacter
+                <span className="relative z-10 group-hover:text-charcoal transition-colors duration-300">Nous Contacter</span>
+                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
             </div>
           </div>
@@ -239,50 +241,38 @@ export default function About() {
         }}></div>
       </section>
 
-      {/* CTA Section - Elegant with Fidelity Banner */}
-      <section className="py-20 bg-warm-cream dark:bg-gray-900 transition-colors">
-        <div className="max-w-5xl mx-auto px-4">
-          {/* Fidelity Banner Integration */}
-          <div className="bg-gradient-to-r from-soft-red/30 via-soft-yellow/20 to-soft-red/30 dark:from-soft-red/20 dark:via-soft-yellow/10 dark:to-soft-red/20 rounded-3xl p-8 md:p-12 shadow-xl border-2 border-primary-red/20 dark:border-primary-red/30 mb-12">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center bg-primary-red rounded-2xl p-4 mb-6 shadow-lg">
-                <Gift className="w-12 h-12 text-white" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-charcoal dark:text-gray-100 mb-4 transition-colors">
-                Programme de Fidélité
-              </h2>
-              <p className="text-2xl md:text-3xl font-bold text-primary-red dark:text-primary-red-light mb-6">
-                10 Pizzas Achetées = 11<sup className="text-xl">ème</sup> Offerte
-              </p>
-              <p className="text-lg text-text-secondary dark:text-text-secondary mb-8 max-w-2xl mx-auto">
-                Profitez de notre programme de fidélité et régalez-vous !
-              </p>
-            </div>
-          </div>
-
+      {/* CTA Section */}
+      <section className="py-12 md:py-16 bg-warm-cream dark:bg-gray-900 transition-colors">
+        <div className="max-w-7xl mx-auto px-4">
           {/* CTA Content */}
           <div className="text-center">
             <h3 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-6 transition-colors">
               Prêt à Commander ?
             </h3>
-            <p className="text-xl text-text-secondary dark:text-text-secondary mb-10 max-w-2xl mx-auto leading-relaxed transition-colors">
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed transition-colors">
               Découvrez notre menu et savourez l'authenticité italienne
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/menu"
-                className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-primary-red to-primary-yellow text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                className="relative inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-primary-red text-white"
               >
-                Voir le Menu
-                <Pizza className="w-5 h-5" />
+                <span className="relative z-10 flex items-center gap-3 group-hover:text-charcoal transition-colors duration-300">
+                  Voir le Menu
+                  <Pizza className="w-5 h-5" />
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-3 border-2 border-charcoal dark:border-gray-300 bg-transparent text-charcoal dark:text-gray-100 px-10 py-5 rounded-2xl font-bold text-lg hover:bg-charcoal hover:text-white dark:hover:bg-gray-100 dark:hover:text-charcoal transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="relative inline-flex items-center justify-center gap-3 border-2 border-charcoal dark:border-gray-300 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-transparent text-charcoal dark:text-gray-100"
               >
-                Nous Contacter
-                <span>→</span>
+                <span className="relative z-10 flex items-center gap-3 group-hover:text-white dark:group-hover:text-charcoal transition-colors duration-300">
+                  Nous Contacter
+                  <span>→</span>
+                </span>
+                <span className="absolute inset-0 bg-charcoal dark:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
             </div>
           </div>

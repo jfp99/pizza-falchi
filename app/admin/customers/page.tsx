@@ -72,82 +72,82 @@ export default function AdminCustomers() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-warm-cream flex items-center justify-center">
+      <div className="min-h-screen bg-warm-cream dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-red border-t-transparent mx-auto mb-4"></div>
-          <p className="text-xl text-gray-600">Chargement des clients...</p>
+          <p className="text-xl text-gray-600 dark:text-gray-300 transition-colors duration-300">Chargement des clients...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-warm-cream p-8">
+    <div className="min-h-screen bg-warm-cream dark:bg-gray-900 p-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-black text-charcoal mb-4">
+          <h1 className="text-4xl font-black text-charcoal dark:text-gray-100 mb-4 transition-colors duration-300">
             Gestion des <span className="text-primary-red">Clients</span>
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 dark:text-gray-300 transition-colors duration-300">
             {customers.length} client{customers.length !== 1 ? 's' : ''} enregistré{customers.length !== 1 ? 's' : ''}
           </p>
         </div>
 
         {/* Search Bar */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8 transition-colors duration-300">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5 transition-colors duration-300" />
             <input
               type="text"
               placeholder="Rechercher par nom, email ou téléphone..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary-red focus:outline-none transition"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-primary-red focus:outline-none transition-colors duration-300"
             />
           </div>
         </div>
 
         {/* Sort Options */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8 transition-colors duration-300">
           <div className="flex flex-wrap gap-3">
-            <span className="font-semibold text-gray-700 flex items-center">Trier par:</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-300 flex items-center transition-colors duration-300">Trier par:</span>
             <button
               onClick={() => handleSort('lastOrderDate')}
-              className={`px-4 py-2 rounded-xl font-semibold transition ${
+              className={`px-4 py-2 rounded-xl font-semibold transition-colors duration-300 ${
                 sortBy === 'lastOrderDate'
                   ? 'bg-primary-red text-white'
-                  : 'bg-gray-100 text-charcoal hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-700 text-charcoal dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               Dernière commande {sortBy === 'lastOrderDate' && (sortOrder === 'asc' ? '↑' : '↓')}
             </button>
             <button
               onClick={() => handleSort('totalOrders')}
-              className={`px-4 py-2 rounded-xl font-semibold transition ${
+              className={`px-4 py-2 rounded-xl font-semibold transition-colors duration-300 ${
                 sortBy === 'totalOrders'
                   ? 'bg-primary-red text-white'
-                  : 'bg-gray-100 text-charcoal hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-700 text-charcoal dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               Commandes {sortBy === 'totalOrders' && (sortOrder === 'asc' ? '↑' : '↓')}
             </button>
             <button
               onClick={() => handleSort('totalSpent')}
-              className={`px-4 py-2 rounded-xl font-semibold transition ${
+              className={`px-4 py-2 rounded-xl font-semibold transition-colors duration-300 ${
                 sortBy === 'totalSpent'
                   ? 'bg-primary-red text-white'
-                  : 'bg-gray-100 text-charcoal hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-700 text-charcoal dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               Montant dépensé {sortBy === 'totalSpent' && (sortOrder === 'asc' ? '↑' : '↓')}
             </button>
             <button
               onClick={() => handleSort('name')}
-              className={`px-4 py-2 rounded-xl font-semibold transition ${
+              className={`px-4 py-2 rounded-xl font-semibold transition-colors duration-300 ${
                 sortBy === 'name'
                   ? 'bg-primary-red text-white'
-                  : 'bg-gray-100 text-charcoal hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-700 text-charcoal dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               Nom {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
@@ -157,17 +157,17 @@ export default function AdminCustomers() {
 
         {/* Customers List */}
         {customers.length === 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-12 text-center shadow-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
             <div className="text-6xl mb-4">👥</div>
-            <h3 className="text-2xl font-bold text-charcoal mb-2">Aucun client</h3>
-            <p className="text-gray-600">
+            <h3 className="text-2xl font-bold text-charcoal dark:text-gray-100 mb-2 transition-colors duration-300">Aucun client</h3>
+            <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
               {searchTerm ? 'Aucun client ne correspond à votre recherche' : 'Aucun client enregistré pour le moment'}
             </p>
           </div>
         ) : (
           <div className="space-y-6">
             {customers.map(customer => (
-              <div key={customer._id} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition">
+              <div key={customer._id} className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
                 <div className="grid md:grid-cols-2 gap-8">
                   {/* Customer Info */}
                   <div>
@@ -176,22 +176,22 @@ export default function AdminCustomers() {
                         <Users className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-charcoal mb-2">
+                        <h3 className="text-2xl font-bold text-charcoal dark:text-gray-100 mb-2 transition-colors duration-300">
                           {customer.name}
                         </h3>
                         <div className="space-y-2">
-                          <p className="text-gray-700 flex items-center gap-2">
+                          <p className="text-gray-700 dark:text-gray-300 flex items-center gap-2 transition-colors duration-300">
                             <Phone className="w-4 h-4 text-primary-red" />
                             {customer.phone}
                           </p>
                           {customer.email && (
-                            <p className="text-gray-700 flex items-center gap-2">
+                            <p className="text-gray-700 dark:text-gray-300 flex items-center gap-2 transition-colors duration-300">
                               <Mail className="w-4 h-4 text-primary-red" />
                               {customer.email}
                             </p>
                           )}
                           {customer.address?.street && (
-                            <p className="text-gray-700 flex items-center gap-2">
+                            <p className="text-gray-700 dark:text-gray-300 flex items-center gap-2 transition-colors duration-300">
                               <MapPin className="w-4 h-4 text-primary-red" />
                               {customer.address.street}, {customer.address.postalCode} {customer.address.city}
                             </p>
@@ -203,34 +203,34 @@ export default function AdminCustomers() {
 
                   {/* Statistics */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-gradient-to-br from-primary-yellow/10 to-primary-yellow/5 rounded-2xl p-4">
+                    <div className="bg-gradient-to-br from-primary-yellow/10 to-primary-yellow/5 dark:from-primary-yellow/20 dark:to-primary-yellow/10 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
                       <div className="flex items-center gap-2 mb-2">
                         <ShoppingBag className="w-5 h-5 text-primary-red" />
-                        <span className="text-sm font-semibold text-gray-600">Commandes</span>
+                        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors duration-300">Commandes</span>
                       </div>
-                      <p className="text-3xl font-black text-charcoal">{customer.totalOrders}</p>
+                      <p className="text-3xl font-black text-charcoal dark:text-gray-100 transition-colors duration-300">{customer.totalOrders}</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-4">
+                    <div className="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/30 dark:to-green-900/10 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
                       <div className="flex items-center gap-2 mb-2">
-                        <Euro className="w-5 h-5 text-green-600" />
-                        <span className="text-sm font-semibold text-gray-600">Total dépensé</span>
+                        <Euro className="w-5 h-5 text-green-600 dark:text-green-400" />
+                        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors duration-300">Total dépensé</span>
                       </div>
-                      <p className="text-3xl font-black text-charcoal">{customer.totalSpent.toFixed(2)}€</p>
+                      <p className="text-3xl font-black text-charcoal dark:text-gray-100 transition-colors duration-300">{customer.totalSpent.toFixed(2)}€</p>
                     </div>
 
-                    <div className="col-span-2 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-4">
+                    <div className="col-span-2 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/30 dark:to-blue-900/10 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
                       <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="w-5 h-5 text-blue-600" />
-                        <span className="text-sm font-semibold text-gray-600">Dernière commande</span>
+                        <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors duration-300">Dernière commande</span>
                       </div>
-                      <p className="text-lg font-bold text-charcoal">{formatDate(customer.lastOrderDate)}</p>
+                      <p className="text-lg font-bold text-charcoal dark:text-gray-100 transition-colors duration-300">{formatDate(customer.lastOrderDate)}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Additional Info */}
-                <div className="mt-6 pt-6 border-t border-gray-200 flex flex-wrap gap-4 text-sm text-gray-600">
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
                   <div>
                     <span className="font-semibold">Client depuis:</span>{' '}
                     {new Date(customer.createdAt).toLocaleDateString('fr-FR')}
