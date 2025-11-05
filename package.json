@@ -19,6 +19,7 @@
     "seed:opening-hours:force": "tsx scripts/seedOpeningHours.ts --force"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.23.0",
     "@stripe/react-stripe-js": "^5.2.0",
     "@stripe/stripe-js": "^8.0.0",
     "@types/bcryptjs": "^2.4.6",
@@ -33,6 +34,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.4.1",
+    "resend": "^6.4.1",
     "stripe": "^19.1.0",
     "swr": "^2.3.6",
     "twilio": "^5.10.2",
