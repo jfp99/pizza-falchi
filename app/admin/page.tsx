@@ -63,7 +63,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-red"></div>
       </div>
     );
@@ -101,25 +101,25 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4 py-8">
         {/* En-tête */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard Admin</h1>
-          <p className="text-gray-600">Bienvenue dans votre espace d'administration</p>
+          <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">Dashboard Admin</h1>
+          <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">Bienvenue dans votre espace d'administration</p>
         </div>
 
         {/* Cartes de Statistiques */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statCards.map((card, index) => (
-            <div key={index} className="bg-white rounded-lg shadow p-6">
+            <div key={index} className="bg-surface dark:bg-surface rounded-lg shadow border border-border dark:border-border p-6 transition-colors duration-300">
               <div className="flex items-center">
-                <div className={`p-3 rounded-full ${card.bgColor} ${card.color} mr-4`}>
+                <div className={`p-3 rounded-full ${card.bgColor} dark:bg-opacity-20 ${card.color} mr-4 transition-colors duration-300`}>
                   <card.icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">{card.title}</p>
-                  <p className="text-2xl font-bold">{card.value}</p>
+                  <p className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">{card.title}</p>
+                  <p className="text-2xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">{card.value}</p>
                 </div>
               </div>
             </div>
@@ -128,27 +128,27 @@ export default function AdminDashboard() {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Commandes Récentes */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-xl font-bold">Commandes Récentes</h2>
+          <div className="bg-surface dark:bg-surface rounded-lg shadow border border-border dark:border-border transition-colors duration-300">
+            <div className="px-6 py-4 border-b border-border dark:border-border transition-colors duration-300">
+              <h2 className="text-xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">Commandes Récentes</h2>
             </div>
             <div className="p-6">
               {recentOrders.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">Aucune commande récente</p>
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4 transition-colors duration-300">Aucune commande récente</p>
               ) : (
                 <div className="space-y-4">
                   {recentOrders.map(order => (
-                    <div key={order._id} className="flex justify-between items-center py-2 border-b">
+                    <div key={order._id} className="flex justify-between items-center py-2 border-b border-border dark:border-border transition-colors duration-300">
                       <div>
-                        <p className="font-medium">{order.customerName}</p>
-                        <p className="text-sm text-gray-600">{order.email || order.phone}</p>
+                        <p className="font-medium text-text-primary dark:text-text-primary transition-colors duration-300">{order.customerName}</p>
+                        <p className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">{order.email || order.phone}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold">{order.total}€</p>
-                        <span className={`inline-block px-2 py-1 rounded-full text-xs ${
-                          order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                          order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-blue-100 text-blue-800'
+                        <p className="font-bold text-text-primary dark:text-text-primary transition-colors duration-300">{order.total}€</p>
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs transition-colors duration-300 ${
+                          order.status === 'completed' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' :
+                          order.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400' :
+                          'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400'
                         }`}>
                           {order.status}
                         </span>
@@ -161,46 +161,46 @@ export default function AdminDashboard() {
           </div>
 
           {/* Actions Rapides */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-xl font-bold">Actions Rapides</h2>
+          <div className="bg-surface dark:bg-surface rounded-lg shadow border border-border dark:border-border transition-colors duration-300">
+            <div className="px-6 py-4 border-b border-border dark:border-border transition-colors duration-300">
+              <h2 className="text-xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">Actions Rapides</h2>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => router.push('/admin/products')}
-                  className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  className="p-4 border-2 border-dashed border-border-medium dark:border-border-medium rounded-lg hover:border-primary-red hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-300 text-center"
                   aria-label="Gérer les produits"
                 >
-                  <Package className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="font-medium">Gérer les Produits</p>
+                  <Package className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2 transition-colors duration-300" />
+                  <p className="font-medium text-text-primary dark:text-text-primary transition-colors duration-300">Gérer les Produits</p>
                 </button>
 
                 <button
                   onClick={() => router.push('/admin/orders')}
-                  className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  className="p-4 border-2 border-dashed border-border-medium dark:border-border-medium rounded-lg hover:border-primary-red hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-300 text-center"
                   aria-label="Voir les commandes"
                 >
-                  <ShoppingCart className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="font-medium">Voir les Commandes</p>
+                  <ShoppingCart className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2 transition-colors duration-300" />
+                  <p className="font-medium text-text-primary dark:text-text-primary transition-colors duration-300">Voir les Commandes</p>
                 </button>
 
                 <button
                   onClick={() => router.push('/admin/customers')}
-                  className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  className="p-4 border-2 border-dashed border-border-medium dark:border-border-medium rounded-lg hover:border-primary-red hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-300 text-center"
                   aria-label="Gérer les clients"
                 >
-                  <Users className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="font-medium">Gérer les Clients</p>
+                  <Users className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2 transition-colors duration-300" />
+                  <p className="font-medium text-text-primary dark:text-text-primary transition-colors duration-300">Gérer les Clients</p>
                 </button>
 
                 <button
                   onClick={() => router.push('/admin/analytics')}
-                  className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  className="p-4 border-2 border-dashed border-border-medium dark:border-border-medium rounded-lg hover:border-primary-red hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-300 text-center"
                   aria-label="Voir les analytiques"
                 >
-                  <TrendingUp className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="font-medium">Analytiques</p>
+                  <TrendingUp className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2 transition-colors duration-300" />
+                  <p className="font-medium text-text-primary dark:text-text-primary transition-colors duration-300">Analytiques</p>
                 </button>
               </div>
             </div>

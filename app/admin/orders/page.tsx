@@ -73,12 +73,12 @@ export default function AdminOrders() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      confirmed: 'bg-blue-100 text-blue-800 border-blue-300',
-      preparing: 'bg-orange-100 text-orange-800 border-orange-300',
-      ready: 'bg-green-100 text-green-800 border-green-300',
-      completed: 'bg-gray-100 text-gray-800 border-gray-300',
-      cancelled: 'bg-red-100 text-red-800 border-red-300'
+      pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border-yellow-300 dark:border-yellow-600 transition-colors duration-300',
+      confirmed: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 border-blue-300 dark:border-blue-600 transition-colors duration-300',
+      preparing: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-400 border-orange-300 dark:border-orange-600 transition-colors duration-300',
+      ready: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 border-green-300 dark:border-green-600 transition-colors duration-300',
+      completed: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-border-medium dark:border-border-medium transition-colors duration-300',
+      cancelled: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 border-red-300 dark:border-red-600 transition-colors duration-300'
     };
     return colors[status] || colors.pending;
   };
@@ -107,39 +107,39 @@ export default function AdminOrders() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-warm-cream flex items-center justify-center">
+      <div className="min-h-screen bg-warm-cream dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-red border-t-transparent mx-auto mb-4"></div>
-          <p className="text-xl text-gray-600">Chargement des commandes...</p>
+          <p className="text-xl text-text-secondary dark:text-text-secondary transition-colors duration-300">Chargement des commandes...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-warm-cream p-4 sm:p-8">
+    <div className="min-h-screen bg-warm-cream dark:bg-gray-900 p-4 sm:p-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-4xl font-black text-charcoal mb-3 sm:mb-4">
+          <h1 className="text-2xl sm:text-4xl font-black text-charcoal dark:text-gray-100 mb-3 sm:mb-4 transition-colors duration-300">
             Gestion des <span className="text-primary-red">Commandes</span>
           </h1>
-          <p className="text-base sm:text-xl text-gray-600">
+          <p className="text-base sm:text-xl text-text-secondary dark:text-text-secondary transition-colors duration-300">
             {orders.length} commande{orders.length !== 1 ? 's' : ''} {selectedStatus !== 'all' ? `(${getStatusLabel(selectedStatus)})` : ''}
           </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg mb-6 sm:mb-8">
+        <div className="bg-surface dark:bg-surface rounded-2xl p-4 sm:p-6 shadow-lg border border-border dark:border-border mb-6 sm:mb-8 transition-colors duration-300">
           <div className="flex flex-wrap gap-2 sm:gap-3">
             {statusOptions.map(option => (
               <button
                 key={option.value}
                 onClick={() => setSelectedStatus(option.value)}
-                className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition ${
+                className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-colors duration-300 ${
                   selectedStatus === option.value
                     ? 'bg-primary-red text-white'
-                    : 'bg-gray-100 text-charcoal hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-gray-700 text-charcoal dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
                 {option.label}
@@ -150,27 +150,27 @@ export default function AdminOrders() {
 
         {/* Orders List */}
         {orders.length === 0 ? (
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center shadow-lg">
+          <div className="bg-surface dark:bg-surface rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center shadow-lg border border-border dark:border-border transition-colors duration-300">
             <div className="text-4xl sm:text-6xl mb-4">📦</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-2">Aucune commande</h3>
-            <p className="text-sm sm:text-base text-gray-600">Aucune commande ne correspond à vos critères</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-charcoal dark:text-gray-100 mb-2 transition-colors duration-300">Aucune commande</h3>
+            <p className="text-sm sm:text-base text-text-secondary dark:text-text-secondary transition-colors duration-300">Aucune commande ne correspond à vos critères</p>
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-6">
             {orders.map(order => (
-              <div key={order._id} className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-lg">
+              <div key={order._id} className="bg-surface dark:bg-surface rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-lg border border-border dark:border-border transition-colors duration-300">
                 {/* Order Header */}
                 <div className="flex flex-wrap justify-between items-start mb-6 gap-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-2xl font-bold text-charcoal">
+                      <h3 className="text-2xl font-bold text-charcoal dark:text-gray-100 transition-colors duration-300">
                         #{order._id?.slice(-8).toUpperCase()}
                       </h3>
-                      <span className={`px-4 py-2 rounded-full text-sm font-bold border-2 ${getStatusColor(order.status)}`}>
+                      <span className={`px-4 py-2 rounded-full text-sm font-bold border-2 transition-colors duration-300 ${getStatusColor(order.status)}`}>
                         {getStatusLabel(order.status)}
                       </span>
                     </div>
-                    <p className="text-gray-600">
+                    <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">
                       {new Date(order.createdAt!).toLocaleString('fr-FR', {
                         day: '2-digit',
                         month: '2-digit',
@@ -187,7 +187,7 @@ export default function AdminOrders() {
                     ) : (
                       <Package className="w-6 h-6 text-primary-red" />
                     )}
-                    <span className="font-bold text-charcoal">
+                    <span className="font-bold text-charcoal dark:text-gray-100 transition-colors duration-300">
                       {order.deliveryType === 'delivery' ? 'Livraison' : 'À emporter'}
                     </span>
                   </div>
@@ -196,19 +196,19 @@ export default function AdminOrders() {
                 <div className="grid md:grid-cols-2 gap-8 mb-6">
                   {/* Customer Info */}
                   <div>
-                    <h4 className="font-bold text-charcoal mb-4 flex items-center gap-2">
+                    <h4 className="font-bold text-charcoal dark:text-gray-100 mb-4 flex items-center gap-2 transition-colors duration-300">
                       <span className="text-primary-red">👤</span> Client
                     </h4>
                     <div className="space-y-2">
-                      <p className="text-gray-700">
+                      <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">
                         <span className="font-semibold">Nom:</span> {order.customerName}
                       </p>
-                      <p className="text-gray-700 flex items-center gap-2">
+                      <p className="text-text-secondary dark:text-text-secondary flex items-center gap-2 transition-colors duration-300">
                         <Phone className="w-4 h-4 text-primary-red" />
                         {order.phone}
                       </p>
                       {order.email && (
-                        <p className="text-gray-700 flex items-center gap-2">
+                        <p className="text-text-secondary dark:text-text-secondary flex items-center gap-2 transition-colors duration-300">
                           <Mail className="w-4 h-4 text-primary-red" />
                           {order.email}
                         </p>
@@ -219,10 +219,10 @@ export default function AdminOrders() {
                   {/* Delivery Address */}
                   {order.deliveryType === 'delivery' && order.deliveryAddress && (
                     <div>
-                      <h4 className="font-bold text-charcoal mb-4 flex items-center gap-2">
+                      <h4 className="font-bold text-charcoal dark:text-gray-100 mb-4 flex items-center gap-2 transition-colors duration-300">
                         <MapPin className="w-5 h-5 text-primary-red" /> Adresse
                       </h4>
-                      <p className="text-gray-700">
+                      <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">
                         {order.deliveryAddress.street}<br />
                         {order.deliveryAddress.postalCode} {order.deliveryAddress.city}
                       </p>
@@ -232,11 +232,11 @@ export default function AdminOrders() {
                   {/* Time Slot Info */}
                   {order.timeSlot && order.pickupTimeRange && (
                     <div>
-                      <h4 className="font-bold text-charcoal mb-4 flex items-center gap-2">
+                      <h4 className="font-bold text-charcoal dark:text-gray-100 mb-4 flex items-center gap-2 transition-colors duration-300">
                         <Clock className="w-5 h-5 text-primary-red" /> Créneau de récupération
                       </h4>
                       <div className="space-y-2">
-                        <p className="text-gray-700 font-semibold">
+                        <p className="text-text-secondary dark:text-text-secondary font-semibold transition-colors duration-300">
                           {order.scheduledTime && new Date(order.scheduledTime).toLocaleDateString('fr-FR', {
                             weekday: 'long',
                             day: 'numeric',
@@ -246,7 +246,7 @@ export default function AdminOrders() {
                         <p className="text-2xl font-black text-primary-red">
                           {order.pickupTimeRange}
                         </p>
-                        <p className="text-xs text-gray-500 capitalize">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 capitalize transition-colors duration-300">
                           Assigné par: {order.assignedBy === 'customer' ? 'Client' : order.assignedBy === 'cashier' ? 'Caissier' : 'Système'}
                         </p>
                       </div>
@@ -256,10 +256,10 @@ export default function AdminOrders() {
                   {/* Estimated Time (fallback if no time slot) */}
                   {!order.timeSlot && order.estimatedDelivery && (
                     <div>
-                      <h4 className="font-bold text-charcoal mb-4 flex items-center gap-2">
+                      <h4 className="font-bold text-charcoal dark:text-gray-100 mb-4 flex items-center gap-2 transition-colors duration-300">
                         <Clock className="w-5 h-5 text-primary-red" /> Heure estimée
                       </h4>
-                      <p className="text-gray-700">
+                      <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">
                         {new Date(order.estimatedDelivery).toLocaleTimeString('fr-FR', {
                           hour: '2-digit',
                           minute: '2-digit'
@@ -271,18 +271,18 @@ export default function AdminOrders() {
 
                 {/* Order Items */}
                 <div className="mb-6">
-                  <h4 className="font-bold text-charcoal mb-4">Articles commandés</h4>
+                  <h4 className="font-bold text-charcoal dark:text-gray-100 mb-4 transition-colors duration-300">Articles commandés</h4>
                   <div className="space-y-3">
                     {order.items.map((item, index) => (
-                      <div key={index} className="flex justify-between items-center bg-warm-cream rounded-xl p-4">
+                      <div key={index} className="flex justify-between items-center bg-warm-cream dark:bg-gray-700 rounded-xl p-4 transition-colors duration-300">
                         <div className="flex-1">
-                          <p className="font-semibold text-charcoal">{item.product.name}</p>
-                          <p className="text-sm text-gray-600">Quantité: {item.quantity}</p>
+                          <p className="font-semibold text-charcoal dark:text-gray-100 transition-colors duration-300">{item.product.name}</p>
+                          <p className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">Quantité: {item.quantity}</p>
                           {item.customizations?.notes && (
-                            <p className="text-sm text-gray-500 italic">Note: {item.customizations.notes}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 italic transition-colors duration-300">Note: {item.customizations.notes}</p>
                           )}
                         </div>
-                        <p className="font-bold text-charcoal">{item.total.toFixed(2)}€</p>
+                        <p className="font-bold text-charcoal dark:text-gray-100 transition-colors duration-300">{item.total.toFixed(2)}€</p>
                       </div>
                     ))}
                   </div>
@@ -290,29 +290,29 @@ export default function AdminOrders() {
 
                 {/* Notes */}
                 {order.notes && (
-                  <div className="mb-6 bg-soft-yellow-lighter rounded-xl p-4">
-                    <h4 className="font-bold text-charcoal mb-2">📝 Notes</h4>
-                    <p className="text-gray-700">{order.notes}</p>
+                  <div className="mb-6 bg-soft-yellow-lighter dark:bg-yellow-900/20 rounded-xl p-4 transition-colors duration-300">
+                    <h4 className="font-bold text-charcoal dark:text-gray-100 mb-2 transition-colors duration-300">📝 Notes</h4>
+                    <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">{order.notes}</p>
                   </div>
                 )}
 
                 {/* Pricing */}
-                <div className="border-t border-gray-200 pt-4 mb-6">
-                  <div className="flex justify-between text-gray-600 mb-2">
+                <div className="border-t border-border dark:border-border pt-4 mb-6 transition-colors duration-300">
+                  <div className="flex justify-between text-text-secondary dark:text-text-secondary mb-2 transition-colors duration-300">
                     <span>Sous-total</span>
                     <span>{order.subtotal.toFixed(2)}€</span>
                   </div>
-                  <div className="flex justify-between text-gray-600 mb-2">
+                  <div className="flex justify-between text-text-secondary dark:text-text-secondary mb-2 transition-colors duration-300">
                     <span>TVA</span>
                     <span>{order.tax.toFixed(2)}€</span>
                   </div>
                   {order.deliveryFee > 0 && (
-                    <div className="flex justify-between text-gray-600 mb-2">
+                    <div className="flex justify-between text-text-secondary dark:text-text-secondary mb-2 transition-colors duration-300">
                       <span>Livraison</span>
                       <span>{order.deliveryFee.toFixed(2)}€</span>
                     </div>
                   )}
-                  <div className="flex justify-between items-center text-xl font-bold text-charcoal border-t border-gray-200 pt-2">
+                  <div className="flex justify-between items-center text-xl font-bold text-charcoal dark:text-gray-100 border-t border-border dark:border-border pt-2 transition-colors duration-300">
                     <span>Total</span>
                     <span className="text-primary-red">{order.total.toFixed(2)}€</span>
                   </div>
@@ -324,14 +324,14 @@ export default function AdminOrders() {
                     <>
                       <button
                         onClick={() => updateOrderStatus(order._id!, 'confirmed')}
-                        className="flex items-center gap-1 sm:gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                        className="flex items-center gap-1 sm:gap-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition-colors duration-300"
                       >
                         <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                         Confirmer
                       </button>
                       <button
                         onClick={() => updateOrderStatus(order._id!, 'cancelled')}
-                        className="flex items-center gap-1 sm:gap-2 bg-red-500 hover:bg-red-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                        className="flex items-center gap-1 sm:gap-2 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition-colors duration-300"
                       >
                         <XCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                         Annuler
@@ -341,7 +341,7 @@ export default function AdminOrders() {
                   {order.status === 'confirmed' && (
                     <button
                       onClick={() => updateOrderStatus(order._id!, 'preparing')}
-                      className="flex items-center gap-1 sm:gap-2 bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                      className="flex items-center gap-1 sm:gap-2 bg-orange-500 hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition-colors duration-300"
                     >
                       <ChefHat className="w-4 h-4 sm:w-5 sm:h-5" />
                       En préparation
@@ -350,7 +350,7 @@ export default function AdminOrders() {
                   {order.status === 'preparing' && (
                     <button
                       onClick={() => updateOrderStatus(order._id!, 'ready')}
-                      className="flex items-center gap-1 sm:gap-2 bg-green-500 hover:bg-green-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                      className="flex items-center gap-1 sm:gap-2 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition-colors duration-300"
                     >
                       <Package className="w-4 h-4 sm:w-5 sm:h-5" />
                       Prête
@@ -360,7 +360,7 @@ export default function AdminOrders() {
                     <>
                       <button
                         onClick={() => sendWhatsAppNotification(order._id!)}
-                        className="flex items-center gap-1 sm:gap-2 bg-green-600 hover:bg-green-700 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                        className="flex items-center gap-1 sm:gap-2 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition-colors duration-300"
                       >
                         <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                         <span className="hidden sm:inline">Notifier client</span>
@@ -368,7 +368,7 @@ export default function AdminOrders() {
                       </button>
                       <button
                         onClick={() => updateOrderStatus(order._id!, 'completed')}
-                        className="flex items-center gap-1 sm:gap-2 bg-gray-500 hover:bg-gray-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                        className="flex items-center gap-1 sm:gap-2 bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition-colors duration-300"
                       >
                         <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                         Terminée

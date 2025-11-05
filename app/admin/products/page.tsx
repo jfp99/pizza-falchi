@@ -34,18 +34,18 @@ export default function AdminProducts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (status === 'loading') return;
-    
+
     if (!session || session.user.role !== 'admin') {
       router.push('/auth/signin');
       return;
     }
-    
+
     fetchProducts();
   }, [session, status, router]);
 
@@ -149,9 +149,9 @@ export default function AdminProducts() {
     const stock = product.stock || 0;
     const minStock = product.minStock || 10;
 
-    if (stock === 0) return { label: 'Rupture', color: 'text-red-600', bgColor: 'bg-red-50' };
-    if (stock <= minStock) return { label: 'Faible', color: 'text-yellow-600', bgColor: 'bg-yellow-50' };
-    return { label: 'Bon', color: 'text-green-600', bgColor: 'bg-green-50' };
+    if (stock === 0) return { label: 'Rupture', color: 'text-red-600 dark:text-red-400', bgColor: 'bg-red-50 dark:bg-red-900/30' };
+    if (stock <= minStock) return { label: 'Faible', color: 'text-yellow-600 dark:text-yellow-400', bgColor: 'bg-yellow-50 dark:bg-yellow-900/30' };
+    return { label: 'Bon', color: 'text-green-600 dark:text-green-400', bgColor: 'bg-green-50 dark:bg-green-900/30' };
   };
 
   const getCategoryIcon = (category: string) => {
@@ -174,7 +174,7 @@ export default function AdminProducts() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#E30613]"></div>
       </div>
     );
@@ -188,51 +188,51 @@ export default function AdminProducts() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* En-tête */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Gestion des Produits</h1>
-          <p className="text-gray-600">Gérez le menu de votre restaurant</p>
+          <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">Gestion des Produits</h1>
+          <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">Gérez le menu de votre restaurant</p>
         </div>
 
         {/* Statistiques */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
+          <div className="bg-surface dark:bg-surface rounded-2xl p-6 shadow-lg border border-border dark:border-border transition-colors duration-300">
             <div className="flex items-center justify-between mb-4">
               <Package className="w-10 h-10 text-primary-red" />
-              <span className="text-3xl font-bold text-gray-900">{stats.total}</span>
+              <span className="text-3xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">{stats.total}</span>
             </div>
-            <p className="text-gray-600 font-medium">Total Produits</p>
+            <p className="text-text-secondary dark:text-text-secondary font-medium transition-colors duration-300">Total Produits</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
+          <div className="bg-surface dark:bg-surface rounded-2xl p-6 shadow-lg border border-border dark:border-border transition-colors duration-300">
             <div className="flex items-center justify-between mb-4">
               <CheckCircle className="w-10 h-10 text-green-600" />
-              <span className="text-3xl font-bold text-gray-900">{stats.available}</span>
+              <span className="text-3xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">{stats.available}</span>
             </div>
-            <p className="text-gray-600 font-medium">Disponibles</p>
+            <p className="text-text-secondary dark:text-text-secondary font-medium transition-colors duration-300">Disponibles</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
+          <div className="bg-surface dark:bg-surface rounded-2xl p-6 shadow-lg border border-border dark:border-border transition-colors duration-300">
             <div className="flex items-center justify-between mb-4">
               <AlertTriangle className="w-10 h-10 text-yellow-600" />
-              <span className="text-3xl font-bold text-gray-900">{stats.lowStock}</span>
+              <span className="text-3xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">{stats.lowStock}</span>
             </div>
-            <p className="text-gray-600 font-medium">Stock Faible</p>
+            <p className="text-text-secondary dark:text-text-secondary font-medium transition-colors duration-300">Stock Faible</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
+          <div className="bg-surface dark:bg-surface rounded-2xl p-6 shadow-lg border border-border dark:border-border transition-colors duration-300">
             <div className="flex items-center justify-between mb-4">
               <TrendingDown className="w-10 h-10 text-red-600" />
-              <span className="text-3xl font-bold text-gray-900">{stats.outOfStock}</span>
+              <span className="text-3xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">{stats.outOfStock}</span>
             </div>
-            <p className="text-gray-600 font-medium">Rupture Stock</p>
+            <p className="text-text-secondary dark:text-text-secondary font-medium transition-colors duration-300">Rupture Stock</p>
           </div>
         </div>
 
         {/* Barre d'actions */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="bg-surface dark:bg-surface rounded-lg shadow p-6 mb-6 border border-border dark:border-border transition-colors duration-300">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-center">
             <div className="flex flex-col sm:flex-row gap-4 flex-1 w-full">
               {/* Recherche */}
@@ -243,7 +243,7 @@ export default function AdminProducts() {
                   placeholder="Rechercher un produit..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
 
@@ -251,7 +251,7 @@ export default function AdminProducts() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                className="px-4 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300"
               >
                 {categories.map(category => (
                   <option key={category.id} value={category.id}>
@@ -278,7 +278,7 @@ export default function AdminProducts() {
         {/* Grille des produits */}
         <div className="grid gap-6">
           {filteredProducts.map(product => (
-            <div key={product._id} className="bg-white rounded-lg shadow hover:shadow-md transition">
+            <div key={product._id} className="bg-surface dark:bg-surface rounded-lg shadow hover:shadow-md transition border border-border dark:border-border">
               <div className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-4 flex-1">
@@ -289,16 +289,16 @@ export default function AdminProducts() {
                     />
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-xl font-bold text-gray-900">{product.name}</h3>
+                        <h3 className="text-xl font-bold text-text-primary dark:text-text-primary transition-colors duration-300">{product.name}</h3>
                         <div className="flex items-center space-x-2">
                           {getCategoryIcon(product.category)}
-                          <span className="text-sm text-gray-500 capitalize">{product.category}</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400 capitalize transition-colors duration-300">{product.category}</span>
                         </div>
                       </div>
-                      <p className="text-gray-600 mb-2">{product.description}</p>
+                      <p className="text-text-secondary dark:text-text-secondary mb-2 transition-colors duration-300">{product.description}</p>
                       <div className="flex flex-wrap gap-1 mb-2">
                         {product.ingredients.map(ingredient => (
-                          <span key={ingredient} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                          <span key={ingredient} className="bg-gray-100 dark:bg-gray-700 text-text-secondary dark:text-text-secondary px-2 py-1 rounded text-xs transition-colors duration-300">
                             {ingredient}
                           </span>
                         ))}
@@ -311,12 +311,12 @@ export default function AdminProducts() {
                           </span>
                         )}
                         {product.spicy && (
-                          <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">
+                          <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 px-2 py-1 rounded text-xs transition-colors duration-300">
                             Épicé
                           </span>
                         )}
                         {product.vegetarian && (
-                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                          <span className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 px-2 py-1 rounded text-xs transition-colors duration-300">
                             Végétarien
                           </span>
                         )}
@@ -325,27 +325,27 @@ export default function AdminProducts() {
                       {/* Stock Information */}
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
-                          <label className="text-sm font-medium text-gray-700">Stock:</label>
+                          <label className="text-sm font-medium text-text-secondary dark:text-text-secondary transition-colors duration-300">Stock:</label>
                           <input
                             type="number"
                             min="0"
                             value={product.stock || 0}
                             onChange={(e) => handleUpdateStock(product._id, parseInt(e.target.value) || 0)}
-                            className={`w-20 px-2 py-1 border rounded-lg text-sm font-semibold focus:ring-2 focus:ring-[#E30613] ${
+                            className={`w-20 px-2 py-1 border rounded-lg text-sm font-semibold focus:ring-2 focus:ring-[#E30613] transition-colors duration-300 ${
                               (product.stock || 0) === 0
-                                ? 'border-red-300 bg-red-50 text-red-700'
+                                ? 'border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                                 : (product.stock || 0) <= (product.minStock || 10)
-                                ? 'border-yellow-300 bg-yellow-50 text-yellow-700'
-                                : 'border-gray-300 bg-white text-gray-900'
+                                ? 'border-yellow-300 dark:border-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
+                                : 'border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary'
                             }`}
                           />
-                          <span className="text-sm text-gray-500">/ {product.minStock || 10}</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">/ {product.minStock || 10}</span>
                         </div>
 
                         {(() => {
                           const status = getStockStatus(product);
                           return (
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-sm font-medium ${status.bgColor} ${status.color}`}>
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-sm font-medium ${status.bgColor} ${status.color} transition-colors duration-300`}>
                               {(product.stock || 0) === 0 ? (
                                 <TrendingDown className="w-4 h-4" />
                               ) : (product.stock || 0) <= (product.minStock || 10) ? (
@@ -365,10 +365,10 @@ export default function AdminProducts() {
                     {/* Bouton Disponibilité */}
                     <button
                       onClick={() => toggleAvailability(product)}
-                      className={`px-3 py-1 rounded text-sm font-medium ${
-                        product.available 
-                          ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                          : 'bg-red-100 text-red-800 hover:bg-red-200'
+                      className={`px-3 py-1 rounded text-sm font-medium transition-colors duration-300 ${
+                        product.available
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50'
+                          : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50'
                       }`}
                     >
                       {product.available ? 'Disponible' : 'Indisponible'}
@@ -380,7 +380,7 @@ export default function AdminProducts() {
                         setEditingProduct(product);
                         setIsModalOpen(true);
                       }}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded transition"
+                      className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition-colors duration-300"
                     >
                       <Edit className="w-5 h-5" />
                     </button>
@@ -388,7 +388,7 @@ export default function AdminProducts() {
                     {/* Bouton Supprimer */}
                     <button
                       onClick={() => deleteProduct(product._id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                      className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition-colors duration-300"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -401,10 +401,10 @@ export default function AdminProducts() {
 
         {/* Message si aucun produit */}
         {filteredProducts.length === 0 && (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-center py-12 bg-surface dark:bg-surface rounded-lg shadow border border-border dark:border-border transition-colors duration-300">
             <div className="text-6xl mb-4">🍕</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Aucun produit trouvé</h3>
-            <p className="text-gray-600">Essayez de modifier vos critères de recherche ou ajoutez un nouveau produit</p>
+            <h3 className="text-2xl font-bold text-text-primary dark:text-text-primary mb-2 transition-colors duration-300">Aucun produit trouvé</h3>
+            <p className="text-text-secondary dark:text-text-secondary transition-colors duration-300">Essayez de modifier vos critères de recherche ou ajoutez un nouveau produit</p>
           </div>
         )}
 
@@ -429,9 +429,9 @@ export default function AdminProducts() {
 }
 
 // Composant Modal pour ajouter/modifier un produit
-function ProductModal({ product, onClose, onSave }: { 
-  product: Product | null; 
-  onClose: () => void; 
+function ProductModal({ product, onClose, onSave }: {
+  product: Product | null;
+  onClose: () => void;
   onSave: () => void;
 }) {
   const [formData, setFormData] = useState({
@@ -491,17 +491,17 @@ function ProductModal({ product, onClose, onSave }: {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4 transition-colors duration-300">
+      <div className="bg-surface dark:bg-surface rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border dark:border-border transition-colors duration-300">
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-2xl font-bold mb-4 text-text-primary dark:text-text-primary transition-colors duration-300">
             {product ? 'Modifier le produit' : 'Ajouter un produit'}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                   Nom *
                 </label>
                 <input
@@ -509,12 +509,12 @@ function ProductModal({ product, onClose, onSave }: {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                   Prix (€) *
                 </label>
                 <input
@@ -524,13 +524,13 @@ function ProductModal({ product, onClose, onSave }: {
                   required
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                 Description *
               </label>
               <textarea
@@ -538,19 +538,19 @@ function ProductModal({ product, onClose, onSave }: {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                   Catégorie *
                 </label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300"
                 >
                   <option value="pizza">Pizza</option>
                   <option value="boisson">Boisson</option>
@@ -560,20 +560,20 @@ function ProductModal({ product, onClose, onSave }: {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                   Image URL
                 </label>
                 <input
                   type="url"
                   value={formData.image}
                   onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                 Ingrédients (séparés par des virgules)
               </label>
               <input
@@ -581,12 +581,12 @@ function ProductModal({ product, onClose, onSave }: {
                 value={formData.ingredients}
                 onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
                 placeholder="sauce tomate, mozzarella, basilic..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                 Tags (séparés par des virgules)
               </label>
               <input
@@ -594,13 +594,13 @@ function ProductModal({ product, onClose, onSave }: {
                 value={formData.tags}
                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                 placeholder="classique, végétarienne, épicée..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                   Stock actuel
                 </label>
                 <input
@@ -608,13 +608,13 @@ function ProductModal({ product, onClose, onSave }: {
                   min="0"
                   value={formData.stock}
                   onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   placeholder="100"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1 transition-colors duration-300">
                   Stock minimum (seuil d'alerte)
                 </label>
                 <input
@@ -622,7 +622,7 @@ function ProductModal({ product, onClose, onSave }: {
                   min="0"
                   value={formData.minStock}
                   onChange={(e) => setFormData({ ...formData, minStock: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border-medium dark:border-border-medium bg-surface dark:bg-surface text-text-primary dark:text-text-primary rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   placeholder="10"
                 />
               </div>
@@ -636,7 +636,7 @@ function ProductModal({ product, onClose, onSave }: {
                   onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                   className="rounded border-gray-300 text-[#E30613] focus:ring-[#E30613]"
                 />
-                <span className="text-sm text-gray-700">Disponible</span>
+                <span className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">Disponible</span>
               </label>
 
               <label className="flex items-center space-x-2">
@@ -646,7 +646,7 @@ function ProductModal({ product, onClose, onSave }: {
                   onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
                   className="rounded border-gray-300 text-[#E30613] focus:ring-[#E30613]"
                 />
-                <span className="text-sm text-gray-700">Populaire</span>
+                <span className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">Populaire</span>
               </label>
 
               <label className="flex items-center space-x-2">
@@ -656,7 +656,7 @@ function ProductModal({ product, onClose, onSave }: {
                   onChange={(e) => setFormData({ ...formData, spicy: e.target.checked })}
                   className="rounded border-gray-300 text-[#E30613] focus:ring-[#E30613]"
                 />
-                <span className="text-sm text-gray-700">Épicé</span>
+                <span className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">Épicé</span>
               </label>
 
               <label className="flex items-center space-x-2">
@@ -666,7 +666,7 @@ function ProductModal({ product, onClose, onSave }: {
                   onChange={(e) => setFormData({ ...formData, vegetarian: e.target.checked })}
                   className="rounded border-gray-300 text-[#E30613] focus:ring-[#E30613]"
                 />
-                <span className="text-sm text-gray-700">Végétarien</span>
+                <span className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">Végétarien</span>
               </label>
             </div>
 
@@ -674,7 +674,7 @@ function ProductModal({ product, onClose, onSave }: {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                className="px-4 py-2 border border-border-medium dark:border-border-medium rounded-lg text-text-secondary dark:text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
               >
                 Annuler
               </button>

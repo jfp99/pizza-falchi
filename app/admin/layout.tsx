@@ -25,7 +25,7 @@ export default function AdminLayout({
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-red"></div>
       </div>
     );
@@ -36,9 +36,9 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       {/* Admin Navigation */}
-      <nav className="bg-white shadow-md">
+      <nav className="bg-surface dark:bg-surface shadow-md transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
@@ -50,7 +50,7 @@ export default function AdminLayout({
               <div className="hidden md:flex space-x-4">
                 <Link
                   href="/admin"
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-text-secondary dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span>Dashboard</span>
@@ -58,7 +58,7 @@ export default function AdminLayout({
 
                 <Link
                   href="/admin/products"
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-text-secondary dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
                 >
                   <Package className="w-4 h-4" />
                   <span>Products</span>
@@ -66,7 +66,7 @@ export default function AdminLayout({
 
                 <Link
                   href="/admin/orders"
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-text-secondary dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>Orders</span>
@@ -74,21 +74,30 @@ export default function AdminLayout({
 
                 <Link
                   href="/admin/customers"
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-text-secondary dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
                 >
                   <Users className="w-4 h-4" />
                   <span>Customers</span>
+                </Link>
+
+                <Link
+                  href="/admin/analytics"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-text-secondary dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+                >
+                  <BarChart3 className="w-4 h-4" />
+                  <span>Analytics</span>
                 </Link>
               </div>
             </div>
 
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-text-secondary dark:text-text-secondary transition-colors duration-300">
                 {session.user.name || session.user.email}
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: '/' })}
-                className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+                className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300"
+                aria-label="Se déconnecter"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
