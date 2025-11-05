@@ -1,23 +1,27 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Search, Filter, Star, Flame, Leaf, Gift, Pizza, ShoppingCart } from 'lucide-react';
+import Image from 'next/image';
+import { Search, Filter, Star, Flame, Leaf, Gift, Pizza, ShoppingCart, Sparkles, ChefHat, Eye, Calculator } from 'lucide-react';
 import { Product, Category } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import ProductCard from '@/components/menu/ProductCard';
 import ProductCardSkeleton from '@/components/menu/ProductCardSkeleton';
 import CartSidebar from '@/components/cart/CartSidebar';
-import CategoryFilter from '@/components/menu/CategoryFilter';
-import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
+import CategoryFilterWithIcons from '@/components/menu/CategoryFilterWithIcons';
 import PackageCard from '@/components/packages/PackageCard';
 import ComboSelectionModal from '@/components/packages/ComboSelectionModal';
 import toast from 'react-hot-toast';
 import { SPACING, TYPOGRAPHY, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
+import { motion, AnimatePresence } from 'framer-motion';
+import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations';
+import Link from 'next/link';
 
+// Categories now use React components instead of emoji strings
 const categories: Category[] = [
-  { id: 'all', name: 'Tout le Menu', icon: '🍕' },
-  { id: 'pizza', name: 'Pizzas', icon: '🍕' },
-  { id: 'boisson', name: 'Boissons', icon: '🥤' },
-  { id: 'combo', name: 'Combos', icon: '🎁' },
+  { id: 'all', name: 'Tout le Menu', icon: 'PizzaSliceIcon' },
+  { id: 'pizza', name: 'Pizzas', icon: 'PizzaSliceIcon' },
+  { id: 'boisson', name: 'Boissons', icon: 'DrinkIcon' },
+  { id: 'combo', name: 'Combos', icon: 'GiftBoxIcon' },
 ];
 
 interface PackageType {
@@ -158,58 +162,147 @@ export default function Menu() {
   };
 
   return (
-    <div className="min-h-screen bg-warm-cream">
-      {/* Hero Header - Enhanced with Gradient */}
-      <section className={`relative bg-gradient-to-br from-charcoal via-gray-700 to-gray-900 ${SPACING.sectionPadding} mb-12 overflow-hidden`}>
-        {/* Animated Background Patterns */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-10 right-10 w-96 h-96 bg-primary-red/20 rounded-full blur-3xl animate-pulse" style={{animationDuration: '4s'}}></div>
-          <div className="absolute bottom-10 left-10 w-80 h-80 bg-primary-yellow/10 rounded-full blur-3xl animate-pulse" style={{animationDuration: '5s', animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-warm-cream dark:bg-gray-900 transition-colors duration-300">
+      {/* Hero Section - Same presentation as homepage */}
+      <section className="relative min-h-screen flex items-center justify-center bg-warm-cream dark:bg-gray-900 overflow-hidden transition-colors">
+        {/* Large Hero Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/hero/hero-main.avif"
+            alt="Pizza Falchi - Notre Menu"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Clean overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal/70 via-charcoal/50 to-transparent"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-block mb-4 backdrop-blur-sm bg-primary-red/90 border border-primary-red rounded-full px-6 py-2 shadow-xl">
-            <span className="text-white text-sm font-bold uppercase tracking-wider">
-              Menu Complet
-            </span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl">
-            Notre <span className="text-primary-yellow drop-shadow-lg">Carte</span>
-          </h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto font-medium drop-shadow-lg">
-            Découvrez nos pizzas artisanales préparées avec passion et des ingrédients de qualité
-          </p>
+        <div className="relative max-w-7xl mx-auto px-4 py-20 w-full">
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Info Badge - Main Focus */}
+            <div className="inline-flex items-center gap-6 bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl mb-10 max-w-2xl">
+              {/* Logo */}
+              <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
+                <Image
+                  src="/images/branding/logo-badge.png"
+                  alt="Pizza Falchi Logo"
+                  fill
+                  className="object-contain drop-shadow-2xl"
+                />
+              </div>
 
-          {/* Feature Badges */}
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <div className="backdrop-blur-md bg-white/10 hover:bg-primary-yellow/20 border border-white/30 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 hover:scale-105">
-              <Star className="w-4 h-4 text-primary-yellow fill-primary-yellow" />
-              <span className="text-sm font-bold text-white">Populaires</span>
+              {/* Info */}
+              <div className="flex flex-col gap-1">
+                <div className="inline-block mb-2">
+                  <span className="bg-primary-red text-white px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg">
+                    Menu Complet
+                  </span>
+                </div>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                  PIZZA FALCHI
+                </h1>
+                <p className="text-primary-yellow font-bold text-xl md:text-2xl">
+                  depuis 2001
+                </p>
+                <p className="text-white/90 font-medium text-base md:text-lg">
+                  Puyricard Aix-en-Provence
+                </p>
+              </div>
             </div>
-            <div className="backdrop-blur-md bg-white/10 hover:bg-primary-red/20 border border-white/30 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 hover:scale-105">
-              <Flame className="w-4 h-4 text-primary-red" />
-              <span className="text-sm font-bold text-white">Épicés</span>
+
+            <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-medium">
+              Pizzas artisanales • Cuisson au feu de bois • Ingrédients italiens
+            </p>
+
+            {/* Tagline */}
+            <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white/80 leading-relaxed mb-10">
+              Découvrez nos
+              <span className="text-primary-yellow"> créations artisanales </span>
+              authentiques
             </div>
-            <div className="backdrop-blur-md bg-white/10 hover:bg-basil-light/20 border border-white/30 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 hover:scale-105">
-              <Leaf className="w-4 h-4 text-basil-light" />
-              <span className="text-sm font-bold text-white">Végétariens</span>
+
+            {/* CTA Button */}
+            <div className="flex justify-center">
+              <button
+                onClick={() => {
+                  const menuSection = document.getElementById('menu-section');
+                  menuSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-primary-yellow/50 text-center"
+              >
+                Voir le Menu
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Wave Effect */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 0L60 8C120 16 240 32 360 37.3C480 43 600 37 720 34.7C840 32 960 32 1080 37.3C1200 43 1320 53 1380 58.7L1440 64V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0V0Z" fill="#FFF9F0"/>
-          </svg>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
+            <div className="w-1 h-3 bg-white/50 rounded-full"></div>
+          </div>
         </div>
       </section>
 
-      {/* Special Offer Banner */}
-      <SpecialOfferBanner />
+      {/* Pizza Builder Card - Elegant Design */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <Link href="/pizza-builder">
+          <div className="bg-surface dark:bg-surface rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-border dark:border-border group cursor-pointer">
+            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+              {/* Icon */}
+              <div className="flex-shrink-0">
+                <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-4 rounded-2xl shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <ChefHat className="w-8 h-8 text-white" />
+                </div>
+              </div>
 
-      <div className="max-w-7xl mx-auto px-4 pb-20">
+              {/* Content */}
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-2xl md:text-3xl font-bold text-charcoal dark:text-gray-100 transition-colors">
+                    Créez Votre Pizza Parfaite
+                  </h2>
+                  <span className="bg-primary-red text-white px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    Nouveau
+                  </span>
+                </div>
+                <p className="text-text-secondary dark:text-text-secondary text-base md:text-lg mb-4 transition-colors">
+                  Personnalisez chaque ingrédient avec notre créateur de pizza interactif
+                </p>
+
+                {/* Features */}
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                    <Eye className="w-4 h-4 text-primary-red" />
+                    <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">Visualisation en temps réel</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                    <Calculator className="w-4 h-4 text-primary-yellow" />
+                    <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">Prix calculé automatiquement</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                    <Leaf className="w-4 h-4 text-basil-light" />
+                    <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">50+ ingrédients</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <div className="flex-shrink-0 mt-4 md:mt-0">
+                <div className="bg-gradient-to-r from-primary-red to-primary-yellow text-white px-6 py-3 rounded-xl font-bold text-base shadow-md group-hover:shadow-lg transition-all group-hover:scale-105 flex items-center gap-2">
+                  Commencer
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      <div id="menu-section" className="max-w-7xl mx-auto px-4 pb-20">
         {/* Filtres et Recherche - Enhanced Design */}
         <div className="mb-12 space-y-8">
           {/* Search Bar - Enhanced */}
@@ -225,7 +318,7 @@ export default function Menu() {
               placeholder="Rechercher une pizza, un ingrédient..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-16 md:pl-20 pr-14 py-4 md:py-5 bg-white border-2 border-gray-200 rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-base md:text-lg font-medium text-charcoal placeholder:text-gray-400 placeholder:font-normal"
+              className="w-full pl-16 md:pl-20 pr-14 py-4 md:py-5 bg-surface dark:bg-surface border-2 border-border dark:border-border rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-base md:text-lg font-medium text-charcoal dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 placeholder:font-normal"
             />
             {searchTerm && (
               <button
@@ -242,7 +335,7 @@ export default function Menu() {
           </div>
 
           {/* Category Filter */}
-          <CategoryFilter
+          <CategoryFilterWithIcons
             categories={categories}
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
@@ -251,16 +344,16 @@ export default function Menu() {
 
         {/* Product Count & Filters Summary - Enhanced */}
         {selectedCategory !== 'combo' && (
-          <div className={`flex flex-col sm:flex-row justify-between items-center mb-10 bg-white ${ROUNDED.lg} ${SPACING.cardPadding} ${SHADOWS.md} border-2 border-gray-100 hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
+          <div className={`flex flex-col sm:flex-row justify-between items-center mb-10 bg-surface dark:bg-surface ${ROUNDED.lg} ${SPACING.cardPadding} ${SHADOWS.md} border-2 border-border dark:border-border hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
             <div className="flex items-center gap-4">
               <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-xl shadow-md">
                 <Filter className="w-5 h-5 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-black text-charcoal">
+                <span className="text-2xl font-black text-charcoal dark:text-gray-100 transition-colors duration-300">
                   {filteredProducts.length}
                 </span>
-                <span className="text-sm text-gray-600 font-medium">
+                <span className="text-sm text-text-secondary dark:text-text-secondary font-medium transition-colors duration-300">
                   produit{filteredProducts.length !== 1 ? 's' : ''} trouvé{filteredProducts.length !== 1 ? 's' : ''}
                 </span>
               </div>
@@ -272,7 +365,7 @@ export default function Menu() {
                   setSearchTerm('');
                   setSelectedCategory('all');
                 }}
-                className="mt-3 sm:mt-0 bg-gray-100 hover:bg-gradient-to-r hover:from-primary-red hover:to-primary-yellow text-charcoal hover:text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
+                className="mt-3 sm:mt-0 bg-gray-100 dark:bg-gray-700 hover:bg-gradient-to-r hover:from-primary-red hover:to-primary-yellow text-charcoal dark:text-gray-100 hover:text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
               >
                 Réinitialiser les filtres
               </button>
@@ -281,25 +374,35 @@ export default function Menu() {
         )}
 
         {/* Grille des produits */}
-        {selectedCategory !== 'combo' && (
-          <div id="products-section" className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}>
-            {isLoading ? (
-              // Show skeleton loaders while loading
-              Array.from({ length: 6 }).map((_, index) => (
-                <ProductCardSkeleton key={`skeleton-${index}`} />
-              ))
-            ) : (
-              // Show actual products when loaded
-              filteredProducts.map(product => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                />
-              ))
-            )}
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          {selectedCategory !== 'combo' && (
+            <motion.div
+              id="products-section"
+              className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}
+              variants={staggerContainer}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              key={selectedCategory}
+            >
+              {isLoading ? (
+                // Show skeleton loaders while loading
+                Array.from({ length: 6 }).map((_, index) => (
+                  <ProductCardSkeleton key={`skeleton-${index}`} />
+                ))
+              ) : (
+                // Show actual products when loaded
+                filteredProducts.map(product => (
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Packages Section - Now at bottom or prominent when combo selected */}
         {packages.length > 0 && (selectedCategory === 'combo' || selectedCategory === 'all') && (
@@ -348,12 +451,12 @@ export default function Menu() {
         {/* Message si aucun résultat - Enhanced */}
         {!isLoading && filteredProducts.length === 0 && selectedCategory !== 'combo' && (
           <div className="text-center py-20">
-            <div className="bg-white rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-gray-100 hover:shadow-3xl transition-all duration-300">
-              <div className="inline-block bg-soft-red-lighter rounded-3xl p-6 mb-6">
-                <Pizza className="w-16 h-16 text-primary-red" />
+            <div className="bg-surface dark:bg-surface rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-border dark:border-border hover:shadow-3xl transition-all duration-300">
+              <div className="inline-block bg-soft-red-lighter dark:bg-primary-red/20 rounded-3xl p-6 mb-6 transition-colors duration-300">
+                <Pizza className="w-16 h-16 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
               </div>
-              <h3 className="text-3xl md:text-4xl font-black text-charcoal mb-4">Aucun résultat trouvé</h3>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              <h3 className="text-3xl md:text-4xl font-black text-charcoal dark:text-gray-100 mb-4 transition-colors duration-300">Aucun résultat trouvé</h3>
+              <p className="text-lg text-text-secondary dark:text-text-secondary mb-8 leading-relaxed transition-colors duration-300">
                 Nous n'avons trouvé aucun produit correspondant à votre recherche.
                 <br />
                 <span className="text-sm">Essayez de modifier vos critères de recherche</span>
