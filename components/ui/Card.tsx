@@ -12,9 +12,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const baseStyles = 'rounded-2xl transition-all duration-300';
 
     const variants = {
-      default: 'bg-white shadow-lg border-2 border-gray-100',
-      elevated: 'bg-white shadow-2xl border-2 border-gray-100',
-      glass: 'bg-white/10 backdrop-blur-sm border-2 border-white/20',
+      default: 'bg-surface dark:bg-surface shadow-lg border-2 border-border dark:border-border',
+      elevated: 'bg-surface dark:bg-surface shadow-2xl border-2 border-border dark:border-border',
+      glass: 'bg-white/10 dark:bg-gray-800/10 backdrop-blur-sm border-2 border-white/20 dark:border-gray-700/20',
     };
 
     const paddings = {
