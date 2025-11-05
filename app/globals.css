@@ -266,3 +266,20 @@ select:focus-visible {
     animation: fade-in 0.3s ease-out forwards;
   }
 }
+
+/* Performance optimization - CSS containment */
+.product-card,
+.package-card,
+.cart-item {
+  contain: layout style paint;
+}
+
+/* Reduce paint on theme toggle */
+.theme-transition {
+  will-change: background-color, color, border-color;
+}
+
+/* Remove will-change after transition */
+.theme-transition-done {
+  will-change: auto;
+}
