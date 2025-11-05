@@ -1,5 +1,5 @@
 'use client';
-import { ShoppingCart, Tag } from 'lucide-react';
+import { ShoppingCart, Tag, Star } from 'lucide-react';
 
 interface PackageItem {
   type: string;
@@ -76,45 +76,46 @@ export default function PackageCard({ package: pkg, onSelect }: PackageCardProps
   const savings = pkg.originalPrice - pkg.discountedPrice;
 
   return (
-    <div className="group relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-gray-100 hover:border-primary-yellow cursor-pointer overflow-hidden">
+    <div className="group relative bg-surface dark:bg-surface rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-border dark:border-border hover:border-primary-yellow dark:hover:border-primary-yellow cursor-pointer overflow-hidden">
       {/* Popular Badge */}
       {pkg.popular && (
-        <div className="absolute top-0 right-0 bg-gradient-to-r from-primary-yellow to-soft-yellow text-gray-800 px-3 sm:px-4 py-1 rounded-bl-xl sm:rounded-bl-2xl font-bold text-xs shadow-lg flex items-center gap-1">
-          <span>⭐</span> POPULAIRE
+        <div className="absolute top-0 right-0 bg-gradient-to-r from-primary-yellow to-soft-yellow text-gray-800 dark:text-gray-900 px-3 sm:px-4 py-1 rounded-bl-xl sm:rounded-bl-2xl font-bold text-xs shadow-lg flex items-center gap-1 transition-colors duration-300">
+          <Star size={12} className="fill-current" />
+          <span>POPULAIRE</span>
         </div>
       )}
 
       {/* Discount Badge */}
       {pkg.badge && (
-        <div className={`absolute top-3 sm:top-4 left-3 sm:left-4 ${colors.badge} text-white px-2 sm:px-3 py-1 rounded-full font-black text-xs sm:text-sm shadow-lg z-10`}>
+        <div className={`absolute top-3 sm:top-4 left-3 sm:left-4 ${colors.badge} text-white px-2 sm:px-3 py-1 rounded-full font-black text-xs sm:text-sm shadow-lg z-10 transition-colors duration-300`}>
           {pkg.badge}
         </div>
       )}
 
       {/* Icon */}
-      <div className="inline-block bg-gray-50 border-2 border-gray-200 rounded-lg sm:rounded-xl p-2 sm:p-3 mb-3 sm:mb-4 mt-3 sm:mt-4">
+      <div className="inline-block bg-background-secondary dark:bg-background-tertiary border-2 border-gray-200 dark:border-gray-600 rounded-lg sm:rounded-xl p-2 sm:p-3 mb-3 sm:mb-4 mt-3 sm:mt-4 transition-colors duration-300">
         <span className="text-xl sm:text-2xl">{pkg.icon}</span>
       </div>
 
       {/* Package Name */}
-      <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-2 group-hover:text-primary-red transition-colors">
+      <h3 className="text-xl sm:text-2xl font-black text-text-primary dark:text-text-primary mb-2 group-hover:text-primary-red dark:group-hover:text-primary-red transition-colors duration-300">
         {pkg.name}
       </h3>
 
       {/* Description */}
-      <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">
+      <p className="text-text-secondary dark:text-text-secondary text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed transition-colors duration-300">
         {pkg.description}
       </p>
 
       {/* Items List */}
-      <div className="space-y-2 mb-4 sm:mb-5 bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-200">
+      <div className="space-y-2 mb-4 sm:mb-5 bg-background-secondary dark:bg-background-tertiary rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-gray-600 transition-colors duration-300">
         {pkg.items.map((item, index) => (
           <div key={index} className="flex items-center gap-2 text-xs sm:text-sm">
             <div className="w-1.5 h-1.5 rounded-full bg-primary-red flex-shrink-0"></div>
-            <span className="font-semibold text-gray-700">
+            <span className="font-semibold text-text-secondary dark:text-text-secondary transition-colors duration-300">
               {item.quantity}x
             </span>
-            <span className="text-gray-600">{item.description}</span>
+            <span className="text-text-secondary dark:text-text-secondary transition-colors duration-300">{item.description}</span>
           </div>
         ))}
       </div>
@@ -125,11 +126,11 @@ export default function PackageCard({ package: pkg, onSelect }: PackageCardProps
           <span className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-primary-red to-soft-red bg-clip-text text-transparent">
             {pkg.discountedPrice.toFixed(2)}€
           </span>
-          <span className="text-base sm:text-lg text-gray-400 line-through font-medium">
+          <span className="text-base sm:text-lg text-gray-400 dark:text-gray-500 line-through font-medium transition-colors duration-300">
             {pkg.originalPrice.toFixed(2)}€
           </span>
         </div>
-        <div className="flex items-center gap-2 text-green-600">
+        <div className="flex items-center gap-2 text-green-600 dark:text-green-400 transition-colors duration-300">
           <Tag className="w-3 h-3 sm:w-4 sm:h-4" />
           <span className="text-xs sm:text-sm font-bold">
             Économisez {savings.toFixed(2)}€
