@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,43 +11,82 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // PRIMARY COLORS - Based on logo's most prominent colors
-        primary: {
-          red: '#C41E1A',        // Logo's main burgundy red (dominant)
-          'red-dark': '#8B1A1D', // Logo's darker border red
-          'red-light': '#D63933', // Lighter variation for hover states
-          yellow: '#E6D5B3',     // Logo's cream/beige banner (dominant)
-          'yellow-dark': '#D4C4A0', // Darker cream for depth
-          'yellow-light': '#F4E4C1', // Lighter cream for highlights
-          DEFAULT: '#C41E1A'
+        // Semantic color system - Light mode (default)
+        background: {
+          primary: '#FEFCF8',
+          secondary: '#FDF9F0',
+          tertiary: '#F9F3E6',
         },
-        // SECONDARY COLORS - Logo's accent colors
+        surface: {
+          DEFAULT: '#FFFFFF',
+          elevated: '#FFFFFF',
+        },
+        text: {
+          primary: '#1A1410',
+          secondary: '#4A3F35',
+          tertiary: '#6B5F52',
+          'on-dark': '#FEFCF8',
+        },
+        border: {
+          DEFAULT: '#E6DED0',
+          medium: '#D4C4A0',
+          strong: '#B8A88C',
+        },
+        // Brand colors (logo-based)
+        brand: {
+          red: {
+            DEFAULT: '#C41E1A',
+            hover: '#A01815',
+            light: '#E8857A',
+            lighter: '#FDE9E7',
+          },
+          gold: {
+            DEFAULT: '#D4AF37',
+            hover: '#B8941F',
+            light: '#E6C44D',
+            lighter: '#F9F3E6',
+          },
+          green: {
+            DEFAULT: '#009246',
+            hover: '#007A3A',
+            light: '#A8C686',
+            lighter: '#E8F5E0',
+          },
+        },
+        // Legacy aliases (for gradual migration)
+        primary: {
+          red: '#C41E1A',
+          'red-dark': '#8B1A1D',
+          'red-light': '#D63933',
+          yellow: '#E6D5B3',
+          'yellow-dark': '#D4C4A0',
+          'yellow-light': '#F4E4C1',
+          DEFAULT: '#C41E1A',
+        },
         accent: {
-          gold: '#D4AF37',       // Logo's metallic gold trim (medium prominence)
+          gold: '#D4AF37',
           'gold-dark': '#B8941F',
           'gold-light': '#E6C44D',
-          green: '#009246',      // Italian flag green (accent)
-          'green-light': '#00A651'
+          green: '#009246',
+          'green-light': '#00A651',
         },
-        // SOFT VARIATIONS - For backgrounds and subtle elements
         soft: {
-          red: '#E8857A',        // Softer version of burgundy
+          red: '#E8857A',
           'red-light': '#F5ABA3',
           'red-lighter': '#FDE9E7',
-          yellow: '#F9F3E6',     // Very soft cream
+          yellow: '#F9F3E6',
           'yellow-light': '#FDF9F0',
           'yellow-lighter': '#FEFCF8',
-          green: '#A8C686'       // Soft green for vegetarian
+          green: '#A8C686',
         },
-        // SUPPORTING COLORS
         basil: {
           green: '#2D5016',
-          light: '#6B8E23'
+          light: '#6B8E23',
         },
-        cream: '#F4E4C1',        // Updated to match logo cream
-        'warm-cream': '#FDF9F0', // Lighter cream for backgrounds
+        cream: '#F4E4C1',
+        'warm-cream': '#FDF9F0',
         wood: '#8B4513',
-        charcoal: '#2C2C2C'
+        charcoal: '#2C2C2C',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
