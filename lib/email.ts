@@ -1,7 +1,9 @@
 import { Resend } from 'resend';
 
-// Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend only if API key is available
+const resend = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your_resend_api_key_here'
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 const FROM_EMAIL = process.env.EMAIL_FROM || 'noreply@pizzafalchi.com';
 const FROM_NAME = process.env.EMAIL_FROM_NAME || 'Pizza Falchi';
@@ -78,7 +80,7 @@ export const sendOrderConfirmationEmail = async (
 ): Promise<{ success: boolean; messageId?: string; error?: string }> => {
   try {
     // Check if Resend is configured
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'your_resend_api_key_here') {
+    if (!resend) {
       console.warn('Resend API key not configured. Email not sent.');
       return { success: false, error: 'Email service not configured' };
     }
@@ -114,7 +116,7 @@ export const sendOrderStatusEmail = async (
 ): Promise<{ success: boolean; messageId?: string; error?: string }> => {
   try {
     // Check if Resend is configured
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'your_resend_api_key_here') {
+    if (!resend) {
       console.warn('Resend API key not configured. Email not sent.');
       return { success: false, error: 'Email service not configured' };
     }
@@ -158,7 +160,7 @@ export const sendAdminNotificationEmail = async (
 ): Promise<{ success: boolean; messageId?: string; error?: string }> => {
   try {
     // Check if Resend is configured
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'your_resend_api_key_here') {
+    if (!resend) {
       console.warn('Resend API key not configured. Email not sent.');
       return { success: false, error: 'Email service not configured' };
     }
@@ -535,7 +537,7 @@ export const sendNewsletterWelcomeEmail = async (
   data: NewsletterWelcomeData
 ): Promise<{ success: boolean; messageId?: string; error?: string }> => {
   try {
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'your_resend_api_key_here') {
+    if (!resend) {
       console.warn('Resend API key not configured. Email not sent.');
       return { success: false, error: 'Email service not configured' };
     }
@@ -573,7 +575,7 @@ export const sendNewsletterCampaign = async (
   let sent = 0;
   let failed = 0;
 
-  if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'your_resend_api_key_here') {
+  if (!resend) {
     console.warn('Resend API key not configured. Emails not sent.');
     return { sent: 0, failed: subscribers.length };
   }
@@ -738,7 +740,7 @@ export const sendAbandonedCartEmail = async (
   data: AbandonedCartEmailData
 ): Promise<{ success: boolean; messageId?: string; error?: string }> => {
   try {
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'your_resend_api_key_here') {
+    if (!resend) {
       console.warn('Resend API key not configured. Email not sent.');
       return { success: false, error: 'Email service not configured' };
     }
