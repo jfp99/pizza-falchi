@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Calendar, Instagram, Facebook, Twitter, X, ExternalLink, Gift, Pizza } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Calendar, Instagram, Facebook, Twitter, X, ExternalLink, Pizza } from 'lucide-react';
 import { CheckIcon, PizzaSliceIcon } from '@/components/icons/CategoryIcons';
+import CompactLoyaltyBanner from '@/components/promotions/CompactLoyaltyBanner';
 
 export default function Contact() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
@@ -151,7 +152,6 @@ export default function Contact() {
                 <Phone className="w-5 h-5" />
                 Appelez-nous maintenant
               </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
             </a>
           </div>
         </div>
@@ -311,44 +311,40 @@ export default function Contact() {
                 <Mail className="w-5 h-5" />
                 Envoyez-nous un email
               </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
             </a>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-12 md:py-16 bg-warm-cream dark:bg-gray-900 transition-colors">
-        <div className="max-w-7xl mx-auto px-4">
+      {/* CTA Section - Subtle & Elegant with Loyalty */}
+      <section className="py-8 md:py-12 bg-background/50 dark:bg-gray-900/50 transition-colors border-t border-border/50 dark:border-border/30">
+        <div className="max-w-5xl mx-auto px-4">
+          {/* Loyalty Banner - Compact & Integrated */}
+          <CompactLoyaltyBanner />
+
           {/* CTA Content */}
           <div className="text-center">
-            <h3 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-6 transition-colors">
-              Prêt à Commander ?
-            </h3>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed transition-colors">
-              Découvrez notre menu et savourez l'authenticité italienne
+            <p className="text-sm uppercase tracking-widest text-text-tertiary dark:text-text-tertiary mb-3 font-medium transition-colors">
+              Une question ?
             </p>
+            <h3 className="text-2xl md:text-3xl font-semibold text-text-primary dark:text-text-primary mb-8 transition-colors">
+              Découvrez notre menu
+            </h3>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <Link
                 href="/menu"
-                className="relative inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-primary-red text-white"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-base bg-primary-red text-white hover:bg-primary-red-hover transition-all duration-200 shadow-sm hover:shadow-md"
               >
-                <span className="relative z-10 flex items-center gap-3 group-hover:text-charcoal transition-colors duration-300">
-                  Voir le Menu
-                  <Pizza className="w-5 h-5" />
-                </span>
-                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <Pizza className="w-4 h-4" />
+                <span>Voir le Menu</span>
               </Link>
               <Link
                 href="tel:+33442920308"
-                className="relative inline-flex items-center justify-center gap-3 border-2 border-charcoal dark:border-gray-300 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-transparent text-charcoal dark:text-gray-100"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-base border border-border dark:border-border bg-transparent text-text-primary dark:text-text-primary hover:bg-background-secondary dark:hover:bg-background-tertiary transition-all duration-200"
               >
-                <span className="relative z-10 flex items-center gap-3 group-hover:text-white dark:group-hover:text-charcoal transition-colors duration-300">
-                  <Phone className="w-5 h-5" />
-                  Appelez-nous
-                </span>
-                <span className="absolute inset-0 bg-charcoal dark:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <Phone className="w-4 h-4" />
+                <span>Appelez-nous</span>
               </Link>
             </div>
           </div>

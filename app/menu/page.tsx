@@ -1,20 +1,32 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { Search, Filter, Star, Flame, Leaf, Gift, Pizza, ShoppingCart, Sparkles, ChefHat, Eye, Calculator } from 'lucide-react';
 import { Product, Category } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import ProductCard from '@/components/menu/ProductCard';
 import ProductCardSkeleton from '@/components/menu/ProductCardSkeleton';
-import CartSidebar from '@/components/cart/CartSidebar';
 import CategoryFilterWithIcons from '@/components/menu/CategoryFilterWithIcons';
 import PackageCard from '@/components/packages/PackageCard';
-import ComboSelectionModal from '@/components/packages/ComboSelectionModal';
 import toast from 'react-hot-toast';
 import { SPACING, TYPOGRAPHY, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations';
 import Link from 'next/link';
+
+// Dynamically import heavy components for better performance
+const CartSidebar = dynamic(() => import('@/components/cart/CartSidebar'), {
+  loading: () => <div className="fixed right-0 top-0 h-full w-96 bg-surface dark:bg-surface animate-pulse" />,
+});
+
+const ComboSelectionModal = dynamic(() => import('@/components/packages/ComboSelectionModal'), {
+  loading: () => <div className="fixed inset-0 bg-black/50 flex items-center justify-center"><div className="bg-surface dark:bg-surface p-8 rounded-3xl animate-pulse w-96 h-96" /></div>,
+});
+
+const PizzaBuilderModal = dynamic(() => import('@/components/pizza-builder/PizzaBuilderModal'), {
+  loading: () => <div className="fixed inset-0 bg-black/50 flex items-center justify-center"><div className="bg-surface dark:bg-surface p-8 rounded-3xl animate-pulse w-96 h-96" /></div>,
+});
 
 // Categories now use React components instead of emoji strings
 const categories: Category[] = [
@@ -50,6 +62,7 @@ export default function Menu() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isComboModalOpen, setIsComboModalOpen] = useState(false);
+  const [isPizzaBuilderOpen, setIsPizzaBuilderOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<PackageType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { addItem, getTotalItems } = useCart();
@@ -245,64 +258,7 @@ export default function Menu() {
         </div>
       </section>
 
-      {/* Pizza Builder Card - Elegant Design */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <Link href="/pizza-builder">
-          <div className="bg-surface dark:bg-surface rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-border dark:border-border group cursor-pointer">
-            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-              {/* Icon */}
-              <div className="flex-shrink-0">
-                <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-4 rounded-2xl shadow-md group-hover:scale-110 transition-transform duration-300">
-                  <ChefHat className="w-8 h-8 text-white" />
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h2 className="text-2xl md:text-3xl font-bold text-charcoal dark:text-gray-100 transition-colors">
-                    Créez Votre Pizza Parfaite
-                  </h2>
-                  <span className="bg-primary-red text-white px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                    Nouveau
-                  </span>
-                </div>
-                <p className="text-text-secondary dark:text-text-secondary text-base md:text-lg mb-4 transition-colors">
-                  Personnalisez chaque ingrédient avec notre créateur de pizza interactif
-                </p>
-
-                {/* Features */}
-                <div className="flex flex-wrap gap-3">
-                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
-                    <Eye className="w-4 h-4 text-primary-red" />
-                    <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">Visualisation en temps réel</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
-                    <Calculator className="w-4 h-4 text-primary-yellow" />
-                    <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">Prix calculé automatiquement</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
-                    <Leaf className="w-4 h-4 text-basil-light" />
-                    <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">50+ ingrédients</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <div className="flex-shrink-0 mt-4 md:mt-0">
-                <div className="bg-gradient-to-r from-primary-red to-primary-yellow text-white px-6 py-3 rounded-xl font-bold text-base shadow-md group-hover:shadow-lg transition-all group-hover:scale-105 flex items-center gap-2">
-                  Commencer
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Link>
-      </div>
-
-      <div id="menu-section" className="max-w-7xl mx-auto px-4 pb-20">
+      <div id="menu-section" className="max-w-7xl mx-auto px-4 pt-16 pb-20">
         {/* Filtres et Recherche - Enhanced Design */}
         <div className="mb-12 space-y-8">
           {/* Search Bar - Enhanced */}
@@ -374,35 +330,41 @@ export default function Menu() {
         )}
 
         {/* Grille des produits */}
-        <AnimatePresence mode="wait">
-          {selectedCategory !== 'combo' && (
-            <motion.div
-              id="products-section"
-              className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              key={selectedCategory}
-            >
-              {isLoading ? (
-                // Show skeleton loaders while loading
-                Array.from({ length: 6 }).map((_, index) => (
-                  <ProductCardSkeleton key={`skeleton-${index}`} />
-                ))
-              ) : (
-                // Show actual products when loaded
-                filteredProducts.map(product => (
+        {selectedCategory !== 'combo' && (
+          <div id="products-section" className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}>
+            {isLoading ? (
+              // Show skeleton loaders while loading
+              Array.from({ length: 6 }).map((_, index) => (
+                <ProductCardSkeleton key={`skeleton-${index}`} />
+              ))
+            ) : (
+              <>
+                {/* Animate only first 6 products for performance */}
+                {filteredProducts.slice(0, 6).map((product, index) => (
+                  <motion.div
+                    key={product._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.2 }}
+                  >
+                    <ProductCard
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                    />
+                  </motion.div>
+                ))}
+                {/* Remaining products without animation for better performance */}
+                {filteredProducts.slice(6).map(product => (
                   <ProductCard
                     key={product._id}
                     product={product}
                     onAddToCart={handleAddToCart}
                   />
-                ))
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+                ))}
+              </>
+            )}
+          </div>
+        )}
 
         {/* Packages Section - Now at bottom or prominent when combo selected */}
         {packages.length > 0 && (selectedCategory === 'combo' || selectedCategory === 'all') && (
@@ -475,6 +437,64 @@ export default function Menu() {
           </div>
         )}
 
+        {/* Pizza Builder Card - Elegant Design - At Bottom */}
+        <div className="mt-16 mb-8">
+          <div
+            onClick={() => setIsPizzaBuilderOpen(true)}
+            className="bg-surface dark:bg-surface rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-border dark:border-border group cursor-pointer"
+          >
+              <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+                {/* Icon */}
+                <div className="flex-shrink-0">
+                  <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-4 rounded-2xl shadow-md group-hover:scale-110 transition-transform duration-300">
+                    <ChefHat className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h2 className="text-2xl md:text-3xl font-bold text-charcoal dark:text-gray-100 transition-colors">
+                      Créez Votre Pizza Parfaite
+                    </h2>
+                    <span className="bg-primary-red text-white px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                      Nouveau
+                    </span>
+                  </div>
+                  <p className="text-text-secondary dark:text-text-secondary text-base md:text-lg mb-4 transition-colors">
+                    Personnalisez chaque ingrédient avec notre créateur de pizza interactif
+                  </p>
+
+                  {/* Features */}
+                  <div className="flex flex-wrap gap-3">
+                    <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                      <Eye className="w-4 h-4 text-primary-red" />
+                      <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">Visualisation en temps réel</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                      <Calculator className="w-4 h-4 text-primary-yellow" />
+                      <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">Prix calculé automatiquement</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-warm-cream dark:bg-gray-700 px-3 py-2 rounded-lg transition-colors">
+                      <Leaf className="w-4 h-4 text-basil-light" />
+                      <span className="text-sm font-medium text-text-secondary dark:text-text-secondary">50+ ingrédients</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <div className="flex-shrink-0 mt-4 md:mt-0">
+                  <div className="bg-gradient-to-r from-primary-red to-primary-yellow text-white px-6 py-3 rounded-xl font-bold text-base shadow-md group-hover:shadow-lg transition-all group-hover:scale-105 flex items-center gap-2">
+                    Commencer
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
         {/* Sidebar Panier */}
         <CartSidebar
           isOpen={isCartOpen}
@@ -508,6 +528,12 @@ export default function Menu() {
             allProducts={products}
           />
         )}
+
+        {/* Pizza Builder Modal */}
+        <PizzaBuilderModal
+          isOpen={isPizzaBuilderOpen}
+          onClose={() => setIsPizzaBuilderOpen(false)}
+        />
       </div>
     </div>
   );

@@ -30,11 +30,14 @@ export default function ThemeToggle() {
         hover:bg-background-tertiary dark:hover:bg-border-medium
         text-text-secondary dark:text-text-secondary
         transition-all duration-200 ease-in-out
-        hover:scale-110 hover:rotate-180
+        hover:scale-110
         focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-1
         cursor-pointer
       "
       aria-label={`Passer au mode ${theme === 'light' ? 'sombre' : 'clair'}`}
+      aria-pressed={theme === 'dark'}
+      role="switch"
+      aria-checked={theme === 'dark'}
     >
       {theme === 'light' ? (
         <Moon className="w-4 h-4 md:w-5 md:h-5" />

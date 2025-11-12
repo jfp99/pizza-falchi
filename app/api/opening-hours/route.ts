@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import OpeningHours from '@/models/OpeningHours';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 /**
  * GET /api/opening-hours
@@ -92,6 +93,12 @@ export async function GET(request: NextRequest) {
  * - ordersPerSlot: Number of orders per slot (default: 2)
  */
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     await connectDB();
 

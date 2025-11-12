@@ -144,10 +144,20 @@ export default function Footer() {
             <p className="text-gray-400 dark:text-text-tertiary transition-colors">
               © {currentYear} <span className="text-brand-gold font-semibold transition-colors">Pizza Falchi</span>. Tous droits réservés.
             </p>
-            <div className="flex gap-4">
-              <Link href="#" className="text-gray-400 dark:text-text-tertiary hover:text-brand-red transition-colors">Mentions Légales</Link>
-              <Link href="#" className="text-gray-400 dark:text-text-tertiary hover:text-brand-gold transition-colors">Confidentialité</Link>
-              <Link href="#" className="text-gray-400 dark:text-text-tertiary hover:text-brand-red transition-colors">CGV</Link>
+            <div className="flex flex-wrap gap-3 md:gap-4 text-sm">
+              <Link href="/mentions-legales" className="text-gray-400 dark:text-text-tertiary hover:text-brand-red transition-colors">Mentions Légales</Link>
+              <span className="text-gray-600 dark:text-gray-500">•</span>
+              <Link href="/politique-confidentialite" className="text-gray-400 dark:text-text-tertiary hover:text-brand-gold transition-colors">Confidentialité</Link>
+              <span className="text-gray-600 dark:text-gray-500">•</span>
+              <Link href="/conditions-generales-vente" className="text-gray-400 dark:text-text-tertiary hover:text-brand-red transition-colors">CGV</Link>
+              <span className="text-gray-600 dark:text-gray-500">•</span>
+              <Link href="/conditions-generales-utilisation" className="text-gray-400 dark:text-text-tertiary hover:text-brand-gold transition-colors">CGU</Link>
+              <span className="text-gray-600 dark:text-gray-500">•</span>
+              <Link href="/politique-cookies" className="text-gray-400 dark:text-text-tertiary hover:text-brand-red transition-colors">Cookies</Link>
+              <span className="text-gray-600 dark:text-gray-500">•</span>
+              <Link href="/accessibilite" className="text-gray-400 dark:text-text-tertiary hover:text-brand-gold transition-colors">Accessibilité</Link>
+              <span className="text-gray-600 dark:text-gray-500">•</span>
+              <Link href="/exercer-mes-droits" className="text-gray-400 dark:text-text-tertiary hover:text-brand-red transition-colors">Exercer mes droits</Link>
             </div>
           </div>
         </div>

@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Newsletter from '@/models/Newsletter';
-import { newsletterSignup } from '@/lib/gtag';
 import { sendNewsletterWelcomeEmail } from '@/lib/email';
+import { validateCSRFMiddleware } from '@/lib/csrf';
+import { sanitizeEmail, sanitizeText } from '@/lib/sanitize';
+import { newsletterSchema } from '@/lib/validations/newsletter';
 
 // Rate limiting map
 const subscriptionAttempts = new Map<string, { count: number; resetAt: number }>();
@@ -28,6 +30,15 @@ function checkRateLimit(ip: string): boolean {
 
 // POST /api/newsletter - Subscribe to newsletter
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json(
+      { error: csrfValidation.error },
+      { status: 403 }
+    );
+  }
+
   try {
     // Rate limiting
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
@@ -41,43 +52,49 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     const body = await request.json();
-    const { email, name, source = 'footer', tags = [] } = body;
 
-    // Validate email
-    if (!email || typeof email !== 'string') {
+    // Sanitize input
+    const sanitizedBody = {
+      email: sanitizeEmail(body.email || ''),
+      name: body.name ? sanitizeText(body.name) : undefined,
+      source: body.source ? sanitizeText(body.source) : 'footer',
+      tags: Array.isArray(body.tags) ? body.tags.map((t: string) => sanitizeText(t)) : [],
+    };
+
+    // Validate with Zod
+    const validationResult = newsletterSchema.safeParse(sanitizedBody);
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Email is required' },
+        {
+          error: 'Données d\'inscription invalides',
+          details: validationResult.error.flatten().fieldErrors,
+        },
         { status: 400 }
       );
     }
 
-    const emailRegex = /^\S+@\S+\.\S+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Please enter a valid email address' },
-        { status: 400 }
-      );
-    }
+    const validatedData = validationResult.data;
 
     // Subscribe or resubscribe
-    const result = await Newsletter.subscribe(email, name, source, tags);
+    const result = await Newsletter.subscribe(
+      validatedData.email,
+      validatedData.name,
+      validatedData.source,
+      validatedData.tags
+    );
 
     // Send welcome email for new subscribers
     if (result.isNew) {
       try {
         await sendNewsletterWelcomeEmail({
-          email,
-          name,
+          email: validatedData.email,
+          name: validatedData.name,
         });
       } catch (emailError) {
         console.error('Failed to send welcome email:', emailError);
         // Don't fail the subscription if email fails
       }
-    }
-
-    // Track with Google Analytics
-    if (typeof window !== 'undefined') {
-      newsletterSignup(source);
     }
 
     return NextResponse.json(

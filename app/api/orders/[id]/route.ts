@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Order from '@/models/Order';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 export async function GET(
   request: NextRequest,
@@ -33,6 +34,12 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     await connectDB();
     const { id } = await params;
@@ -66,6 +73,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     await connectDB();
     const { id } = await params;

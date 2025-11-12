@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { X, ShoppingCart, Check } from 'lucide-react';
 import { Product } from '@/types';
 import Image from 'next/image';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface PackageItem {
   type: string;
@@ -40,6 +41,7 @@ export default function ComboSelectionModal({
   allProducts,
 }: ComboSelectionModalProps) {
   const [selectedProducts, setSelectedProducts] = useState<{ [key: string]: Product[] }>({});
+  const modalRef = useFocusTrap(isOpen);
 
   useEffect(() => {
     if (isOpen) {
@@ -122,11 +124,11 @@ export default function ComboSelectionModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div ref={modalRef} className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl transition-colors duration-300" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-primary-red to-primary-yellow p-4 sm:p-6 rounded-t-2xl sm:rounded-t-3xl flex justify-between items-start sm:items-center gap-3 z-10">
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg sm:text-2xl font-black text-white mb-1 break-words">
+            <h2 id="modal-title" className="text-lg sm:text-2xl font-black text-white mb-1 break-words">
               {pkg.icon} {pkg.name}
             </h2>
             <p className="text-white/90 text-xs sm:text-sm">{pkg.description}</p>

@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { existsSync } from 'fs';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;

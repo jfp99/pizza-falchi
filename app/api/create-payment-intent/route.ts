@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 // Lazy initialization - only create Stripe instance when needed
 const getStripe = () => {
@@ -15,6 +16,15 @@ const getStripe = () => {
 };
 
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json(
+      { error: csrfValidation.error },
+      { status: 403 }
+    );
+  }
+
   try {
     // Check if Stripe is configured
     const stripe = getStripe();

@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import OpeningHours from '@/models/OpeningHours';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 /**
  * POST /api/opening-hours/exceptions
@@ -18,6 +19,12 @@ import OpeningHours from '@/models/OpeningHours';
  * - customHours: Custom hours { open: "HH:MM", close: "HH:MM" } (optional if isClosed = false)
  */
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     await connectDB();
 
@@ -110,6 +117,12 @@ export async function POST(request: NextRequest) {
  * - date: Date of the exception to remove (ISO format)
  */
 export async function DELETE(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     await connectDB();
 

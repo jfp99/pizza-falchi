@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import AbandonedCart from '@/models/AbandonedCart';
 import { sendAbandonedCartEmail } from '@/lib/email';
+import { validateCSRFMiddleware } from '@/lib/csrf';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 /**
  * Cron job endpoint to send abandoned cart reminder emails
@@ -82,8 +85,18 @@ export async function GET(request: NextRequest) {
  * Manual trigger endpoint (admin only)
  */
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
-    // TODO: Add authentication check for admin
+    // Authentication check for admin
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
 
     await connectDB();
 

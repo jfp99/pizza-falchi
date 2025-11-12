@@ -1,0 +1,223 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Aller au contenu principal" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e9]
+          - generic [ref=e11]: 04 42 92 03 08
+        - generic [ref=e12]: Ouvert 6j/7 • 18h-21h30
+      - generic [ref=e14]:
+        - link "Pizza Falchi Logo PIZZA FALCHI AUTHENTIQUE • ARTISANAL" [ref=e15] [cursor=pointer]:
+          - /url: /
+          - img "Pizza Falchi Logo" [ref=e17]
+          - generic [ref=e19]:
+            - generic [ref=e20]: PIZZA FALCHI
+            - generic [ref=e21]: AUTHENTIQUE • ARTISANAL
+        - button "Toggle menu" [ref=e22] [cursor=pointer]:
+          - img [ref=e23]
+      - button "Passer au mode sombre" [ref=e27] [cursor=pointer]:
+        - img [ref=e28]
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - img "Pizza Falchi - Pizzas artisanales italiennes authentiques" [ref=e35]
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - img "Pizza Falchi Logo" [ref=e41]
+              - generic [ref=e42]:
+                - generic [ref=e43]: Pizzas Artisanales
+                - heading "PIZZA FALCHI" [level=1] [ref=e44]
+                - paragraph [ref=e45]: depuis 2001
+                - paragraph [ref=e46]: Puyricard Aix-en-Provence
+                - generic [ref=e47]: À EMPORTER
+            - paragraph [ref=e48]: Authenticité italienne • Ingrédients premium • Savoir-faire artisanal
+            - generic [ref=e49]: Des pizzas qui voyagent jusqu'à vous
+            - generic [ref=e50]:
+              - link "Voir le Menu" [ref=e51] [cursor=pointer]:
+                - /url: /menu
+                - text: Voir le Menu
+              - link "Nous Trouver" [ref=e53] [cursor=pointer]:
+                - /url: /contact
+                - text: Nous Trouver
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e65]: Tradizione • Qualità • Passione
+            - heading "Soirée Pizza ?" [level=2] [ref=e66]
+            - generic [ref=e67]:
+              - paragraph [ref=e68]:
+                - text: Pizza FALCHI vous accueille dans un
+                - strong [ref=e69]: cadre convivial
+                - text: et vous propose un large choix de pizzas confectionnées à partir de
+                - strong [ref=e70]: produits frais et de qualité
+                - text: . Il nous tient à cœur de vous faire savourer des pizzas faites maison et authentiques.
+              - paragraph [ref=e71]:
+                - text: Nos
+                - strong [ref=e72]: pizzaïolos passionnés
+                - text: sauront mettre à profit leur savoir-faire pour faire voyager vos papilles gustatives et celles de vos proches.
+              - paragraph [ref=e73]:
+                - text: Dans un cadre chaleureux à des prix très légers, nous vous accueillons comme nous pourrions accueillir des amis à la maison. Chacun pourra trouver son bonheur dans notre
+                - strong [ref=e74]: carte diversifiée
+                - text: .
+            - generic [ref=e75]:
+              - generic [ref=e76]:
+                - img [ref=e78]
+                - generic [ref=e80]:
+                  - heading "Produits Frais" [level=3] [ref=e81]
+                  - paragraph [ref=e82]: Ingrédients de qualité préparés à la demande
+              - generic [ref=e83]:
+                - img [ref=e85]
+                - generic [ref=e90]:
+                  - heading "Cadre Convivial" [level=3] [ref=e91]
+                  - paragraph [ref=e92]: Accueil chaleureux pour toute la famille
+              - generic [ref=e93]:
+                - img [ref=e95]
+                - generic [ref=e97]:
+                  - heading "Savoir-faire" [level=3] [ref=e98]
+                  - paragraph [ref=e99]: Pizzaïolos passionnés et expérimentés
+            - generic [ref=e100]:
+              - link "Appeler Pizza Falchi" [ref=e101] [cursor=pointer]:
+                - /url: tel:+33442920308
+                - img [ref=e102]
+                - generic [ref=e104]: 04 42 92 03 08
+              - paragraph [ref=e105]: Un coup de téléphone et nous vous préparons votre commande !
+          - img "Soirée pizza entre amis - Pizza Falchi" [ref=e108]
+        - generic [ref=e113]:
+          - img "Pizza Falchi - Nos Pizzas Artisanales" [ref=e115]
+          - generic [ref=e116]:
+            - generic [ref=e118]:
+              - img [ref=e119]
+              - generic [ref=e125]: Notre Spécialité
+            - heading "Pizzas Authentiques" [level=2] [ref=e126]
+            - paragraph [ref=e127]: Chaque pizza est préparée avec des ingrédients sélectionnés directement d'Italie. Notre pâte fermente 48 heures pour une texture légère et croustillante.
+            - generic [ref=e128]:
+              - generic [ref=e129]:
+                - generic [ref=e130]: 48h
+                - generic [ref=e131]: Fermentation
+              - generic [ref=e132]:
+                - generic [ref=e133]: 100%
+                - generic [ref=e134]: Italien
+              - generic [ref=e135]:
+                - generic [ref=e136]: Feu
+                - generic [ref=e137]: De bois
+            - link "Découvrir le Menu →" [ref=e138] [cursor=pointer]:
+              - /url: /menu
+              - generic [ref=e139]:
+                - text: Découvrir le Menu
+                - generic [ref=e140]: →
+        - generic [ref=e144]:
+          - heading "Prêt à Commander ?" [level=3] [ref=e145]
+          - paragraph [ref=e146]: Découvrez notre menu et savourez l'authenticité italienne
+          - generic [ref=e147]:
+            - link "Voir le Menu" [ref=e148] [cursor=pointer]:
+              - /url: /menu
+              - generic [ref=e149]:
+                - text: Voir le Menu
+                - img [ref=e150]
+            - link "Nous Contacter →" [ref=e157] [cursor=pointer]:
+              - /url: /contact
+              - generic [ref=e158]:
+                - text: Nous Contacter
+                - generic [ref=e159]: →
+    - generic [ref=e168]:
+      - generic [ref=e169]:
+        - generic [ref=e171]:
+          - img [ref=e173]
+          - img [ref=e178]
+        - generic [ref=e180]:
+          - generic [ref=e182]: Fidélité
+          - heading "10 Pizzas Achetées = 11ème Offerte" [level=3] [ref=e183]:
+            - text: 10 Pizzas Achetées = 11
+            - superscript [ref=e184]: ème
+            - text: Offerte
+          - paragraph [ref=e185]: Profitez de notre programme de fidélité
+      - button "En savoir plus" [ref=e187] [cursor=pointer]:
+        - paragraph [ref=e188]: En savoir plus
+    - contentinfo [ref=e190]:
+      - generic [ref=e192]:
+        - generic [ref=e193]:
+          - generic [ref=e194]:
+            - link "Pizza Falchi Logo PIZZA FALCHI AUTHENTIQUE • ARTISANAL" [ref=e195] [cursor=pointer]:
+              - /url: /
+              - img "Pizza Falchi Logo" [ref=e197]
+              - generic [ref=e198]:
+                - generic [ref=e199]: PIZZA FALCHI
+                - generic [ref=e200]: AUTHENTIQUE • ARTISANAL
+            - generic [ref=e201]:
+              - link "Instagram" [ref=e202] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e203]
+              - link "Facebook" [ref=e206] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e207]
+              - link "Google" [ref=e209] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e210]
+            - generic [ref=e215]:
+              - img "Fait Maison - Produits faits maison" [ref=e217]
+              - paragraph [ref=e218]:
+                - text: Produits
+                - text: Faits Maison
+          - generic [ref=e219]:
+            - heading "Navigation" [level=3] [ref=e220]
+            - list [ref=e221]:
+              - listitem [ref=e222]:
+                - link "→ Accueil" [ref=e223] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e224]:
+                - link "→ Menu" [ref=e225] [cursor=pointer]:
+                  - /url: /menu
+              - listitem [ref=e226]:
+                - link "→ À Propos" [ref=e227] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e228]:
+                - link "→ Contact" [ref=e229] [cursor=pointer]:
+                  - /url: /contact
+          - generic [ref=e230]:
+            - heading "Contact" [level=3] [ref=e231]
+            - generic [ref=e232]:
+              - link "04 42 92 03 08" [ref=e233] [cursor=pointer]:
+                - /url: tel:+33442920308
+                - img [ref=e234]
+                - generic [ref=e236]: 04 42 92 03 08
+              - link "pizzafalchipro@gmail.com" [ref=e237] [cursor=pointer]:
+                - /url: mailto:pizzafalchipro@gmail.com
+                - img [ref=e238]
+                - generic [ref=e241]: pizzafalchipro@gmail.com
+              - generic [ref=e242]:
+                - img [ref=e243]
+                - generic [ref=e246]: 615, av. de la Touloubre, 13540 Puyricard
+          - generic [ref=e247]:
+            - heading "Horaires" [level=3] [ref=e248]
+            - generic [ref=e249]:
+              - generic [ref=e250]:
+                - img [ref=e251]
+                - generic [ref=e254]: Mar - Dim
+              - paragraph [ref=e255]: 18h00 - 21h30
+              - paragraph [ref=e256]: Fermé le lundi
+        - generic [ref=e258]:
+          - paragraph [ref=e259]: © 2025 Pizza Falchi. Tous droits réservés.
+          - generic [ref=e260]:
+            - link "Mentions Légales" [ref=e261] [cursor=pointer]:
+              - /url: "#"
+            - link "Confidentialité" [ref=e262] [cursor=pointer]:
+              - /url: "#"
+            - link "CGV" [ref=e263] [cursor=pointer]:
+              - /url: "#"
+  - generic [ref=e268] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e269]:
+      - img [ref=e270]
+    - generic [ref=e273]:
+      - button "Open issues overlay" [ref=e274]:
+        - generic [ref=e275]:
+          - generic [ref=e276]: "0"
+          - generic [ref=e277]: "1"
+        - generic [ref=e278]: Issue
+      - button "Collapse issues badge" [ref=e279]:
+        - img [ref=e280]
+  - alert [ref=e282]
+```

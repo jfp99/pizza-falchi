@@ -6,6 +6,8 @@ import TimeSlot from '@/models/TimeSlot';
 import { sendWhatsAppNotification } from '@/lib/whatsapp';
 import { readLimiter, orderLimiter } from '@/lib/rateLimiter';
 import { orderSchema } from '@/lib/validations/order';
+import { validateCSRFMiddleware } from '@/lib/csrf';
+import { sanitizeOrderData } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   // Apply rate limiting
@@ -36,6 +38,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json(
+      { error: csrfValidation.error },
+      { status: 403 }
+    );
+  }
+
   // Apply rate limiting for order creation
   const rateLimitResponse = await orderLimiter(request);
   if (rateLimitResponse) return rateLimitResponse;
@@ -45,8 +56,11 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    // Sanitize input to prevent XSS attacks
+    const sanitizedBody = sanitizeOrderData(body);
+
     // Validate input with Zod
-    const validationResult = orderSchema.safeParse(body);
+    const validationResult = orderSchema.safeParse(sanitizedBody);
 
     if (!validationResult.success) {
       return NextResponse.json(

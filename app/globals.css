@@ -156,7 +156,7 @@ select,
 
 /* Enhanced focus indicators for accessibility (WCAG AA) */
 *:focus {
-  outline: 3px solid var(--color-primary-yellow);
+  outline: 3px solid var(--color-brand-red);
   outline-offset: 2px;
 }
 
@@ -165,26 +165,50 @@ select,
 }
 
 *:focus-visible {
-  outline: 3px solid var(--color-primary-yellow);
+  outline: 3px solid var(--color-brand-red);
   outline-offset: 2px;
-  box-shadow: 0 0 0 3px rgba(230, 213, 179, 0.3);
+  box-shadow: 0 0 0 5px rgba(196, 30, 26, 0.2);
 }
 
-/* Focus styles for interactive elements on dark backgrounds */
+/* Dark mode focus variant */
+.dark *:focus-visible {
+  outline: 3px solid var(--color-brand-gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(230, 196, 77, 0.3);
+}
+
+/* Focus styles for interactive elements */
 button:focus-visible,
 a:focus-visible,
 [role="button"]:focus-visible {
-  outline: 3px solid var(--color-primary-yellow);
+  outline: 3px solid var(--color-brand-red);
   outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(196, 30, 26, 0.2);
+}
+
+.dark button:focus-visible,
+.dark a:focus-visible,
+.dark [role="button"]:focus-visible {
+  outline: 3px solid var(--color-brand-gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(230, 196, 77, 0.3);
 }
 
 /* Focus styles for form inputs */
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 3px solid var(--color-primary-yellow);
+  outline: 3px solid var(--color-brand-red);
   outline-offset: 2px;
-  border-color: var(--color-primary-red);
+  border-color: var(--color-brand-red);
+}
+
+.dark input:focus-visible,
+.dark textarea:focus-visible,
+.dark select:focus-visible {
+  outline: 3px solid var(--color-brand-gold);
+  outline-offset: 2px;
+  border-color: var(--color-brand-gold);
 }
 
 @layer components {

@@ -3,6 +3,9 @@ import { connectDB } from '@/lib/mongodb';
 import Review from '@/models/Review';
 import Order from '@/models/Order';
 import { readLimiter, writeLimiter } from '@/lib/rateLimiter';
+import { validateCSRFMiddleware } from '@/lib/csrf';
+import { sanitizeReviewData } from '@/lib/sanitize';
+import { reviewSchema } from '@/lib/validations/review';
 
 // GET - Fetch reviews for a product
 export async function GET(request: NextRequest) {
@@ -62,46 +65,46 @@ export async function GET(request: NextRequest) {
 
 // POST - Create a new review
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json(
+      { error: csrfValidation.error },
+      { status: 403 }
+    );
+  }
+
   const rateLimitResponse = await writeLimiter(request);
   if (rateLimitResponse) return rateLimitResponse;
 
   try {
     const body = await request.json();
-    const {
-      productId,
-      customerName,
-      customerEmail,
-      rating,
-      title,
-      comment,
-    } = body;
 
-    // Validation
-    if (!productId || !customerName || !customerEmail || !rating || !title || !comment) {
+    // Sanitize input to prevent XSS attacks
+    const sanitizedBody = sanitizeReviewData(body);
+
+    // Validate input with Zod
+    const validationResult = reviewSchema.safeParse(sanitizedBody);
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Tous les champs sont requis' },
+        {
+          error: 'Données d\'avis invalides',
+          details: validationResult.error.flatten().fieldErrors,
+        },
         { status: 400 }
       );
     }
 
-    if (rating < 1 || rating > 5) {
-      return NextResponse.json(
-        { error: 'La note doit être entre 1 et 5' },
-        { status: 400 }
-      );
-    }
-
-    if (comment.length > 1000) {
-      return NextResponse.json(
-        { error: 'Le commentaire ne peut pas dépasser 1000 caractères' },
-        { status: 400 }
-      );
-    }
+    const validatedData = validationResult.data;
 
     await connectDB();
 
     // Check if user can review
-    const canReview = await Review.canUserReview(productId, customerEmail);
+    const canReview = await Review.canUserReview(
+      validatedData.productId,
+      validatedData.customerEmail
+    );
 
     if (!canReview.canReview) {
       return NextResponse.json(
@@ -112,13 +115,13 @@ export async function POST(request: NextRequest) {
 
     // Create review
     const review = await Review.create({
-      product: productId,
+      product: validatedData.productId,
       order: canReview.orderId,
-      customerName: customerName.trim(),
-      customerEmail: customerEmail.toLowerCase().trim(),
-      rating,
-      title: title.trim(),
-      comment: comment.trim(),
+      customerName: validatedData.customerName,
+      customerEmail: validatedData.customerEmail,
+      rating: validatedData.rating,
+      title: validatedData.title,
+      comment: validatedData.comment,
       verified: canReview.verified,
       status: 'pending', // Reviews need approval
     });

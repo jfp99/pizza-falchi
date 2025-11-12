@@ -5,6 +5,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { readLimiter, apiLimiter } from '@/lib/rateLimiter';
 import { productSchema } from '@/lib/validations/product';
+import { validateCSRFMiddleware } from '@/lib/csrf';
+import { sanitizeProductData } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   // Apply rate limiting for read operations
@@ -25,6 +27,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json(
+      { error: csrfValidation.error },
+      { status: 403 }
+    );
+  }
+
   // Apply rate limiting for product creation
   const rateLimitResponse = await apiLimiter(request);
   if (rateLimitResponse) return rateLimitResponse;
@@ -42,8 +53,11 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
 
+    // Sanitize input to prevent XSS attacks
+    const sanitizedBody = sanitizeProductData(body);
+
     // Validate input with Zod
-    const validationResult = productSchema.safeParse(body);
+    const validationResult = productSchema.safeParse(sanitizedBody);
 
     if (!validationResult.success) {
       return NextResponse.json(

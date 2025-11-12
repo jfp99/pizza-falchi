@@ -86,6 +86,85 @@ export const MilkIcon: React.FC<IconProps> = (props) => {
   );
 };
 
+export const RoquefortIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M4 19h16a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z" />
+      <path d="M20 7L12 3L4 7" />
+      <path d="M7 11l3 3M10 11l-3 3" />
+      <path d="M14 12l2 2M16 12l-2 2" />
+      <circle cx="12" cy="15" r="0.5" fill="currentColor" />
+      <circle cx="9" cy="16" r="0.5" fill="currentColor" />
+    </svg>
+  );
+};
+
+export const EmmentalIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M4 19h16a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z" />
+      <path d="M20 7L12 3L4 7" />
+      <circle cx="8" cy="11" r="1.5" />
+      <circle cx="12" cy="14" r="1.5" />
+      <circle cx="16" cy="12" r="1.5" />
+      <circle cx="15" cy="16" r="1" />
+    </svg>
+  );
+};
+
+export const ParmesanIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M4 19h16a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z" />
+      <path d="M20 7L12 3L4 7" />
+      <path d="M6 11h12M6 13h10M8 15h8" />
+    </svg>
+  );
+};
+
+export const RacletteIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M4 10h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2z" />
+      <path d="M6 17c0 2 1 3 2 4M12 17c0 2 0 3 0 4M18 17c0 2-1 3-2 4" />
+      <circle cx="9" cy="13" r="0.5" fill="currentColor" />
+      <circle cx="15" cy="13" r="0.5" fill="currentColor" />
+    </svg>
+  );
+};
+
 // ============================================================================
 // VEGETABLES
 // ============================================================================
@@ -264,6 +343,47 @@ export const BasilIcon: React.FC<IconProps> = (props) => {
       <path d="M15 11c0 0 3-1 5 1-2 1-3 1-5 0z" />
       <path d="M9 16c0 0-3-1-5 1 2 1 3 1 5 0z" />
       <path d="M15 16c0 0 3-1 5 1-2 1-3 1-5 0z" />
+    </svg>
+  );
+};
+
+export const ArtichokeIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M12 3c-3 0-5 2-5 5v6c0 3 2 5 5 5s5-2 5-5V8c0-3-2-5-5-5z" />
+      <path d="M12 19v3" />
+      <path d="M8 8c-2 0-3 1-3 2M16 8c2 0 3 1 3 2" />
+      <path d="M8 12c-1.5 0-2.5 1-2.5 2M16 12c1.5 0 2.5 1 2.5 2" />
+      <path d="M9 16c-1 0-2 1-2 1.5M15 16c1 0 2 1 2 1.5" />
+    </svg>
+  );
+};
+
+export const HerbsIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M8 21v-8c0-2 1-4 2-4" />
+      <path d="M12 21v-10c0-2 1-3 2-3" />
+      <path d="M16 21v-7c0-2 1-3 2-3" />
+      <path d="M10 9c-2-1-4-2-4-4 0-1 1-2 2-2 2 0 3 2 4 4" />
+      <path d="M14 8c-2-2-3-4-3-6 0-1 1-2 2-2 2 0 3 2 4 4" />
+      <path d="M18 11c-1-2-2-4-2-6 0-1 1-2 2-2s2 1 2 2c0 2-1 4-2 6z" />
     </svg>
   );
 };
@@ -534,6 +654,84 @@ export const NutIcon: React.FC<IconProps> = (props) => {
   );
 };
 
+export const AlmondIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M12 3c-4 0-7 3-7 8 0 4 3 10 7 10s7-6 7-10c0-5-3-8-7-8z" />
+      <path d="M12 7c-2 0-3 2-3 4s1 5 3 5 3-3 3-5-1-4-3-4z" />
+    </svg>
+  );
+};
+
+export const SeafoodMixIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M6 12c0 0 2-3 6-3s6 3 6 3-2 3-6 3-6-3-6-3z" />
+      <circle cx="15" cy="12" r="0.5" fill="currentColor" />
+      <path d="M6 12l-3-1M6 12l-3 1" />
+      <path d="M8 7c0-1 1-2 2-2s2 1 2 2v2" />
+      <path d="M14 7c0-1 1-2 2-2s2 1 2 2v2" />
+      <path d="M19 15l2 2M19 17l2-2" />
+    </svg>
+  );
+};
+
+export const CaperIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+      <path d="M12 8v-2M12 18v-2M8 12h-2M18 12h-2" />
+      <path d="M15 9l1.5-1.5M9 15l-1.5 1.5M15 15l1.5 1.5M9 9l-1.5-1.5" />
+    </svg>
+  );
+};
+
+export const CurryIcon: React.FC<IconProps> = (props) => {
+  const { size = 24, className, ...rest } = props;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      {...defaultProps}
+      {...rest}
+    >
+      <path d="M8 12c0-2 1-4 4-4s4 2 4 4" />
+      <path d="M7 12c-2 0-4 1-4 3v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4c0-2-2-3-4-3" />
+      <circle cx="10" cy="16" r="0.5" fill="currentColor" />
+      <circle cx="14" cy="16" r="0.5" fill="currentColor" />
+      <circle cx="12" cy="14" r="0.5" fill="currentColor" />
+      <path d="M12 3v5" />
+    </svg>
+  );
+};
+
 // ============================================================================
 // ICON MAPPING SYSTEM
 // ============================================================================
@@ -546,33 +744,70 @@ export const ingredientIconMap: Record<string, React.FC<IconProps>> = {
   cheese: CheeseIcon,
   fromage: CheeseIcon,
   mozzarella: CheeseIcon,
+  emmental: EmmentalIcon,
   goat: GoatIcon,
   chevre: GoatIcon,
+  chèvre: GoatIcon,
   'goat cheese': GoatIcon,
+  roquefort: RoquefortIcon,
+  'blue cheese': RoquefortIcon,
+  parmesan: ParmesanIcon,
+  parmigiano: ParmesanIcon,
+  raclette: RacletteIcon,
+  brousse: CheeseIcon,
   milk: MilkIcon,
   cream: MilkIcon,
+  crème: MilkIcon,
+  'crème fraîche': MilkIcon,
+  'creme fraiche': MilkIcon,
 
   // Vegetables
   tomato: TomatoIcon,
   tomate: TomatoIcon,
+  'tomate fraîche': TomatoIcon,
+  'tomate fraiche': TomatoIcon,
+  'fresh tomato': TomatoIcon,
   'cherry tomato': TomatoIcon,
+  'tomates cerise': TomatoIcon,
+  cerise: TomatoIcon,
   mushroom: MushroomIcon,
   champignon: MushroomIcon,
+  champignons: MushroomIcon,
   pepper: PepperIcon,
   poivron: PepperIcon,
+  poivrons: PepperIcon,
   'bell pepper': PepperIcon,
   onion: OnionIcon,
   oignon: OnionIcon,
+  oignons: OnionIcon,
   garlic: GarlicIcon,
   ail: GarlicIcon,
   eggplant: EggplantIcon,
   aubergine: EggplantIcon,
+  aubergines: EggplantIcon,
+  'aubergines grillées': EggplantIcon,
+  'aubergines grillees': EggplantIcon,
+  'grilled eggplant': EggplantIcon,
   olive: OliveIcon,
+  olives: OliveIcon,
+  artichoke: ArtichokeIcon,
+  artichokes: ArtichokeIcon,
+  artichaut: ArtichokeIcon,
+  artichauts: ArtichokeIcon,
   arugula: AruglaIcon,
   roquette: AruglaIcon,
   rocket: AruglaIcon,
   basil: BasilIcon,
   basilic: BasilIcon,
+  herbs: HerbsIcon,
+  herbes: HerbsIcon,
+  'herbes de provence': HerbsIcon,
+  'herbs de provence': HerbsIcon,
+  'provencal herbs': HerbsIcon,
+  persil: HerbsIcon,
+  parsley: HerbsIcon,
+  'huile d\'olive': OliveIcon,
+  'olive oil': OliveIcon,
 
   // Meats
   bacon: BaconIcon,
@@ -580,25 +815,49 @@ export const ingredientIconMap: Record<string, React.FC<IconProps>> = {
   salami: SalamiIcon,
   prosciutto: ProsciuttoIcon,
   jambon: ProsciuttoIcon,
+  'jambon cru': ProsciuttoIcon,
+  'raw ham': ProsciuttoIcon,
   ham: ProsciuttoIcon,
   chicken: ChickenIcon,
   poulet: ChickenIcon,
   meat: MeatIcon,
   viande: MeatIcon,
+  'viande hachée': MeatIcon,
+  'viande hachee': MeatIcon,
+  'ground meat': MeatIcon,
+  'viande kebab': MeatIcon,
+  kebab: MeatIcon,
   beef: MeatIcon,
   sausage: SausageIcon,
   saucisse: SausageIcon,
   merguez: SausageIcon,
+  chorizo: SausageIcon,
+  figatelli: SausageIcon,
 
   // Seafood
   fish: FishIcon,
   poisson: FishIcon,
   salmon: FishIcon,
+  saumon: FishIcon,
   tuna: FishIcon,
+  thon: FishIcon,
   shrimp: ShrimpIcon,
   crevette: ShrimpIcon,
   anchovy: AnchovyIcon,
   anchois: AnchovyIcon,
+  seafood: SeafoodMixIcon,
+  'fruits de mer': SeafoodMixIcon,
+  'mixed seafood': SeafoodMixIcon,
+  caper: CaperIcon,
+  capers: CaperIcon,
+  câpre: CaperIcon,
+  câpres: CaperIcon,
+  capres: CaperIcon,
+
+  // Sauces & Condiments
+  curry: CurryIcon,
+  'sauce curry': CurryIcon,
+  'curry sauce': CurryIcon,
 
   // Other
   egg: EggIcon,
@@ -609,10 +868,15 @@ export const ingredientIconMap: Record<string, React.FC<IconProps>> = {
   piment: ChiliIcon,
   spice: SpiceIcon,
   epice: SpiceIcon,
+  épice: SpiceIcon,
   nut: NutIcon,
   noix: NutIcon,
   walnut: NutIcon,
   pine: NutIcon,
+  almond: AlmondIcon,
+  almonds: AlmondIcon,
+  amande: AlmondIcon,
+  amandes: AlmondIcon,
 };
 
 /**

@@ -19,24 +19,29 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-40 transition-opacity"
           onClick={onClose}
+          aria-label="Fermer le panier"
         />
       )}
 
       {/* Sidebar */}
-      <div className={`
-        fixed top-0 right-0 h-full w-96 bg-surface dark:bg-background-secondary shadow-2xl z-50 transform transition-transform
-        ${isOpen ? 'translate-x-0' : 'translate-x-full'}
-        md:relative md:translate-x-0 md:shadow-lg md:rounded-xl md:mt-8 md:w-80
-      `}>
+      <aside
+        className={`
+          fixed top-0 right-0 h-full w-full sm:w-96 bg-surface dark:bg-background-secondary shadow-2xl z-50 transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+        `}
+        role="complementary"
+        aria-label="Panier d'achat"
+        aria-hidden={!isOpen}
+      >
         <div className="p-6 h-full flex flex-col">
           {/* En-tête */}
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-text-primary dark:text-text-primary">Votre Panier</h2>
+            <h2 id="cart-sidebar-title" className="text-2xl font-bold text-text-primary dark:text-text-primary">Votre Panier</h2>
             <button
               onClick={onClose}
-              className="md:hidden text-text-tertiary dark:text-text-tertiary hover:text-text-secondary dark:hover:text-text-secondary"
+              className="text-text-tertiary dark:text-text-tertiary hover:text-text-secondary dark:hover:text-text-secondary transition-colors"
               aria-label="Fermer le panier"
             >
               <X className="w-6 h-6" />
@@ -52,14 +57,24 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           ) : (
             <>
               {/* Liste des articles */}
-              <div className="flex-1 overflow-y-auto space-y-4">
+              <div
+                className="flex-1 overflow-y-auto space-y-4"
+                role="list"
+                aria-label={`Panier contenant ${items.length} article${items.length > 1 ? 's' : ''}`}
+                aria-live="polite"
+                aria-atomic="false"
+              >
                 {items.map((item, index) => (
                   <CartItem key={index} item={item} />
                 ))}
               </div>
 
               {/* Résumé et actions */}
-              <div className="border-t border-border dark:border-border pt-6 space-y-4">
+              <div
+                className="border-t border-border dark:border-border pt-6 space-y-4"
+                role="region"
+                aria-label="Résumé du panier"
+              >
                 <div className="space-y-2">
                   <div className="flex justify-between items-center text-lg">
                     <span className="font-bold text-text-primary dark:text-text-primary">Sous-total</span>
@@ -91,7 +106,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
             </>
           )}
         </div>
-      </div>
+      </aside>
     </>
   );
 }

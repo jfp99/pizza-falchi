@@ -1,5 +1,6 @@
 'use client';
 import { X, Gift, CheckCircle, Info } from 'lucide-react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface LoyaltyModalProps {
   isOpen: boolean;
@@ -7,11 +8,13 @@ interface LoyaltyModalProps {
 }
 
 export default function LoyaltyModal({ isOpen, onClose }: LoyaltyModalProps) {
+  const modalRef = useFocusTrap(isOpen);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative bg-warm-cream rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div ref={modalRef} className="relative bg-warm-cream dark:bg-gray-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300" role="dialog" aria-modal="true" aria-labelledby="loyalty-modal-title">
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-primary-red to-primary-yellow p-6 md:p-8 rounded-t-3xl">
           <button
@@ -27,7 +30,7 @@ export default function LoyaltyModal({ isOpen, onClose }: LoyaltyModalProps) {
               <Gift className="w-8 h-8 text-primary-red" />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-black text-white mb-1">
+              <h2 id="loyalty-modal-title" className="text-3xl md:text-4xl font-black text-white mb-1">
                 Programme de Fidélité
               </h2>
               <p className="text-white/90 font-medium">

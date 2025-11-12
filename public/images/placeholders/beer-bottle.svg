@@ -1,0 +1,66 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <radialGradient id="bg-beer" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#FFF9F0"/>
+      <stop offset="100%" stop-color="#FFEED9"/>
+    </radialGradient>
+
+    <linearGradient id="bottle-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B4513"/>
+      <stop offset="30%" stop-color="#A0522D"/>
+      <stop offset="70%" stop-color="#8B4513"/>
+      <stop offset="100%" stop-color="#654321"/>
+    </linearGradient>
+
+    <linearGradient id="beer-liquid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="50%" stop-color="#FFA500"/>
+      <stop offset="100%" stop-color="#FF8C00"/>
+    </linearGradient>
+
+    <linearGradient id="bottle-shine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="white" stop-opacity="0"/>
+      <stop offset="30%" stop-color="white" stop-opacity="0.5"/>
+      <stop offset="70%" stop-color="white" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bg-beer)"/>
+
+  <!-- Beer bottle -->
+  <g transform="translate(200, 150)">
+    <!-- Bottle body -->
+    <rect x="-30" y="-80" width="60" height="180" rx="10" fill="url(#bottle-gradient)" opacity="0.9"/>
+
+    <!-- Beer liquid inside -->
+    <rect x="-26" y="-50" width="52" height="140" rx="8" fill="url(#beer-liquid)" opacity="0.7"/>
+
+    <!-- Foam/head -->
+    <ellipse cx="0" cy="-50" rx="26" ry="10" fill="white" opacity="0.9"/>
+    <ellipse cx="-10" cy="-55" rx="8" ry="6" fill="white" opacity="0.8"/>
+    <ellipse cx="12" cy="-56" rx="6" ry="5" fill="white" opacity="0.8"/>
+
+    <!-- Bottle shine -->
+    <rect x="-25" y="-75" width="20" height="170" rx="8" fill="url(#bottle-shine)" opacity="0.6"/>
+
+    <!-- Bottle neck -->
+    <rect x="-15" y="-110" width="30" height="35" fill="url(#bottle-gradient)" opacity="0.9"/>
+
+    <!-- Bottle cap -->
+    <rect x="-18" y="-125" width="36" height="18" rx="3" fill="#FFD700" stroke="#CC9900" stroke-width="2"/>
+
+    <!-- Cap ridges -->
+    <line x1="-15" y1="-120" x2="-15" y2="-110" stroke="#CC9900" stroke-width="1"/>
+    <line x1="-5" y1="-120" x2="-5" y2="-110" stroke="#CC9900" stroke-width="1"/>
+    <line x1="5" y1="-120" x2="5" y2="-110" stroke="#CC9900" stroke-width="1"/>
+    <line x1="15" y1="-120" x2="15" y2="-110" stroke="#CC9900" stroke-width="1"/>
+  </g>
+
+  <!-- Label -->
+  <text x="200" y="270" text-anchor="middle" fill="#8B4513" font-size="18" font-weight="bold" font-family="system-ui">
+    BIÈRE
+  </text>
+</svg>

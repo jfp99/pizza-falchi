@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <!-- Radial gradient for starburst center -->
+    <radialGradient id="redGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#D63A3A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B82828;stop-opacity:1" />
+    </radialGradient>
+
+    <!-- Badge gradient (cream/yellow) -->
+    <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F9E9B8;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F4E1A0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E8D28A;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Gold stroke gradient -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8C474;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Green arc gradient -->
+    <radialGradient id="greenGradient" cx="50%" cy="30%" r="50%">
+      <stop offset="0%" style="stop-color:#3D6B20;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2D5016;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- Starburst base circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#redGradient)"/>
+
+  <!-- Starburst points (24 points for authentic look) -->
+  <g id="starburst" fill="#C82333" opacity="0.9">
+    <path d="M50,2 L51.5,14 L50,2 L48.5,14 Z"/>
+    <path d="M63,5 L62,17 L63,5 L60.5,16.5 Z"/>
+    <path d="M74.5,12 L71,23 L74.5,12 L70,22 Z"/>
+    <path d="M83.5,22 L78,31 L83.5,22 L77,30 Z"/>
+    <path d="M89,35 L82.5,42 L89,35 L81.5,41 Z"/>
+    <path d="M92,49 L85,53 L92,49 L84,52 Z"/>
+    <path d="M89,63 L82.5,63 L89,63 L81.5,62 Z"/>
+    <path d="M83.5,75.5 L78,71 L83.5,75.5 L77,70 Z"/>
+    <path d="M74.5,85 L71,77 L74.5,85 L70,76 Z"/>
+    <path d="M63,92 L62,82 L63,92 L60.5,81.5 Z"/>
+    <path d="M50,95 L51.5,84 L50,95 L48.5,84 Z"/>
+    <path d="M37,92 L38,82 L37,92 L39.5,81.5 Z"/>
+    <path d="M25.5,85 L29,77 L25.5,85 L30,76 Z"/>
+    <path d="M16.5,75.5 L22,71 L16.5,75.5 L23,70 Z"/>
+    <path d="M11,63 L17.5,63 L11,63 L18.5,62 Z"/>
+    <path d="M8,49 L15,53 L8,49 L16,52 Z"/>
+    <path d="M11,35 L17.5,42 L11,35 L18.5,41 Z"/>
+    <path d="M16.5,22 L22,31 L16.5,22 L23,30 Z"/>
+    <path d="M25.5,12 L29,23 L25.5,12 L30,22 Z"/>
+    <path d="M37,5 L38,17 L37,5 L39.5,16.5 Z"/>
+  </g>
+
+  <!-- Red vertical stripes texture -->
+  <g opacity="0.2">
+    <rect x="20" y="10" width="1" height="80" fill="#8B1725"/>
+    <rect x="30" y="10" width="1" height="80" fill="#8B1725"/>
+    <rect x="40" y="10" width="1" height="80" fill="#8B1725"/>
+    <rect x="60" y="10" width="1" height="80" fill="#8B1725"/>
+    <rect x="70" y="10" width="1" height="80" fill="#8B1725"/>
+    <rect x="80" y="10" width="1" height="80" fill="#8B1725"/>
+  </g>
+
+  <!-- Gold decorative dots on outer edge -->
+  <circle cx="50" cy="7" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="68" cy="10" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="82" cy="20" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="90" cy="35" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="93" cy="50" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="90" cy="65" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="82" cy="80" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="68" cy="90" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="50" cy="93" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="32" cy="90" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="18" cy="80" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="10" cy="65" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="7" cy="50" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="10" cy="35" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="18" cy="20" r="1.2" fill="#E8C474" opacity="0.8"/>
+  <circle cx="32" cy="10" r="1.2" fill="#E8C474" opacity="0.8"/>
+
+  <!-- Top decorative arc with "MAISON DE QUALITÉ" text area -->
+  <path d="M 20 28 Q 50 20 80 28" fill="none" stroke="url(#goldGradient)" stroke-width="2.5"/>
+  <path d="M 21 29 Q 50 21 79 29" fill="none" stroke="#8B1725" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- Small gold dots on arc -->
+  <circle cx="23" cy="28" r="0.8" fill="#E8C474"/>
+  <circle cx="35" cy="24" r="0.8" fill="#E8C474"/>
+  <circle cx="50" cy="22" r="0.8" fill="#E8C474"/>
+  <circle cx="65" cy="24" r="0.8" fill="#E8C474"/>
+  <circle cx="77" cy="28" r="0.8" fill="#E8C474"/>
+
+  <!-- Green decorative arc behind badge -->
+  <ellipse cx="50" cy="50" rx="38" ry="32" fill="url(#greenGradient)" opacity="0.85"/>
+
+  <!-- Decorative scrollwork on green -->
+  <path d="M 28 44 Q 32 42 35 44 Q 38 46 38 50" fill="none" stroke="#E8C474" stroke-width="0.8" opacity="0.7"/>
+  <path d="M 72 44 Q 68 42 65 44 Q 62 46 62 50" fill="none" stroke="#E8C474" stroke-width="0.8" opacity="0.7"/>
+
+  <!-- Center cream badge (ribbon style) -->
+  <ellipse cx="50" cy="48" rx="30" ry="20" fill="url(#badgeGradient)"/>
+  <ellipse cx="50" cy="48" rx="30" ry="20" fill="none" stroke="#C82333" stroke-width="2"/>
+  <ellipse cx="50" cy="48" rx="28" ry="18" fill="none" stroke="url(#goldGradient)" stroke-width="0.8"/>
+
+  <!-- Horizontal lines on badge (ribbon texture) -->
+  <g opacity="0.15">
+    <line x1="23" y1="40" x2="77" y2="40" stroke="#8B1725" stroke-width="0.5"/>
+    <line x1="22" y1="43" x2="78" y2="43" stroke="#8B1725" stroke-width="0.5"/>
+    <line x1="22" y1="46" x2="78" y2="46" stroke="#8B1725" stroke-width="0.5"/>
+    <line x1="22" y1="49" x2="78" y2="49" stroke="#8B1725" stroke-width="0.5"/>
+    <line x1="22" y1="52" x2="78" y2="52" stroke="#8B1725" stroke-width="0.5"/>
+    <line x1="23" y1="55" x2="77" y2="55" stroke="#8B1725" stroke-width="0.5"/>
+  </g>
+
+  <!-- Italian flag shield below text -->
+  <g id="flag">
+    <path d="M 45 58 L 55 58 L 54 66 L 50 69 L 46 66 Z" fill="#FFFFFF" stroke="#A0826D" stroke-width="0.5"/>
+    <path d="M 45 58 L 48 58 L 47.3 66 L 46 66 Z" fill="#009246"/>
+    <path d="M 52 58 L 55 58 L 54 66 L 52.7 66 Z" fill="#CE2B37"/>
+  </g>
+
+  <!-- Text: "PF" in elegant serif font -->
+  <text x="50" y="50"
+        font-family="Georgia, Palatino, Times New Roman, serif"
+        font-size="18"
+        font-weight="bold"
+        fill="#1a1a1a"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        letter-spacing="1">PF</text>
+
+  <!-- Subtle shadow/depth on letters -->
+  <text x="50.3" y="50.3"
+        font-family="Georgia, Palatino, Times New Roman, serif"
+        font-size="18"
+        font-weight="bold"
+        fill="#8B1725"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        letter-spacing="1"
+        opacity="0.15">PF</text>
+
+  <!-- Outer decorative border -->
+  <circle cx="50" cy="50" r="47" fill="none" stroke="url(#goldGradient)" stroke-width="1.5" opacity="0.8"/>
+  <circle cx="50" cy="50" r="45.5" fill="none" stroke="#8B1725" stroke-width="0.3" opacity="0.5"/>
+</svg>

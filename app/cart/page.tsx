@@ -125,9 +125,10 @@ export default function CartPage() {
                       <button
                         onClick={() => handleRemoveItem(item.product._id, item.product.name)}
                         className="text-red-400 dark:text-red-300 hover:text-red-600 dark:hover:text-red-400 transition-all p-2 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-xl group/btn"
+                        aria-label={`Supprimer ${item.product.name} du panier`}
                         title="Supprimer"
                       >
-                        <Trash2 className="w-5 h-5 transform group-hover/btn:scale-110 transition-transform" />
+                        <Trash2 className="w-5 h-5 transform group-hover/btn:scale-110 transition-transform" aria-hidden="true" />
                       </button>
                     </div>
 
@@ -139,8 +140,9 @@ export default function CartPage() {
                           className="bg-white dark:bg-gray-600 hover:bg-primary-red hover:text-white text-gray-700 dark:text-gray-200 w-10 h-10 rounded-lg flex items-center justify-center shadow-sm transition-colors duration-300"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
+                          aria-label="Diminuer la quantité"
                         >
-                          <Minus className="w-4 h-4" />
+                          <Minus className="w-4 h-4" aria-hidden="true" />
                         </motion.button>
                         <motion.span
                           className="text-lg font-bold text-gray-900 dark:text-gray-100 w-14 text-center transition-colors duration-300"
@@ -156,8 +158,9 @@ export default function CartPage() {
                           className="bg-white dark:bg-gray-600 hover:bg-primary-red hover:text-white text-gray-700 dark:text-gray-200 w-10 h-10 rounded-lg flex items-center justify-center shadow-sm transition-colors duration-300"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
+                          aria-label="Augmenter la quantité"
                         >
-                          <Plus className="w-4 h-4" />
+                          <Plus className="w-4 h-4" aria-hidden="true" />
                         </motion.button>
                       </div>
 

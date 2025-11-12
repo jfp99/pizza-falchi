@@ -1,0 +1,42 @@
+
+> pizza-truck@0.1.0 build:analyze
+> cross-env ANALYZE=true next build
+
+   ▲ Next.js 15.5.4
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+[1mWebpack Bundle Analyzer[22m saved report to [1mC:\Users\jfpru\OneDrive\Escritorio\pizza-falchi\.next\analyze\nodejs.html[22m
+[1mWebpack Bundle Analyzer[22m saved report to [1mC:\Users\jfpru\OneDrive\Escritorio\pizza-falchi\.next\analyze\edge.html[22m
+[1mWebpack Bundle Analyzer[22m saved report to [1mC:\Users\jfpru\OneDrive\Escritorio\pizza-falchi\.next\analyze\client.html[22m
+ ⚠ Compiled with warnings in 20.1s
+
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@prisma/instrumentation/dist/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/prisma.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./sentry.server.config.ts
+
+   Linting and checking validity of types ...
+ ⨯ ESLint: Invalid Options: - Unknown options: useEslintrc, extensions - 'extensions' has been removed.
+Failed to compile.
+
+./lib/gtag.ts:323:5
+Type error: All declarations of 'gtag' must have identical modifiers.
+
+[0m [90m 321 |[39m declare global {
+ [90m 322 |[39m   [36minterface[39m [33mWindow[39m {
+[31m[1m>[22m[39m[90m 323 |[39m     gtag[33m:[39m (
+ [90m     |[39m     [31m[1m^[22m[39m
+ [90m 324 |[39m       command[33m:[39m string[33m,[39m
+ [90m 325 |[39m       targetId[33m:[39m string [33m|[39m [33mDate[39m[33m,[39m
+ [90m 326 |[39m       config[33m?[39m[33m:[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m any[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

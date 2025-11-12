@@ -1,29 +1,52 @@
 import { Plus, Star, Flame, Leaf } from 'lucide-react';
 import { Product } from '@/types';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { IngredientIcon } from '@/components/icons/IngredientIcons';
+import { ProductImage } from '@/components/menu/ProductImage';
 import { motion } from 'framer-motion';
 import { hoverLift, staggerItem } from '@/lib/animations';
+import Badge from '@/components/ui/Badge';
 
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product) => void;
 }
 
-export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
-  const [imageError, setImageError] = useState(false);
+const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const [isAdded, setIsAdded] = useState(false);
-
-  // Professional SVG placeholder without emojis
-  const placeholderImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%23f3f4f6"/%3E%3Cpath d="M180 130 c0-16 8-28 20-28s20 12 20 28-8 28-20 28-20-12-20-28z" fill="%23d1d5db"/%3E%3Cpath d="M200 102 c0-8 0-12 0-12s8 4 12 12" stroke="%23d1d5db" stroke-width="2" fill="none"/%3E%3Cpath d="M200 102 c0-8 0-12 0-12s-8 4-12 12" stroke="%23d1d5db" stroke-width="2" fill="none"/%3E%3C/svg%3E';
-
-  const [imageSrc, setImageSrc] = useState(product.image || placeholderImage);
 
   const handleAddToCart = () => {
     onAddToCart(product);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1000);
+  };
+
+  // Get color for ingredient type (matching PizzaPlaceholder logic)
+  const getIngredientColor = (ingredient: string): string => {
+    const lower = ingredient.toLowerCase();
+    // Vegetables = green
+    if (lower.includes('tomate') || lower.includes('poivron') || lower.includes('oignon') ||
+        lower.includes('champignon') || lower.includes('basilic') || lower.includes('olive')) {
+      return '#16A34A';
+    }
+    // Cheese = yellow/orange
+    if (lower.includes('fromage') || lower.includes('mozzarella') || lower.includes('emmental') ||
+        lower.includes('chèvre') || lower.includes('parmesan') || lower.includes('raclette')) {
+      return '#F59E0B';
+    }
+    // Meats = red/brown
+    if (lower.includes('jambon') || lower.includes('poulet') || lower.includes('viande') ||
+        lower.includes('merguez') || lower.includes('chorizo') || lower.includes('lardons')) {
+      return '#DC2626';
+    }
+    // Seafood = blue
+    if (lower.includes('anchois') || lower.includes('thon') || lower.includes('saumon') ||
+        lower.includes('fruits de mer')) {
+      return '#0EA5E9';
+    }
+    // Default = brand red
+    return '#E30613';
   };
 
 
@@ -37,20 +60,17 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       exit="exit"
       className="group bg-surface dark:bg-surface rounded-2xl shadow-lg hover:shadow-2xl dark:shadow-brand-red/10 border border-border dark:border-border overflow-hidden h-full flex flex-col transition-colors duration-300">
       <Link href={`/products/${product._id}`} className="relative overflow-hidden aspect-[4/3] cursor-pointer bg-background-secondary dark:bg-background-tertiary">
-        <motion.img
-          src={imageSrc}
-          alt={`${product.name} - ${product.description}`}
-          className="w-full h-full object-cover"
+        <motion.div
+          className="w-full h-full"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          loading="lazy"
-          onError={() => {
-            if (!imageError) {
-              setImageError(true);
-              setImageSrc(placeholderImage);
-            }
-          }}
-        />
+        >
+          <ProductImage
+            product={product}
+            className="w-full h-full"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        </motion.div>
         
         {/* Badges */}
         <motion.div
@@ -60,34 +80,34 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
           transition={{ delay: 0.1, duration: 0.3 }}
         >
           {product.popular && (
-            <motion.span
-              className="bg-brand-gold text-text-on-dark px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg transition-colors"
+            <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Star className="w-3 h-3 fill-current" />
-              <span>Populaire</span>
-            </motion.span>
+              <Badge variant="popular" size="md" icon={<Star className="w-3 h-3 fill-current" />}>
+                Populaire
+              </Badge>
+            </motion.div>
           )}
           {product.spicy && (
-            <motion.span
-              className="bg-brand-red text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg transition-colors"
+            <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Flame className="w-3 h-3" />
-              <span>Épicé</span>
-            </motion.span>
+              <Badge variant="spicy" size="md" icon={<Flame className="w-3 h-3" />}>
+                Épicé
+              </Badge>
+            </motion.div>
           )}
           {product.vegetarian && (
-            <motion.span
-              className="bg-brand-green text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg transition-colors"
+            <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Leaf className="w-3 h-3" />
-              <span>Végétarien</span>
-            </motion.span>
+              <Badge variant="vegetarian" size="md" icon={<Leaf className="w-3 h-3" />}>
+                Végétarien
+              </Badge>
+            </motion.div>
           )}
         </motion.div>
 
@@ -107,30 +127,30 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
 
       <div className="p-5 flex flex-col flex-1">
         <Link href={`/products/${product._id}`} className="space-y-2 mb-4 cursor-pointer">
-          <h3 className="text-xl font-bold text-text-primary dark:text-text-primary line-clamp-1 group-hover:text-brand-red dark:group-hover:text-brand-red transition-colors">
+          <h3 className="text-xl font-semibold capitalize tracking-tight text-text-primary dark:text-text-primary line-clamp-1 group-hover:text-brand-red dark:group-hover:text-brand-red transition-colors">
             {product.name}
           </h3>
-          <p className="text-text-secondary dark:text-text-secondary text-sm leading-relaxed line-clamp-2 transition-colors">
-            {product.description}
-          </p>
         </Link>
 
         {/* Ingredients with SVG Icons */}
         {product.ingredients && product.ingredients.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
-            {product.ingredients.map(ingredient => (
-              <span
-                key={ingredient}
-                className="bg-background-tertiary dark:bg-background-tertiary text-text-secondary dark:text-text-secondary px-1.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 border border-border dark:border-border transition-colors"
-              >
-                <IngredientIcon
-                  ingredient={ingredient}
-                  size={14}
-                  className="text-text-tertiary dark:text-text-tertiary transition-colors"
-                />
-                <span className="capitalize text-xs">{ingredient}</span>
-              </span>
-            ))}
+            {product.ingredients.map(ingredient => {
+              const iconColor = getIngredientColor(ingredient);
+              return (
+                <span
+                  key={ingredient}
+                  className="bg-background-tertiary dark:bg-background-tertiary text-text-secondary dark:text-text-secondary px-1.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 border border-border dark:border-border transition-colors"
+                >
+                  <IngredientIcon
+                    ingredient={ingredient}
+                    size={14}
+                    style={{ color: iconColor }}
+                  />
+                  <span className="capitalize text-xs">{ingredient}</span>
+                </span>
+              );
+            })}
           </div>
         )}
 
@@ -152,7 +172,11 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             animate={isAdded ? { scale: [1, 1.2, 1] } : {}}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            transition={
+              isAdded
+                ? { duration: 0.3, ease: "easeInOut" }
+                : { type: "spring", stiffness: 400, damping: 17 }
+            }
           >
             <motion.div
               animate={isAdded ? { rotate: [0, -10, 10, -10, 10, 0] } : {}}
@@ -172,4 +196,6 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       </div>
     </motion.div>
   );
-}
+});
+
+export default ProductCard;

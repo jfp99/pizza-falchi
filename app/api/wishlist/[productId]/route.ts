@@ -4,12 +4,19 @@ import { authOptions } from '@/lib/auth';
 import { connectDB } from '@/lib/mongodb';
 import Wishlist from '@/models/Wishlist';
 import { writeLimiter } from '@/lib/rateLimiter';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 // DELETE - Remove specific product from wishlist
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ productId: string }> }
 ) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   const rateLimitResponse = await writeLimiter(request);
   if (rateLimitResponse) return rateLimitResponse;
 

@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Newsletter from '@/models/Newsletter';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 // POST /api/newsletter/unsubscribe - Unsubscribe from newsletter
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     await connectDB();
 

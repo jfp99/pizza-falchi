@@ -10,7 +10,7 @@ import AuthProvider from '@/components/providers/SessionProvider';
 import { CartProvider } from '@/contexts/CartContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
-import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
+import CookieConsent from '@/components/legal/CookieConsent';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -24,9 +24,17 @@ export const metadata: Metadata = {
   },
   description: 'Découvrez Pizza Falchi, votre food truck de pizzas artisanales à Ajaccio. Pizzas au feu de bois préparées avec des ingrédients frais et de qualité. Commandez en ligne et savourez l\'authenticité corse.',
   icons: {
-    icon: '/images/logo-pizzafalchi.jpg',
-    shortcut: '/images/logo-pizzafalchi.jpg',
-    apple: '/images/logo-pizzafalchi.jpg',
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon-32x32.png',
+    apple: '/apple-touch-icon.png',
+    other: [
+      { rel: 'android-chrome', url: '/android-chrome-192x192.png', sizes: '192x192' },
+      { rel: 'android-chrome', url: '/android-chrome-512x512.png', sizes: '512x512' },
+    ],
   },
   keywords: [
     'pizza',
@@ -116,7 +124,7 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#FFF9F0" />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased overflow-x-hidden`} suppressHydrationWarning>
         <AuthProvider>
           <ThemeProvider>
             <CartProvider>
@@ -126,7 +134,6 @@ export default function RootLayout({
               <main id="main-content" className="flex-1">
                 {children}
               </main>
-              <SpecialOfferBanner />
               <Footer />
             </div>
             <Toaster
@@ -141,6 +148,7 @@ export default function RootLayout({
             />
             <SpeedInsights />
             <GoogleAnalytics />
+            <CookieConsent />
           </CartProvider>
           </ThemeProvider>
         </AuthProvider>

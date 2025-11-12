@@ -11,6 +11,7 @@ import TimeSlotSelector from '@/components/checkout/TimeSlotSelector';
 import toast from 'react-hot-toast';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 import { checkoutAnalytics } from '@/lib/analytics';
+import { useCSRF } from '@/hooks/useCSRF';
 import type { TimeSlot } from '@/types';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
@@ -18,6 +19,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 export default function Checkout() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCart();
+  const { token: csrfToken, getHeaders: getCSRFHeaders } = useCSRF();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
@@ -37,6 +39,7 @@ export default function Checkout() {
     notes: ''
   });
 
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -63,7 +66,10 @@ export default function Checkout() {
     try {
       const response = await fetch('/api/create-payment-intent', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getCSRFHeaders(),
+        },
         body: JSON.stringify({ amount: total }),
       });
 
@@ -102,6 +108,12 @@ export default function Checkout() {
       if (!formData.street.trim()) newErrors.street = 'Adresse requise';
       if (!formData.city.trim()) newErrors.city = 'Ville requise';
       if (!formData.postalCode.trim()) newErrors.postalCode = 'Code postal requis';
+    }
+
+    // CGV acceptance validation
+    if (!acceptedTerms) {
+      newErrors.terms = 'Vous devez accepter les CGV pour continuer';
+      toast.error('Veuillez accepter les Conditions Générales de Vente');
     }
 
     setErrors(newErrors);
@@ -165,6 +177,7 @@ export default function Checkout() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...getCSRFHeaders(),
         },
         body: JSON.stringify(orderData),
       });
@@ -608,11 +621,42 @@ export default function Checkout() {
                 </div>
               </div>
 
+              {/* CGV Acceptance Checkbox */}
+              <div className="mb-6">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <div className="relative flex items-center justify-center w-5 h-5 mt-0.5 flex-shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={acceptedTerms}
+                      onChange={(e) => setAcceptedTerms(e.target.checked)}
+                      className="w-5 h-5 rounded border-2 border-gray-300 dark:border-gray-600 text-primary-red focus:ring-2 focus:ring-primary-red focus:ring-offset-2 cursor-pointer transition-all"
+                    />
+                  </div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 leading-tight">
+                    J'ai lu et j'accepte les{' '}
+                    <Link href="/conditions-generales-vente" target="_blank" className="text-primary-red font-semibold hover:underline">
+                      Conditions Générales de Vente
+                    </Link>{' '}
+                    et la{' '}
+                    <Link href="/politique-confidentialite" target="_blank" className="text-primary-red font-semibold hover:underline">
+                      Politique de Confidentialité
+                    </Link>
+                    <span className="text-red-500 ml-1">*</span>
+                  </span>
+                </label>
+                {errors.terms && (
+                  <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.terms}
+                  </p>
+                )}
+              </div>
+
               {/* Submit Button - Only for cash/card payments */}
               {formData.paymentMethod !== 'online' && (
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !acceptedTerms}
                   className="w-full bg-gradient-to-r from-primary-red to-soft-red hover:from-primary-red-dark hover:to-primary-red text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all duration-300 transform hover:scale-105 hover:shadow-xl text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   {isSubmitting ? (
@@ -630,7 +674,7 @@ export default function Checkout() {
               )}
 
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4 transition-colors duration-300">
-                En confirmant, vous acceptez nos conditions générales
+                En confirmant votre commande, vos données seront traitées conformément à notre politique de confidentialité
               </p>
             </div>
           </div>

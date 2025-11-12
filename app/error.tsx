@@ -56,7 +56,7 @@ export default function Error({ error, reset }: ErrorProps) {
             onClick={reset}
             className="btn-primary inline-flex items-center gap-2 group"
           >
-            <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
+            <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-200" />
             Réessayer
           </button>
 

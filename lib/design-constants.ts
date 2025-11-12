@@ -63,9 +63,9 @@ export const SHADOWS = {
 } as const;
 
 export const TRANSITIONS = {
-  base: 'transition-all duration-300',
-  fast: 'transition-all duration-200',
-  slow: 'transition-all duration-500',
+  fast: 'transition-all duration-150',
+  base: 'transition-all duration-200',
+  slow: 'transition-colors duration-300',
 } as const;
 
 export const GRADIENTS = {

@@ -64,7 +64,8 @@ export async function POST(request: NextRequest) {
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        // Unhandled event type - no action needed
+        break;
     }
 
     return NextResponse.json({ received: true });
@@ -96,8 +97,6 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     order.paymentStatus = 'paid';
     order.status = 'confirmed'; // Auto-confirm paid orders
     await order.save();
-
-    console.log(`Payment succeeded for order ${order._id}`);
 
     // Send confirmation email to customer
     if (order.email) {
@@ -144,8 +143,6 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
     // Don't cancel the order - customer might retry
     await order.save();
 
-    console.log(`Payment failed for order ${order._id}`);
-
     // Optionally send failure notification email
     // (You may want to implement this based on business logic)
   } catch (error) {
@@ -172,8 +169,6 @@ async function handlePaymentCanceled(paymentIntent: Stripe.PaymentIntent) {
     order.paymentStatus = 'failed';
     order.status = 'cancelled';
     await order.save();
-
-    console.log(`Payment canceled for order ${order._id}`);
 
     // Send cancellation email if needed
     if (order.email) {
@@ -223,8 +218,6 @@ async function handleRefund(charge: Stripe.Charge) {
     // Update order payment status
     order.paymentStatus = 'refunded';
     await order.save();
-
-    console.log(`Refund processed for order ${order._id}`);
 
     // Send refund confirmation email
     if (order.email) {

@@ -12,6 +12,7 @@ import {
   getAvailableSlotsForDate,
   bulkGenerateTimeSlots,
 } from '@/lib/timeSlots';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 /**
  * GET /api/time-slots
@@ -122,6 +123,12 @@ export async function GET(request: NextRequest) {
  * - numberOfDays: Number of days to generate slots for (default: 7)
  */
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     await connectDB();
 

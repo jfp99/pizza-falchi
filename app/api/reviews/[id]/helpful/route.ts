@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Review from '@/models/Review';
 import { writeLimiter } from '@/lib/rateLimiter';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 // POST - Mark review as helpful
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   const rateLimitResponse = await writeLimiter(request);
   if (rateLimitResponse) return rateLimitResponse;
 

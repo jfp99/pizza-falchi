@@ -1,0 +1,224 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Aller au contenu principal" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e9]
+          - generic [ref=e11]: 04 42 92 03 08
+        - generic [ref=e12]: Ouvert 6j/7 • 18h-21h30
+      - generic [ref=e14]:
+        - link "Pizza Falchi Logo PIZZA FALCHI AUTHENTIQUE • ARTISANAL" [ref=e15] [cursor=pointer]:
+          - /url: /
+          - img "Pizza Falchi Logo" [ref=e17]
+          - generic [ref=e19]:
+            - generic [ref=e20]: PIZZA FALCHI
+            - generic [ref=e21]: AUTHENTIQUE • ARTISANAL
+        - generic [ref=e22]:
+          - link "Accueil" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - text: Accueil
+          - link "Menu" [ref=e25] [cursor=pointer]:
+            - /url: /menu
+            - text: Menu
+          - link "À Propos" [ref=e27] [cursor=pointer]:
+            - /url: /about
+            - text: À Propos
+          - link "Contact" [ref=e29] [cursor=pointer]:
+            - /url: /contact
+            - text: Contact
+          - link "Panier vide" [ref=e32] [cursor=pointer]:
+            - /url: /cart
+            - generic [ref=e33]:
+              - img [ref=e34]
+              - generic [ref=e38]: Panier
+      - button "Passer au mode sombre" [ref=e43] [cursor=pointer]:
+        - img [ref=e44]
+    - main [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - img "Pizza Falchi - Notre Histoire" [ref=e51]
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - img "Pizza Falchi Logo" [ref=e57]
+              - generic [ref=e58]:
+                - generic [ref=e59]: Notre Histoire
+                - heading "PIZZA FALCHI" [level=1] [ref=e60]
+                - paragraph [ref=e61]: depuis 2001
+                - paragraph [ref=e62]: Puyricard Aix-en-Provence
+            - paragraph [ref=e63]: Une passion transmise de génération en génération
+            - generic [ref=e64]: L'Art de la Pizza Italienne authentique
+            - generic [ref=e65]:
+              - link "Voir le Menu" [ref=e66] [cursor=pointer]:
+                - /url: /menu
+                - text: Voir le Menu
+              - link "Nous Contacter" [ref=e68] [cursor=pointer]:
+                - /url: /contact
+                - text: Nous Contacter
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e78]: Notre Savoir-Faire
+            - heading "L'Art de la Pizza Authentique" [level=2] [ref=e80]
+            - paragraph [ref=e81]: Découvrez les étapes de fabrication de nos pizzas artisanales, de la pâte fraîche jusqu'à la cuisson au feu de bois
+          - generic [ref=e82]:
+            - generic [ref=e84]:
+              - generic [ref=e86]:
+                - img "Boules de pâte fraîche prêtes pour la préparation" [ref=e88]
+                - generic [ref=e91]: "01"
+              - generic [ref=e92]:
+                - heading "Pâte Artisanale" [level=3] [ref=e93]
+                - paragraph [ref=e94]: Pétrissage et façonnage manuel de notre pâte avec fermentation de 48h
+            - generic [ref=e96]:
+              - generic [ref=e98]:
+                - img "Application de la sauce tomate sur la pâte" [ref=e100]
+                - generic [ref=e103]: "02"
+              - generic [ref=e104]:
+                - heading "Sauce Traditionnelle" [level=3] [ref=e105]
+                - paragraph [ref=e106]: Application de notre sauce tomate San Marzano en spirale traditionnelle
+            - generic [ref=e108]:
+              - generic [ref=e110]:
+                - img "Ajout des ingrédients frais sur la pizza" [ref=e112]
+                - generic [ref=e115]: "03"
+              - generic [ref=e116]:
+                - heading "Garniture Généreuse" [level=3] [ref=e117]
+                - paragraph [ref=e118]: Ingrédients frais italiens disposés avec soin par nos pizzaïolos
+            - generic [ref=e120]:
+              - generic [ref=e122]:
+                - img "Pizza cuisant dans le four à bois" [ref=e124]
+                - generic [ref=e127]: "04"
+              - generic [ref=e128]:
+                - heading "Cuisson au Feu de Bois" [level=3] [ref=e129]
+                - paragraph [ref=e130]: Cuisson rapide à haute température dans notre four traditionnel
+        - generic [ref=e133]:
+          - generic [ref=e135]: Notre Origine
+          - generic [ref=e136]:
+            - paragraph [ref=e137]: En 2001, la pizzeria a vu le jour et depuis cette année-là les Falchi servent de délicieuses pizzas sur la commune de Puyricard. J'ai eu l'honneur de me joindre à cette aventure en 2014 et d'apprendre la confection de ces pizzas gourmandes dont je maîtrise désormais les secrets.
+            - paragraph [ref=e138]: M. et Mme Falchi me font confiance pour la reprise de cette pizzeria et pour faire perdurer leurs recettes afin de continuer à régaler les habitants de Puyricard et de ses alentours.
+            - paragraph [ref=e139]: "Chaque pizza est préparée avec des ingrédients importés d'Italie : tomates San Marzano, mozzarella di bufala, basilic frais et huile d'olive extra vierge. Notre pâte fermente pendant 48 heures pour une texture légère et croustillante, exactement comme à Naples."
+          - generic [ref=e140]:
+            - generic [ref=e142]: Nos Valeurs
+            - generic [ref=e143]:
+              - generic [ref=e144]:
+                - img [ref=e146]
+                - heading "Passion" [level=4] [ref=e148]
+                - paragraph [ref=e149]: Chaque pizza est préparée avec amour et dévouement, comme si nous la faisions pour notre propre famille
+              - generic [ref=e150]:
+                - img [ref=e152]
+                - heading "Qualité" [level=4] [ref=e155]
+                - paragraph [ref=e156]: Ingrédients 100% italiens, sélectionnés avec soin auprès de producteurs de confiance
+              - generic [ref=e157]:
+                - img [ref=e159]
+                - heading "Authenticité" [level=4] [ref=e162]
+                - paragraph [ref=e163]: Recettes traditionnelles napolitaines respectées à la lettre, sans compromis
+              - generic [ref=e164]:
+                - img [ref=e166]
+                - heading "Proximité" [level=4] [ref=e171]
+                - paragraph [ref=e172]: Nous nous déplaçons dans votre quartier pour vous offrir une expérience unique
+          - paragraph [ref=e174]: Passione • Tradizione • Qualità
+        - generic [ref=e177]:
+          - heading "Prêt à Commander ?" [level=3] [ref=e178]
+          - paragraph [ref=e179]: Découvrez notre menu et savourez l'authenticité italienne
+          - generic [ref=e180]:
+            - link "Voir le Menu" [ref=e181] [cursor=pointer]:
+              - /url: /menu
+              - generic [ref=e182]:
+                - text: Voir le Menu
+                - img [ref=e183]
+            - link "Nous Contacter →" [ref=e190] [cursor=pointer]:
+              - /url: /contact
+              - generic [ref=e191]:
+                - text: Nous Contacter
+                - generic [ref=e192]: →
+    - generic [ref=e201]:
+      - generic [ref=e202]:
+        - generic [ref=e204]:
+          - img [ref=e206]
+          - img [ref=e211]
+        - generic [ref=e213]:
+          - generic [ref=e215]: Fidélité
+          - heading "10 Pizzas Achetées = 11ème Offerte" [level=3] [ref=e216]:
+            - text: 10 Pizzas Achetées = 11
+            - superscript [ref=e217]: ème
+            - text: Offerte
+          - paragraph [ref=e218]: Profitez de notre programme de fidélité
+      - button "En savoir plus" [ref=e220] [cursor=pointer]:
+        - paragraph [ref=e221]: En savoir plus
+    - contentinfo [ref=e223]:
+      - generic [ref=e225]:
+        - generic [ref=e226]:
+          - generic [ref=e227]:
+            - link "Pizza Falchi Logo PIZZA FALCHI AUTHENTIQUE • ARTISANAL" [ref=e228] [cursor=pointer]:
+              - /url: /
+              - img "Pizza Falchi Logo" [ref=e230]
+              - generic [ref=e231]:
+                - generic [ref=e232]: PIZZA FALCHI
+                - generic [ref=e233]: AUTHENTIQUE • ARTISANAL
+            - generic [ref=e234]:
+              - link "Instagram" [ref=e235] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e236]
+              - link "Facebook" [ref=e239] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e240]
+              - link "Google" [ref=e242] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e243]
+            - generic [ref=e248]:
+              - img "Fait Maison - Produits faits maison" [ref=e250]
+              - paragraph [ref=e251]:
+                - text: Produits
+                - text: Faits Maison
+          - generic [ref=e252]:
+            - heading "Navigation" [level=3] [ref=e253]
+            - list [ref=e254]:
+              - listitem [ref=e255]:
+                - link "→ Accueil" [ref=e256] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e257]:
+                - link "→ Menu" [ref=e258] [cursor=pointer]:
+                  - /url: /menu
+              - listitem [ref=e259]:
+                - link "→ À Propos" [ref=e260] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e261]:
+                - link "→ Contact" [ref=e262] [cursor=pointer]:
+                  - /url: /contact
+          - generic [ref=e263]:
+            - heading "Contact" [level=3] [ref=e264]
+            - generic [ref=e265]:
+              - link "04 42 92 03 08" [ref=e266] [cursor=pointer]:
+                - /url: tel:+33442920308
+                - img [ref=e267]
+                - generic [ref=e269]: 04 42 92 03 08
+              - link "pizzafalchipro@gmail.com" [ref=e270] [cursor=pointer]:
+                - /url: mailto:pizzafalchipro@gmail.com
+                - img [ref=e271]
+                - generic [ref=e274]: pizzafalchipro@gmail.com
+              - generic [ref=e275]:
+                - img [ref=e276]
+                - generic [ref=e279]: 615, av. de la Touloubre, 13540 Puyricard
+          - generic [ref=e280]:
+            - heading "Horaires" [level=3] [ref=e281]
+            - generic [ref=e282]:
+              - generic [ref=e283]:
+                - img [ref=e284]
+                - generic [ref=e287]: Mar - Dim
+              - paragraph [ref=e288]: 18h00 - 21h30
+              - paragraph [ref=e289]: Fermé le lundi
+        - generic [ref=e291]:
+          - paragraph [ref=e292]: © 2025 Pizza Falchi. Tous droits réservés.
+          - generic [ref=e293]:
+            - link "Mentions Légales" [ref=e294] [cursor=pointer]:
+              - /url: "#"
+            - link "Confidentialité" [ref=e295] [cursor=pointer]:
+              - /url: "#"
+            - link "CGV" [ref=e296] [cursor=pointer]:
+              - /url: "#"
+  - button "Open Next.js Dev Tools" [ref=e302] [cursor=pointer]:
+    - img [ref=e303]
+  - alert [ref=e306]
+```

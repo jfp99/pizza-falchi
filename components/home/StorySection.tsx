@@ -107,7 +107,7 @@ export default function StorySection() {
                 src="/images/restaurant/soiree-pizza.jpg"
                 alt="Soirée pizza entre amis - Pizza Falchi"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover transition-transform duration-200 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>

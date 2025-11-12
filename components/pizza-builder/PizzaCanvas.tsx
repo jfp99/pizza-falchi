@@ -1,6 +1,5 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
 
 interface PizzaCanvasProps {
   size: any;
@@ -10,16 +9,6 @@ interface PizzaCanvasProps {
 }
 
 export default function PizzaCanvas({ size, crust, toppings, theme }: PizzaCanvasProps) {
-  const [rotation, setRotation] = useState(0);
-
-  // Auto-rotate pizza
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRotation((prev) => prev + 0.5);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
-
   // Scale based on size
   const scale = size.size / 31; // 31 is medium size
 
@@ -34,14 +23,38 @@ export default function PizzaCanvas({ size, crust, toppings, theme }: PizzaCanva
       {/* Pizza Container */}
       <div className="relative w-full aspect-square flex items-center justify-center">
         <motion.div
-          className="relative"
+          className="relative pizza-rotate"
           style={{
-            transform: `rotate(${rotation}deg) scale(${scale})`,
+            transform: `scale(${scale})`,
             width: '300px',
             height: '300px',
           }}
           transition={{ type: 'spring', stiffness: 100 }}
         >
+          <style jsx>{`
+            .pizza-rotate {
+              animation: rotate 60s linear infinite;
+            }
+            @keyframes rotate {
+              from {
+                transform: rotate(0deg) scale(${scale});
+              }
+              to {
+                transform: rotate(360deg) scale(${scale});
+              }
+            }
+            .topping-counter-rotate {
+              animation: counter-rotate 60s linear infinite;
+            }
+            @keyframes counter-rotate {
+              from {
+                transform: rotate(0deg);
+              }
+              to {
+                transform: rotate(-360deg);
+              }
+            }
+          `}</style>
           {/* Pizza Base */}
           <motion.div
             className="absolute inset-0 rounded-full shadow-2xl"
@@ -110,11 +123,10 @@ export default function PizzaCanvas({ size, crust, toppings, theme }: PizzaCanva
               return positions.map((pos, i) => (
                 <motion.div
                   key={`${topping.id}-${i}`}
-                  className="absolute w-8 h-8 rounded-full flex items-center justify-center"
+                  className="absolute w-8 h-8 rounded-full flex items-center justify-center topping-counter-rotate"
                   style={{
                     left: pos.x - 16,
                     top: pos.y - 16,
-                    transform: `rotate(-${rotation}deg)`,
                   }}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}

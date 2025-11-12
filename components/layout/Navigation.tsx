@@ -69,30 +69,30 @@ export default function Navigation() {
           <div className="hidden lg:flex items-center space-x-1">
             <Link
               href="/"
-              className="relative px-4 py-2 text-brand-red dark:text-text-primary font-semibold transition-all duration-300 group"
+              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
             >
-              <span className="relative z-10 group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Accueil</span>
+              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Accueil</span>
               <span className="absolute inset-0 bg-gradient-to-r from-brand-red to-brand-gold opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
             <Link
               href="/menu"
-              className="relative px-4 py-2 text-brand-red dark:text-text-primary font-semibold transition-all duration-300 group"
+              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
             >
-              <span className="relative z-10 group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Menu</span>
+              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Menu</span>
               <span className="absolute inset-0 bg-gradient-to-r from-brand-gold to-brand-red opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
             <Link
               href="/about"
-              className="relative px-4 py-2 text-brand-red dark:text-text-primary font-semibold transition-all duration-300 group"
+              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
             >
-              <span className="relative z-10 group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">À Propos</span>
+              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Vision</span>
               <span className="absolute inset-0 bg-gradient-to-r from-brand-red to-brand-gold opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
             <Link
               href="/contact"
-              className="relative px-4 py-2 text-brand-red dark:text-text-primary font-semibold transition-all duration-300 group"
+              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
             >
-              <span className="relative z-10 group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Contact</span>
+              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Contact</span>
               <span className="absolute inset-0 bg-gradient-to-r from-brand-gold to-brand-red opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
 
@@ -108,11 +108,11 @@ export default function Navigation() {
                 className="relative bg-brand-red px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-2xl flex items-center space-x-2 overflow-visible group text-text-on-dark transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 isolate"
                 aria-label={`Panier ${getTotalItems() > 0 ? `avec ${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''}` : 'vide'}`}
               >
-                <span className="relative z-[5] flex items-center space-x-2 group-hover:text-charcoal transition-colors duration-300">
+                <span className="relative z-[5] flex items-center space-x-2 group-hover:text-charcoal transition-colors duration-300 uppercase text-sm tracking-wide">
                   <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                   <span>Panier</span>
                 </span>
-                <span className="absolute inset-0 z-[1] bg-gradient-to-r from-brand-gold via-primary-yellow to-brand-gold bg-[length:200%_100%] bg-left group-hover:bg-right opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out rounded-full"></span>
+                <span className="absolute inset-0 z-[1] bg-gradient-to-r from-brand-gold via-primary-yellow to-brand-gold bg-[length:200%_100%] bg-left group-hover:bg-right opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out rounded-full"></span>
                 {getTotalItems() > 0 && (
                   <span className="absolute -top-2 -right-2 z-[30] bg-brand-gold text-charcoal rounded-full w-7 h-7 text-sm font-black flex items-center justify-center shadow-xl ring-2 ring-white dark:ring-gray-900 animate-pulse group-hover:scale-110 transition-transform duration-300">
                     {getTotalItems()}
@@ -126,6 +126,8 @@ export default function Navigation() {
                   className="absolute right-0 top-full mt-2 w-96 bg-surface dark:bg-surface rounded-2xl shadow-2xl border-2 border-border dark:border-border overflow-hidden transition-colors"
                   role="region"
                   aria-label="Aperçu du panier"
+                  aria-live="polite"
+                  aria-atomic="true"
                   onBlur={(e) => {
                     // Hide preview if focus moves outside
                     if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -193,6 +195,8 @@ export default function Navigation() {
             className="lg:hidden bg-brand-red hover:bg-brand-red-hover p-2 rounded-lg transition-all"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
             {isOpen ? <X className="w-6 h-6 text-text-on-dark" /> : <Menu className="w-6 h-6 text-text-on-dark" />}
           </button>
@@ -200,42 +204,47 @@ export default function Navigation() {
 
         {/* Menu Mobile */}
         {isOpen && (
-          <div className="lg:hidden py-4 border-t border-border-medium dark:border-border-medium">
+          <div
+            id="mobile-menu"
+            className="lg:hidden py-4 border-t border-border-medium dark:border-border-medium"
+            role="navigation"
+            aria-label="Menu mobile"
+          >
             <div className="flex flex-col space-y-2">
               <Link
                 href="/"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-semibold"
+                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
                 onClick={() => setIsOpen(false)}
               >
                 Accueil
               </Link>
               <Link
                 href="/menu"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-semibold"
+                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
                 onClick={() => setIsOpen(false)}
               >
                 Menu
               </Link>
               <Link
                 href="/about"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-semibold"
+                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
                 onClick={() => setIsOpen(false)}
               >
-                À Propos
+                Vision
               </Link>
               <Link
                 href="/contact"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-semibold"
+                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
                 onClick={() => setIsOpen(false)}
               >
                 Contact
               </Link>
               <Link
                 href="/cart"
-                className="relative px-4 py-3 rounded-lg font-bold flex items-center justify-between overflow-hidden group bg-brand-red text-text-on-dark"
+                className="relative px-4 py-3 rounded-lg font-bold tracking-wide flex items-center justify-between overflow-hidden group bg-brand-red text-text-on-dark"
                 onClick={() => setIsOpen(false)}
               >
-                <span className="relative z-10 flex items-center space-x-2 group-hover:text-text-primary transition-colors duration-300">
+                <span className="relative z-10 flex items-center space-x-2 group-hover:text-text-primary transition-colors duration-300 uppercase text-sm">
                   <ShoppingCart className="w-5 h-5" />
                   <span>Panier</span>
                 </span>

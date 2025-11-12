@@ -1,6 +1,16 @@
 import type { NextConfig } from 'next';
 
+// Setup bundle analyzer (only when ANALYZE=true)
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
+  images: {
+    // Configure image quality levels for Next.js 16 compatibility
+    qualities: [75, 90, 95, 100],
+    formats: ['image/webp', 'image/avif'],
+  },
   eslint: {
     // Enable ESLint during builds for production safety
     ignoreDuringBuilds: false,
@@ -61,4 +71,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

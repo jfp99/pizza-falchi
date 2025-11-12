@@ -3,6 +3,7 @@ import { connectDB } from '@/lib/mongodb';
 import { PhoneCall } from '@/models/Analytics';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 export async function GET(request: NextRequest) {
   try {
@@ -69,6 +70,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== 'admin') {
@@ -100,6 +107,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== 'admin') {

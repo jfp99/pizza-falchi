@@ -1,0 +1,109 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Aller au contenu principal" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e9]
+          - generic [ref=e11]: 04 42 92 03 08
+        - generic [ref=e12]: Ouvert 6j/7 • 18h-21h30
+      - generic [ref=e14]:
+        - link "Pizza Falchi Logo PIZZA FALCHI AUTHENTIQUE • ARTISANAL" [ref=e15] [cursor=pointer]:
+          - /url: /
+          - img "Pizza Falchi Logo" [ref=e17]
+          - generic [ref=e19]:
+            - generic [ref=e20]: PIZZA FALCHI
+            - generic [ref=e21]: AUTHENTIQUE • ARTISANAL
+        - button "Toggle menu" [ref=e22] [cursor=pointer]:
+          - img [ref=e23]
+    - main
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e39]:
+          - img [ref=e41]
+          - img [ref=e46]
+        - generic [ref=e48]:
+          - generic [ref=e50]: Fidélité
+          - heading "10 Pizzas Achetées = 11ème Offerte" [level=3] [ref=e51]:
+            - text: 10 Pizzas Achetées = 11
+            - superscript [ref=e52]: ème
+            - text: Offerte
+          - paragraph [ref=e53]: Profitez de notre programme de fidélité
+      - button "En savoir plus" [ref=e55] [cursor=pointer]:
+        - paragraph [ref=e56]: En savoir plus
+    - contentinfo [ref=e58]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - link "Pizza Falchi Logo PIZZA FALCHI AUTHENTIQUE • ARTISANAL" [ref=e63] [cursor=pointer]:
+              - /url: /
+              - img "Pizza Falchi Logo" [ref=e65]
+              - generic [ref=e66]:
+                - generic [ref=e67]: PIZZA FALCHI
+                - generic [ref=e68]: AUTHENTIQUE • ARTISANAL
+            - generic [ref=e69]:
+              - link "Instagram" [ref=e70] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e71]
+              - link "Facebook" [ref=e74] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e75]
+              - link "Google" [ref=e77] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e78]
+            - generic [ref=e83]:
+              - img "Fait Maison - Produits faits maison" [ref=e85]
+              - paragraph [ref=e86]:
+                - text: Produits
+                - text: Faits Maison
+          - generic [ref=e87]:
+            - heading "Navigation" [level=3] [ref=e88]
+            - list [ref=e89]:
+              - listitem [ref=e90]:
+                - link "→ Accueil" [ref=e91] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e92]:
+                - link "→ Menu" [ref=e93] [cursor=pointer]:
+                  - /url: /menu
+              - listitem [ref=e94]:
+                - link "→ À Propos" [ref=e95] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e96]:
+                - link "→ Contact" [ref=e97] [cursor=pointer]:
+                  - /url: /contact
+          - generic [ref=e98]:
+            - heading "Contact" [level=3] [ref=e99]
+            - generic [ref=e100]:
+              - link "04 42 92 03 08" [ref=e101] [cursor=pointer]:
+                - /url: tel:+33442920308
+                - img [ref=e102]
+                - generic [ref=e104]: 04 42 92 03 08
+              - link "pizzafalchipro@gmail.com" [ref=e105] [cursor=pointer]:
+                - /url: mailto:pizzafalchipro@gmail.com
+                - img [ref=e106]
+                - generic [ref=e109]: pizzafalchipro@gmail.com
+              - generic [ref=e110]:
+                - img [ref=e111]
+                - generic [ref=e114]: 615, av. de la Touloubre, 13540 Puyricard
+          - generic [ref=e115]:
+            - heading "Horaires" [level=3] [ref=e116]
+            - generic [ref=e117]:
+              - generic [ref=e118]:
+                - img [ref=e119]
+                - generic [ref=e122]: Mar - Dim
+              - paragraph [ref=e123]: 18h00 - 21h30
+              - paragraph [ref=e124]: Fermé le lundi
+        - generic [ref=e126]:
+          - paragraph [ref=e127]: © 2025 Pizza Falchi. Tous droits réservés.
+          - generic [ref=e128]:
+            - link "Mentions Légales" [ref=e129] [cursor=pointer]:
+              - /url: "#"
+            - link "Confidentialité" [ref=e130] [cursor=pointer]:
+              - /url: "#"
+            - link "CGV" [ref=e131] [cursor=pointer]:
+              - /url: "#"
+```

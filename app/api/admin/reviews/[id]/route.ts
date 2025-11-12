@@ -4,12 +4,19 @@ import { authOptions } from '@/lib/auth';
 import { connectDB } from '@/lib/mongodb';
 import Review from '@/models/Review';
 import { writeLimiter } from '@/lib/rateLimiter';
+import { validateCSRFMiddleware } from '@/lib/csrf';
 
 // PUT - Update review status or add admin response (Admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   const rateLimitResponse = await writeLimiter(request);
   if (rateLimitResponse) return rateLimitResponse;
 
@@ -68,6 +75,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Apply CSRF protection
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    return NextResponse.json({ error: csrfValidation.error }, { status: 403 });
+  }
+
   const rateLimitResponse = await writeLimiter(request);
   if (rateLimitResponse) return rateLimitResponse;
 

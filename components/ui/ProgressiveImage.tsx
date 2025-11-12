@@ -82,7 +82,7 @@ export default function ProgressiveImage({
         width={width}
         height={height}
         sizes={sizes}
-        className={`${className} transition-opacity duration-500 ${
+        className={`${className} transition-opacity duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         onLoad={handleLoad}

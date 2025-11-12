@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Users, Award, Star, Leaf, Flame, Phone, Gift, Pizza } from 'lucide-react';
+import { Heart, Users, Award, Star, Leaf, Flame, Phone, Pizza } from 'lucide-react';
 import { ChefIcon, TruckIcon } from '@/components/icons/CategoryIcons';
 import ProcessSection from '@/components/about/ProcessSection';
+import CompactLoyaltyBanner from '@/components/promotions/CompactLoyaltyBanner';
 import type { Metadata } from 'next';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
@@ -103,7 +104,6 @@ export default function About() {
                 className="relative px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl text-center overflow-hidden group bg-primary-red text-white"
               >
                 <span className="relative z-10 group-hover:text-charcoal transition-colors duration-300">Voir le Menu</span>
-                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
 
               <Link
@@ -125,176 +125,23 @@ export default function About() {
         </div>
       </section>
 
-      {/* Process Section */}
-      <ProcessSection />
-
-      {/* Values Section */}
-      <section className="py-20 bg-surface dark:bg-surface transition-colors">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-4">
-              Nos Valeurs
-            </h2>
-            <p className="text-xl text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
-              Ce qui nous anime au quotidien
-            </p>
-          </div>
-
-          <div className={`grid md:grid-cols-2 lg:grid-cols-4 ${SPACING.cardGap}`}>
-            {/* Value 1 */}
-            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
-              <div className="bg-primary-red p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
-                <Heart className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Passion</h3>
-              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
-                Chaque pizza est préparée avec amour et dévouement, comme si nous la faisions pour notre propre famille
-              </p>
-            </div>
-
-            {/* Value 2 */}
-            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
-              <div className="bg-gray-500 dark:bg-gray-600 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
-                <Award className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Qualité</h3>
-              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
-                Ingrédients 100% italiens, sélectionnés avec soin auprès de producteurs de confiance
-              </p>
-            </div>
-
-            {/* Value 3 */}
-            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
-              <div className="bg-primary-red p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
-                <Leaf className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Authenticité</h3>
-              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
-                Recettes traditionnelles napolitaines respectées à la lettre, sans compromis
-              </p>
-            </div>
-
-            {/* Value 4 */}
-            <div className={`bg-warm-cream dark:bg-gray-700 ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
-              <div className="bg-gray-500 dark:bg-gray-600 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
-                <Users className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal dark:text-gray-100">Proximité</h3>
-              <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm">
-                Nous nous déplaçons dans votre quartier pour vous offrir une expérience unique
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section - Hero Style */}
-      <section className="relative bg-gradient-to-br from-charcoal via-gray-800 to-gray-900 py-24 md:py-32 overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-10 left-10 w-80 h-80 bg-primary-red/15 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-primary-yellow/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
-          {/* Badge */}
-          <div className="inline-block mb-6">
-            <span className="bg-primary-red text-white px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-xl">
-              Nos Réussites
-            </span>
-          </div>
-
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-4 drop-shadow-2xl">
-            Pizza Falchi en <span className="text-primary-yellow drop-shadow-lg">Chiffres</span>
-          </h2>
-          <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
-            Des résultats qui témoignent de notre engagement et de votre confiance
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            <div className="backdrop-blur-sm bg-white/10 rounded-3xl p-6 md:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl md:text-5xl font-black text-primary-yellow mb-2 drop-shadow-lg">5000+</div>
-              <div className="text-white/90 font-medium text-sm md:text-base">Pizzas Servies</div>
-            </div>
-            <div className="backdrop-blur-sm bg-white/10 rounded-3xl p-6 md:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl md:text-5xl font-black text-primary-yellow mb-2 drop-shadow-lg flex items-center justify-center gap-2">
-                <Star className="w-8 h-8 fill-primary-yellow text-primary-yellow" aria-hidden="true" />
-                4.9
-              </div>
-              <div className="text-white/90 font-medium text-sm md:text-base">Note Moyenne</div>
-            </div>
-            <div className="backdrop-blur-sm bg-white/10 rounded-3xl p-6 md:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl md:text-5xl font-black text-primary-yellow mb-2 drop-shadow-lg">100%</div>
-              <div className="text-white/90 font-medium text-sm md:text-base">Ingrédients Italiens</div>
-            </div>
-            <div className="backdrop-blur-sm bg-white/10 rounded-3xl p-6 md:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl md:text-5xl font-black text-primary-yellow mb-2 drop-shadow-lg">3</div>
-              <div className="text-white/90 font-medium text-sm md:text-base">Générations</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Decorative pattern */}
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,.05) 20px, rgba(255,255,255,.05) 40px)'
-        }}></div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-12 md:py-16 bg-warm-cream dark:bg-gray-900 transition-colors">
+      {/* Notre Histoire & Valeurs - Unified Section */}
+      <section className="py-20 md:py-32 bg-surface dark:bg-surface transition-colors">
         <div className="max-w-7xl mx-auto px-4">
-          {/* CTA Content */}
-          <div className="text-center">
-            <h3 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-6 transition-colors">
-              Prêt à Commander ?
-            </h3>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed transition-colors">
-              Découvrez notre menu et savourez l'authenticité italienne
-            </p>
+          {/* Main Container - Histoire de Famille with embedded Valeurs */}
+          <div className="bg-warm-cream dark:bg-gray-900 rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl transition-colors border-t-4 border-primary-red">
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/menu"
-                className="relative inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-primary-red text-white"
-              >
-                <span className="relative z-10 flex items-center gap-3 group-hover:text-charcoal transition-colors duration-300">
-                  Voir le Menu
-                  <Pizza className="w-5 h-5" />
-                </span>
-                <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              </Link>
-              <Link
-                href="/contact"
-                className="relative inline-flex items-center justify-center gap-3 border-2 border-charcoal dark:border-gray-300 px-10 py-5 rounded-2xl font-bold text-lg shadow-lg overflow-hidden group bg-transparent text-charcoal dark:text-gray-100"
-              >
-                <span className="relative z-10 flex items-center gap-3 group-hover:text-white dark:group-hover:text-charcoal transition-colors duration-300">
-                  Nous Contacter
-                  <span>→</span>
-                </span>
-                <span className="absolute inset-0 bg-charcoal dark:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Histoire de Famille Section - Bottom */}
-      <section className="py-20 md:py-32 bg-warm-cream dark:bg-gray-900 transition-colors">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-surface dark:bg-surface rounded-3xl p-8 md:p-12 shadow-2xl transition-colors">
-            <div className="text-center mb-8">
-              <div className="inline-block mb-4">
-                <span className="bg-primary-red text-white px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider">
-                  Notre Origine
-                </span>
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 text-basil-green dark:text-basil-light font-medium text-sm md:text-base mb-4 transition-colors duration-300">
+                <span className="w-12 h-[2px] bg-basil-green dark:bg-basil-light transition-colors duration-300" />
+                <span className="tracking-wider">Notre Origine</span>
+                <span className="w-12 h-[2px] bg-basil-green dark:bg-basil-light transition-colors duration-300" />
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-charcoal dark:text-gray-100 mb-4">
-                Une Histoire de Famille
-              </h2>
             </div>
 
-            <div className="space-y-6 text-lg text-text-secondary dark:text-text-secondary leading-relaxed">
+            {/* Story Content */}
+            <div className="max-w-4xl mx-auto space-y-6 text-lg text-text-secondary dark:text-text-secondary leading-relaxed transition-colors mb-12">
               <p>
                 En 2001, la pizzeria a vu le jour et depuis cette année-là les Falchi servent de délicieuses pizzas sur la commune de Puyricard. J'ai eu l'honneur de me joindre à cette aventure en 2014 et d'apprendre la confection de ces pizzas gourmandes dont je maîtrise désormais les secrets.
               </p>
@@ -306,11 +153,115 @@ export default function About() {
               </p>
             </div>
 
-            {/* Signature */}
-            <div className="mt-8 pt-8 border-t border-border dark:border-border text-center">
-              <p className="text-2xl font-black text-charcoal dark:text-gray-100 italic">
+            {/* Nos Valeurs - Integrated within the same container */}
+            <div className="mt-16 pt-12 border-t-2 border-border dark:border-border transition-colors">
+              <div className="text-center mb-10">
+                <div className="inline-flex items-center gap-2 text-basil-green dark:text-basil-light font-medium text-sm md:text-base mb-4 transition-colors duration-300">
+                  <span className="w-12 h-[2px] bg-basil-green dark:bg-basil-light transition-colors duration-300" />
+                  <span className="tracking-wider">Nos Valeurs</span>
+                  <span className="w-12 h-[2px] bg-basil-green dark:bg-basil-light transition-colors duration-300" />
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Passion */}
+                <div className="group bg-warm-cream dark:bg-gray-800 rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-primary-red">
+                  <div className="bg-gradient-to-br from-primary-red to-primary-red-dark p-3 rounded-2xl w-14 h-14 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg mx-auto">
+                    <Heart className="w-7 h-7 text-white" />
+                  </div>
+                  <h4 className="text-lg font-black mb-2 text-charcoal dark:text-gray-100 transition-colors text-center">
+                    Passion
+                  </h4>
+                  <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm transition-colors text-center">
+                    Chaque pizza est préparée avec amour et dévouement, comme si nous la faisions pour notre propre famille
+                  </p>
+                </div>
+
+                {/* Qualité */}
+                <div className="group bg-warm-cream dark:bg-gray-800 rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-primary-yellow">
+                  <div className="bg-gradient-to-br from-primary-yellow to-primary-yellow-dark p-3 rounded-2xl w-14 h-14 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg mx-auto">
+                    <Award className="w-7 h-7 text-white" />
+                  </div>
+                  <h4 className="text-lg font-black mb-2 text-charcoal dark:text-gray-100 transition-colors text-center">
+                    Qualité
+                  </h4>
+                  <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm transition-colors text-center">
+                    Ingrédients 100% italiens, sélectionnés avec soin auprès de producteurs de confiance
+                  </p>
+                </div>
+
+                {/* Authenticité */}
+                <div className="group bg-warm-cream dark:bg-gray-800 rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-basil-light">
+                  <div className="bg-gradient-to-br from-basil-light to-basil-green p-3 rounded-2xl w-14 h-14 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg mx-auto">
+                    <Leaf className="w-7 h-7 text-white" />
+                  </div>
+                  <h4 className="text-lg font-black mb-2 text-charcoal dark:text-gray-100 transition-colors text-center">
+                    Authenticité
+                  </h4>
+                  <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm transition-colors text-center">
+                    Recettes traditionnelles napolitaines respectées à la lettre, sans compromis
+                  </p>
+                </div>
+
+                {/* Proximité */}
+                <div className="group bg-warm-cream dark:bg-gray-800 rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-brand-gold">
+                  <div className="bg-gradient-to-br from-brand-gold to-primary-yellow p-3 rounded-2xl w-14 h-14 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg mx-auto">
+                    <Users className="w-7 h-7 text-white" />
+                  </div>
+                  <h4 className="text-lg font-black mb-2 text-charcoal dark:text-gray-100 transition-colors text-center">
+                    Proximité
+                  </h4>
+                  <p className="text-text-secondary dark:text-text-secondary leading-relaxed text-sm transition-colors text-center">
+                    Nous nous déplaçons dans votre quartier pour vous offrir une expérience unique
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Signature Quote at the bottom */}
+            <div className="mt-12 pt-10 border-t-2 border-border dark:border-border text-center transition-colors">
+              <p className="text-2xl md:text-3xl font-black text-charcoal dark:text-gray-100 italic transition-colors">
                 Passione • Tradizione • Qualità
               </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <ProcessSection />
+
+      {/* CTA Section - Subtle & Elegant with Loyalty */}
+      <section className="py-8 md:py-12 bg-background/50 dark:bg-gray-900/50 transition-colors border-t border-border/50 dark:border-border/30">
+        <div className="max-w-5xl mx-auto px-4">
+          {/* Loyalty Banner - Compact & Integrated */}
+          <CompactLoyaltyBanner />
+
+          {/* CTA Content */}
+          <div className="text-center">
+            <p className="text-sm uppercase tracking-widest text-text-tertiary dark:text-text-tertiary mb-3 font-medium transition-colors">
+              Une question ?
+            </p>
+            <h3 className="text-2xl md:text-3xl font-semibold text-text-primary dark:text-text-primary mb-8 transition-colors">
+              Découvrez notre menu
+            </h3>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <Link
+                href="/menu"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-base bg-primary-red text-white hover:bg-primary-red-hover transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                <Pizza className="w-4 h-4" />
+                <span>Voir le Menu</span>
+              </Link>
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-base border border-border dark:border-border bg-transparent text-text-primary dark:text-text-primary hover:bg-background-secondary dark:hover:bg-background-tertiary transition-all duration-200"
+              >
+                <span>Nous Contacter</span>
+                <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+              </Link>
             </div>
           </div>
         </div>
