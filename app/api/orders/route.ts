@@ -8,6 +8,8 @@ import { readLimiter, orderLimiter } from '@/lib/rateLimiter';
 import { orderSchema } from '@/lib/validations/order';
 import { validateCSRFMiddleware } from '@/lib/csrf';
 import { sanitizeOrderData } from '@/lib/sanitize';
+import { dispatchOrderCreated } from '@/lib/webhooks/dispatcher';
+import { webhookEvents } from '@/lib/webhooks/events';
 
 export async function GET(request: NextRequest) {
   // Apply rate limiting
@@ -156,6 +158,38 @@ export async function POST(request: NextRequest) {
     const populatedOrder = await Order.findById(order._id)
       .populate('items.product')
       .populate('timeSlot');
+
+    // Emit order created webhook event
+    try {
+      await dispatchOrderCreated(populatedOrder);
+
+      // Also emit via event system for any local listeners
+      await webhookEvents.emitOrderCreated({
+        orderId: populatedOrder._id.toString(),
+        orderNumber: populatedOrder.orderId || populatedOrder._id.toString().slice(-6).toUpperCase(),
+        customer: {
+          name: populatedOrder.customerName,
+          email: populatedOrder.email,
+          phone: populatedOrder.phone,
+          deliveryAddress: populatedOrder.deliveryAddress,
+        },
+        items: populatedOrder.items.map((item: any) => ({
+          productId: item.product?._id?.toString() || item.productId,
+          productName: item.product?.name || 'Produit',
+          quantity: item.quantity,
+          price: item.price,
+          customizations: item.customizations?.notes,
+          totalPrice: item.total || item.quantity * item.price,
+        })),
+        totalAmount: populatedOrder.total,
+        deliveryType: populatedOrder.deliveryType,
+        paymentMethod: populatedOrder.paymentMethod,
+        paymentStatus: populatedOrder.paymentStatus,
+      });
+    } catch (webhookError) {
+      console.error('Webhook dispatch error:', webhookError);
+      // Don't fail order creation if webhook fails
+    }
 
     // Send WhatsApp notification
     try {

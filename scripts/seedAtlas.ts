@@ -171,7 +171,7 @@ const pizzaFalchiProducts = [
     popular: false,
     spicy: false,
     vegetarian: false,
-    tags: ["classique", "viande", "corse"]
+    tags: ["classique", "viande", "provence"]
   },
   {
     name: "Fruits de Mer",
@@ -474,7 +474,7 @@ const pizzaFalchiProducts = [
     popular: false,
     spicy: false,
     vegetarian: false,
-    tags: ["spécialité", "viande", "corse"]
+    tags: ["spécialité", "viande", "provence"]
   },
   {
     name: "Anti-Pasti",

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Calendar, Instagram, Facebook, Twitter, X, ExternalLink, Pizza } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Calendar, Instagram, Facebook, Twitter, X, ExternalLink, Pizza, Gift } from 'lucide-react';
 import { CheckIcon, PizzaSliceIcon } from '@/components/icons/CategoryIcons';
 import CompactLoyaltyBanner from '@/components/promotions/CompactLoyaltyBanner';
 

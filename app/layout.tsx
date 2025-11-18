@@ -19,10 +19,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Pizza Falchi - Pizzas Artisanales à Ajaccio',
+    default: 'Pizza Falchi - Pizzas Artisanales à Puyricard - France',
     template: '%s | Pizza Falchi'
   },
-  description: 'Découvrez Pizza Falchi, votre food truck de pizzas artisanales à Ajaccio. Pizzas au feu de bois préparées avec des ingrédients frais et de qualité. Commandez en ligne et savourez l\'authenticité corse.',
+  description: 'Découvrez Pizza Falchi, votre food truck de pizzas artisanales à Puyricard. Pizzas au feu de bois préparées avec des ingrédients frais et de qualité. Commandez en ligne et savourez l\'authenticité provençale.',
   icons: {
     icon: [
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
@@ -40,12 +40,12 @@ export const metadata: Metadata = {
     'pizza',
     'pizzeria',
     'food truck',
-    'Ajaccio',
-    'Corse',
+    'Puyricard',
+    'Provence',
     'pizza artisanale',
     'pizza au feu de bois',
     'livraison pizza',
-    'pizza corse',
+    'pizza provençale',
     'restaurant italien',
     'pizzas fraîches'
   ],
@@ -66,8 +66,8 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: 'https://www.pizzafalchi.com',
     siteName: 'Pizza Falchi',
-    title: 'Pizza Falchi - Pizzas Artisanales à Ajaccio',
-    description: 'Découvrez nos pizzas artisanales au feu de bois préparées avec passion. Food truck moderne à Ajaccio, Corse.',
+    title: 'Pizza Falchi - Pizzas Artisanales à Puyricard',
+    description: 'Découvrez nos pizzas artisanales au feu de bois préparées avec passion. Food truck moderne à Puyricard, Provence.',
     images: [
       {
         url: '/images/og-image.jpg',
@@ -79,8 +79,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Pizza Falchi - Pizzas Artisanales à Ajaccio',
-    description: 'Découvrez nos pizzas artisanales au feu de bois préparées avec passion. Food truck moderne à Ajaccio, Corse.',
+    title: 'Pizza Falchi - Pizzas Artisanales à Puyricard',
+    description: 'Découvrez nos pizzas artisanales au feu de bois préparées avec passion. Food truck moderne à Puyricard, Provence.',
     images: ['/images/twitter-image.jpg'],
     creator: '@pizzafalchi',
   },

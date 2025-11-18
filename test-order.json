@@ -1,0 +1,30 @@
+{
+  "customerName": "Jean Dupont",
+  "phone": "+33612345678",
+  "email": "jean.dupont@example.com",
+  "deliveryType": "delivery",
+  "deliveryAddress": {
+    "street": "123 Rue de la République",
+    "city": "Ajaccio",
+    "postalCode": "20000",
+    "country": "France"
+  },
+  "items": [
+    {
+      "product": "68e7fb8a561a1ee2de577bde",
+      "quantity": 1,
+      "price": 12.50,
+      "customizations": {
+        "size": "large",
+        "notes": "Bien cuite s'il vous plaît"
+      },
+      "total": 12.50
+    }
+  ],
+  "subtotal": 12.50,
+  "tax": 1.25,
+  "deliveryFee": 2.50,
+  "total": 16.25,
+  "paymentMethod": "card",
+  "notes": "Test n8n integration - Sonner à l'interphone"
+}

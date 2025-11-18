@@ -291,7 +291,7 @@ const generateOrderConfirmationHTML = (data: OrderEmailData): string => {
           <tr>
             <td style="background-color: #f9f9f9; padding: 30px; text-align: center; border-top: 1px solid #eee;">
               <p style="color: #999; font-size: 14px; margin: 0 0 10px 0;">Merci de votre confiance !</p>
-              <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Pizza Falchi - Ajaccio, France</p>
+              <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Pizza Falchi - Puyricard, France</p>
             </td>
           </tr>
         </table>
@@ -339,7 +339,7 @@ Email: contact@pizzafalchi.com
 
 Merci de votre confiance !
 
-Pizza Falchi - Ajaccio, France
+Pizza Falchi - Puyricard, France
   `;
 };
 
@@ -428,7 +428,7 @@ const generateOrderStatusHTML = (data: OrderStatusEmailData): string => {
           <tr>
             <td style="background-color: #f9f9f9; padding: 30px; text-align: center; border-top: 1px solid #eee;">
               <p style="color: #999; font-size: 14px; margin: 0 0 10px 0;">Merci de votre confiance !</p>
-              <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Pizza Falchi - Ajaccio, France</p>
+              <p style="color: #999; font-size: 12px; margin: 0;">© 2025 Pizza Falchi - Puyricard, France</p>
             </td>
           </tr>
         </table>
@@ -465,7 +465,7 @@ Email: contact@pizzafalchi.com
 
 Merci de votre confiance !
 
-Pizza Falchi - Ajaccio, France
+Pizza Falchi - Puyricard, France
   `;
 };
 

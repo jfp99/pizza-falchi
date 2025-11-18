@@ -54,6 +54,69 @@ const OrderSchema = new mongoose.Schema({
   estimatedDelivery: Date,
   notificationSent: { type: Boolean, default: false },
   notificationSentAt: { type: Date },
+
+  // Webhook & Notification Tracking
+  webhookEvents: [{
+    eventType: { type: String, required: true },
+    timestamp: { type: Date, required: true },
+    webhookUrl: String,
+    success: { type: Boolean, required: true },
+    retries: { type: Number, default: 0 },
+    error: String
+  }],
+  notificationChannels: {
+    whatsapp: { type: Boolean, default: false },
+    email: { type: Boolean, default: false },
+    sms: { type: Boolean, default: false }
+  },
+  lastNotificationTime: Date,
+
+  // Delivery Tracking
+  deliveryStatus: {
+    type: String,
+    enum: ['not_started', 'assigned', 'driver_en_route', 'at_restaurant', 'picked_up', 'in_transit', 'arrived', 'delivered'],
+    default: 'not_started'
+  },
+  deliveryDriver: {
+    id: String,
+    name: String,
+    phone: String,
+    vehicle: String,
+    licensePlate: String,
+    assignedAt: Date
+  },
+  estimatedArrivalTime: Date,
+  actualDeliveryTime: Date,
+  currentLocation: {
+    latitude: Number,
+    longitude: Number,
+    updatedAt: Date
+  },
+
+  // Kitchen Display System (KDS)
+  kdsStatus: {
+    type: String,
+    enum: ['pending', 'acknowledged', 'in_progress', 'completed'],
+    default: 'pending'
+  },
+  kdsAcknowledgedAt: Date,
+  preparationStartedAt: Date,
+  preparationCompletedAt: Date,
+  estimatedReadyTime: Date,
+  actualPreparationTime: Number, // in minutes
+
+  // Cancellation & Refund
+  cancellationReason: String,
+  cancelledAt: Date,
+  cancelledBy: String,
+  refundAmount: Number,
+  refundStatus: {
+    type: String,
+    enum: ['pending', 'processed', 'failed'],
+    default: 'pending'
+  },
+  refundProcessedAt: Date,
+
   // Time Slot Management
   timeSlot: { type: mongoose.Schema.Types.ObjectId, ref: 'TimeSlot' },
   scheduledTime: { type: Date },
@@ -74,5 +137,9 @@ OrderSchema.index({ orderId: 1 }); // For quick order ID lookup
 OrderSchema.index({ createdAt: -1 }); // For recent orders (already have timestamps, but explicit)
 OrderSchema.index({ timeSlot: 1 }); // For time slot management queries
 OrderSchema.index({ scheduledTime: 1 }); // For querying orders by scheduled time
+OrderSchema.index({ deliveryStatus: 1 }); // For delivery tracking queries
+OrderSchema.index({ kdsStatus: 1 }); // For kitchen display system queries
+OrderSchema.index({ 'deliveryDriver.id': 1 }); // For driver assignment queries
+OrderSchema.index({ 'webhookEvents.eventType': 1 }); // For webhook event queries
 
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema);
