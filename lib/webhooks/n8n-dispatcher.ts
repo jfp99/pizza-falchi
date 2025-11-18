@@ -198,8 +198,20 @@ class N8nDispatcher {
     previousStatus: string,
     newStatus: string
   ): Promise<void> {
+    // Map status to event type
+    const statusToEventType: Record<string, WebhookEventType> = {
+      'confirmed': WebhookEventType.ORDER_CONFIRMED,
+      'preparing': WebhookEventType.ORDER_PREPARING,
+      'ready': WebhookEventType.ORDER_READY,
+      'in_delivery': WebhookEventType.ORDER_IN_DELIVERY,
+      'completed': WebhookEventType.ORDER_COMPLETED,
+      'cancelled': WebhookEventType.ORDER_CANCELLED,
+    };
+
+    const eventType = statusToEventType[newStatus] || WebhookEventType.ORDER_CONFIRMED;
+
     const event: N8nOrderEvent = {
-      eventType: WebhookEventType.ORDER_STATUS_CHANGED,
+      eventType,
       timestamp: new Date().toISOString(),
       orderId: order._id?.toString() || order.id,
       data: {
