@@ -77,9 +77,9 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 py-20 w-full">
           <div className="max-w-3xl mx-auto text-center">
             {/* Info Badge - Main Focus */}
-            <div className="inline-flex items-center gap-6 bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl mb-10 max-w-2xl">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-white/10 backdrop-blur-lg rounded-3xl p-4 sm:p-6 md:p-8 border border-white/20 shadow-2xl mb-10 max-w-2xl">
               {/* Logo */}
-              <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 flex-shrink-0">
                 <Image
                   src="/images/branding/logo-badge.png"
                   alt="Pizza Falchi Logo"
@@ -89,13 +89,13 @@ export default function Home() {
               </div>
 
               {/* Info */}
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 text-center sm:text-left">
                 <div className="inline-block mb-2">
-                  <span className="bg-primary-red text-white px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg">
+                  <span className="bg-primary-red text-white px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg">
                     Pizzas Artisanales
                   </span>
                 </div>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
                   PIZZA FALCHI
                 </h1>
                 <p className="text-primary-yellow font-bold text-xl md:text-2xl">
@@ -127,14 +127,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/menu"
-                className="relative px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl text-center overflow-hidden group bg-primary-red text-white"
+                className="relative px-8 py-4 sm:px-12 sm:py-6 rounded-2xl font-bold text-lg sm:text-xl shadow-2xl text-center overflow-hidden group bg-primary-red text-white"
               >
                 <span className="relative z-10 group-hover:text-charcoal transition-colors duration-300">Voir le Menu</span>
               </Link>
 
               <Link
                 href="/contact"
-                className="relative border-2 border-white bg-white/10 backdrop-blur px-12 py-6 rounded-2xl font-bold text-xl shadow-xl text-center overflow-hidden group text-white"
+                className="relative border-2 border-white bg-white/10 backdrop-blur px-8 py-4 sm:px-12 sm:py-6 rounded-2xl font-bold text-lg sm:text-xl shadow-xl text-center overflow-hidden group text-white"
               >
                 <span className="relative z-10 group-hover:text-charcoal transition-colors duration-300">Nous Trouver</span>
                 <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>

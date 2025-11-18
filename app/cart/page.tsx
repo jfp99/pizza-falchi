@@ -88,13 +88,13 @@ export default function CartPage() {
                 key={index}
                 className={`group bg-white dark:bg-gray-800 ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700 transition-colors duration-300`}
               >
-                <div className="flex gap-6">
+                <div className="flex gap-4 sm:gap-6">
                   {/* Product Image */}
                   <div className="flex-shrink-0 relative">
                     <img
                       src={item.product.image || '/images/pizza-placeholder.jpg'}
                       alt={`${item.product.name} - ${item.product.description}`}
-                      className="w-28 h-28 object-cover rounded-2xl shadow-sm"
+                      className="w-20 h-20 sm:w-28 sm:h-28 object-cover rounded-2xl shadow-sm"
                     />
                     {item.product.popular && (
                       <div className="absolute -top-2 -right-2 bg-gradient-to-r from-primary-yellow to-soft-yellow text-gray-800 dark:text-gray-900 text-xs font-bold px-2 py-1 rounded-full shadow-lg flex items-center gap-1 transition-colors duration-300">
@@ -108,7 +108,7 @@ export default function CartPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-primary-red dark:group-hover:text-primary-red-light transition-colors duration-300">
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-primary-red dark:group-hover:text-primary-red-light transition-colors duration-300 line-clamp-1">
                           {item.product.name}
                         </h3>
                         <div className="flex items-center gap-3">
@@ -207,7 +207,7 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl p-8 shadow-2xl border border-gray-100 dark:border-gray-700 sticky top-6 transition-colors duration-300">
+            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-gray-100 dark:border-gray-700 static lg:sticky lg:top-6 transition-colors duration-300">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">
                   Récapitulatif

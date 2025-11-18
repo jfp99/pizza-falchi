@@ -123,7 +123,7 @@ export default function Navigation() {
               {/* Cart Preview Dropdown */}
               {showCartPreview && (
                 <div
-                  className="absolute right-0 top-full mt-2 w-96 bg-surface dark:bg-surface rounded-2xl shadow-2xl border-2 border-border dark:border-border overflow-hidden transition-colors"
+                  className="absolute right-0 top-full mt-2 w-full max-w-[calc(100vw-2rem)] sm:w-96 bg-surface dark:bg-surface rounded-2xl shadow-2xl border-2 border-border dark:border-border overflow-hidden transition-colors"
                   role="region"
                   aria-label="Aperçu du panier"
                   aria-live="polite"
@@ -192,7 +192,7 @@ export default function Navigation() {
           {/* Menu Mobile Button */}
           <button
             suppressHydrationWarning
-            className="lg:hidden bg-brand-red hover:bg-brand-red-hover p-2 rounded-lg transition-all"
+            className="lg:hidden bg-brand-red hover:bg-brand-red-hover p-3 rounded-lg transition-all min-w-[44px] min-h-[44px]"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
             aria-expanded={isOpen}

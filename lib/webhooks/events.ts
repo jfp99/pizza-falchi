@@ -50,7 +50,7 @@ type EventListener = (event: WebhookPayload) => void | Promise<void>;
  * Webhook Event Emitter
  */
 class WebhookEventEmitter extends EventEmitter {
-  private listeners: Map<WebhookEventType, Set<EventListener>> = new Map();
+  private webhookListeners: Map<WebhookEventType, Set<EventListener>> = new Map();
   private eventHistory: WebhookPayload[] = [];
   private maxHistorySize = 100;
 
@@ -205,10 +205,10 @@ class WebhookEventEmitter extends EventEmitter {
    * Register webhook listener
    */
   onWebhook(eventType: WebhookEventType, listener: EventListener): void {
-    if (!this.listeners.has(eventType)) {
-      this.listeners.set(eventType, new Set());
+    if (!this.webhookListeners.has(eventType)) {
+      this.webhookListeners.set(eventType, new Set());
     }
-    this.listeners.get(eventType)!.add(listener);
+    this.webhookListeners.get(eventType)!.add(listener);
 
     // Also register with Node's EventEmitter for compatibility
     this.on(eventType, listener);
@@ -218,7 +218,7 @@ class WebhookEventEmitter extends EventEmitter {
    * Remove webhook listener
    */
   offWebhook(eventType: WebhookEventType, listener: EventListener): void {
-    const listeners = this.listeners.get(eventType);
+    const listeners = this.webhookListeners.get(eventType);
     if (listeners) {
       listeners.delete(listener);
     }
@@ -233,7 +233,7 @@ class WebhookEventEmitter extends EventEmitter {
     this.addToHistory(event);
 
     // Emit to all listeners
-    const listeners = this.listeners.get(event.eventType);
+    const listeners = this.webhookListeners.get(event.eventType);
     if (listeners) {
       const promises: Promise<void>[] = [];
 
@@ -299,14 +299,14 @@ class WebhookEventEmitter extends EventEmitter {
    * Get registered event types
    */
   getRegisteredEventTypes(): WebhookEventType[] {
-    return Array.from(this.listeners.keys());
+    return Array.from(this.webhookListeners.keys());
   }
 
   /**
    * Get listener count for event type
    */
   getListenerCount(eventType: WebhookEventType): number {
-    const listeners = this.listeners.get(eventType);
+    const listeners = this.webhookListeners.get(eventType);
     return listeners ? listeners.size : 0;
   }
 }

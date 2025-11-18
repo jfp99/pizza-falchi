@@ -125,16 +125,16 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
         </motion.div>
       </Link>
 
-      <div className="p-5 flex flex-col flex-1">
+      <div className="p-4 sm:p-5 flex flex-col flex-1">
         <Link href={`/products/${product._id}`} className="space-y-2 mb-4 cursor-pointer">
-          <h3 className="text-xl font-semibold capitalize tracking-tight text-text-primary dark:text-text-primary line-clamp-1 group-hover:text-brand-red dark:group-hover:text-brand-red transition-colors">
+          <h3 className="text-lg sm:text-xl font-semibold capitalize tracking-tight text-text-primary dark:text-text-primary line-clamp-1 group-hover:text-brand-red dark:group-hover:text-brand-red transition-colors">
             {product.name}
           </h3>
         </Link>
 
         {/* Ingredients with SVG Icons */}
         {product.ingredients && product.ingredients.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-4">
+          <div className="flex flex-wrap gap-1 mb-4 max-h-16 overflow-hidden">
             {product.ingredients.map(ingredient => {
               const iconColor = getIngredientColor(ingredient);
               return (
@@ -147,7 +147,7 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
                     size={14}
                     style={{ color: iconColor }}
                   />
-                  <span className="capitalize text-xs">{ingredient}</span>
+                  <span className="capitalize text-xs line-clamp-1">{ingredient}</span>
                 </span>
               );
             })}
