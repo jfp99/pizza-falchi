@@ -11,15 +11,16 @@ interface RateLimitStore {
 // Note: In production with multiple instances, use Redis or similar
 const store: RateLimitStore = {};
 
-// Clean up old entries every 10 minutes to prevent memory leaks
-setInterval(() => {
+// Clean up old entries on each request to prevent memory leaks
+// This is serverless-friendly unlike setInterval
+const cleanupStore = () => {
   const now = Date.now();
   Object.keys(store).forEach((key) => {
     if (store[key].resetTime < now) {
       delete store[key];
     }
   });
-}, 10 * 60 * 1000);
+};
 
 export interface RateLimitConfig {
   windowMs: number;
@@ -33,6 +34,9 @@ export interface RateLimitConfig {
  */
 export const createRateLimiter = (config: RateLimitConfig) => {
   return async (request: NextRequest): Promise<NextResponse | null> => {
+    // Clean up expired entries (serverless-friendly)
+    cleanupStore();
+
     // Get client identifier (IP address or forwarded IP)
     const ip =
       request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
