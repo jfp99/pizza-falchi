@@ -10,6 +10,7 @@ import { validateCSRFMiddleware } from '@/lib/csrf';
 import { sanitizeOrderData } from '@/lib/sanitize';
 import { dispatchOrderCreated } from '@/lib/webhooks/dispatcher';
 import { webhookEvents } from '@/lib/webhooks/events';
+import { n8nDispatcher } from '@/lib/webhooks/n8n-dispatcher';
 
 export async function GET(request: NextRequest) {
   // Apply rate limiting
@@ -162,6 +163,9 @@ export async function POST(request: NextRequest) {
     // Emit order created webhook event
     try {
       await dispatchOrderCreated(populatedOrder);
+
+      // Send to n8n for workflow automation
+      await n8nDispatcher.orderCreated(populatedOrder);
 
       // Also emit via event system for any local listeners
       await webhookEvents.emitOrderCreated({

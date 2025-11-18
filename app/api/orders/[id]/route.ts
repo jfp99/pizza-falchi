@@ -4,6 +4,7 @@ import Order from '@/models/Order';
 import { validateCSRFMiddleware } from '@/lib/csrf';
 import { dispatchOrderStatusChanged } from '@/lib/webhooks/dispatcher';
 import { webhookEvents, getEventTypeForOrderStatus } from '@/lib/webhooks/events';
+import { n8nDispatcher } from '@/lib/webhooks/n8n-dispatcher';
 
 export async function GET(
   request: NextRequest,
@@ -71,6 +72,25 @@ export async function PATCH(
     if (hasStatusChanged) {
       try {
         await dispatchOrderStatusChanged(order, previousStatus, body.status);
+
+        // Send to n8n for workflow automation based on status
+        await n8nDispatcher.orderStatusUpdated(order, previousStatus, body.status);
+
+        // Handle specific status changes for n8n
+        switch (body.status) {
+          case 'confirmed':
+            await n8nDispatcher.orderConfirmed(order);
+            break;
+          case 'ready':
+            await n8nDispatcher.orderReady(order);
+            break;
+          case 'completed':
+            await n8nDispatcher.orderCompleted(order);
+            break;
+          case 'cancelled':
+            await n8nDispatcher.orderCancelled(order);
+            break;
+        }
 
         // Also emit via event system for local listeners
         const eventType = getEventTypeForOrderStatus(body.status);
