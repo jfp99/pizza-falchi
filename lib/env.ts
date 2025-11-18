@@ -120,4 +120,13 @@ export function isAnalyticsConfigured(): boolean {
 }
 
 // Export validated env for use throughout the app
-export const env = validateEnv();
+// Use lazy evaluation to avoid crashing at module initialization
+let cachedEnv: EnvVariables | null = null;
+export const env = new Proxy({} as EnvVariables, {
+  get(target, prop) {
+    if (!cachedEnv) {
+      cachedEnv = validateEnv();
+    }
+    return cachedEnv[prop as keyof EnvVariables];
+  }
+});
