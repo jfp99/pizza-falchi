@@ -63,6 +63,9 @@ export interface N8nOrderEvent {
     source: string;
     version: string;
     environment: string;
+    previousStatus?: string;
+    newStatus?: string;
+    [key: string]: any;
   };
 }
 
