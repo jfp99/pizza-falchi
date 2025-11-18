@@ -264,7 +264,7 @@ export const WebhookSignatureSchema = z.object({
 export function validateWebhookPayload(
   eventType: WebhookEventType,
   payload: unknown
-): z.SafeParseReturnType<any, any> {
+) {
   switch (eventType) {
     case WebhookEventType.ORDER_CREATED:
       return OrderCreatedPayloadSchema.safeParse(payload);
