@@ -9,18 +9,23 @@ import { validateCSRFMiddleware } from '@/lib/csrf';
 import { sanitizeProductData } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
-  // Apply rate limiting for read operations
-  const rateLimitResponse = await readLimiter(request);
-  if (rateLimitResponse) return rateLimitResponse;
-
   try {
+    // Apply rate limiting for read operations
+    const rateLimitResponse = await readLimiter(request);
+    if (rateLimitResponse) return rateLimitResponse;
+
     await connectDB();
     const products = await Product.find({ available: true }).sort({ category: 1, name: 1 });
     return NextResponse.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
+    // Return detailed error in production for debugging
     return NextResponse.json(
-      { error: 'Erreur lors du chargement des produits' },
+      {
+        error: 'Erreur lors du chargement des produits',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: process.env.NODE_ENV !== 'production' ? (error instanceof Error ? error.stack : undefined) : undefined
+      },
       { status: 500 }
     );
   }
