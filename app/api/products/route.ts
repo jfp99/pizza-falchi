@@ -10,9 +10,9 @@ import { sanitizeProductData } from '@/lib/sanitize';
 
 export async function GET(request: NextRequest) {
   try {
-    // Apply rate limiting for read operations
-    const rateLimitResponse = await readLimiter(request);
-    if (rateLimitResponse) return rateLimitResponse;
+    // TODO: Re-enable rate limiting after fixing serverless compatibility
+    // const rateLimitResponse = await readLimiter(request);
+    // if (rateLimitResponse) return rateLimitResponse;
 
     await connectDB();
     const products = await Product.find({ available: true }).sort({ category: 1, name: 1 });
