@@ -3,7 +3,13 @@
     "allow": [
       "WebFetch(domain:www.pizzapai.fr)",
       "WebFetch(domain:www.pizzafalchi.com)",
-      "WebFetch(domain:pizza-falchi-app.vercel.app)"
+      "WebFetch(domain:pizza-falchi-app.vercel.app)",
+      "Edit",
+      "Bash(npm:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm test:*)",
+      "mcp__*"
     ],
     "deny": [],
     "ask": []
