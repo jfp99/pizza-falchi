@@ -1,4 +1,287 @@
-# CLAUDE.md
+# CLAUDE.md - Workflow Développement S-Tier
+
+> **Ce document est le cerveau opérationnel du projet. Il définit comment Claude Code et les MCP Servers travaillent ensemble pour livrer une application production-ready.**
+
+---
+
+## 🎯 CONTEXTE & OBJECTIFS
+
+### Qui Je Suis
+
+- **Freelance Senior** spécialisé en automatisations IA augmentées
+- **Stack**: Next.js 15, TypeScript, MongoDB, MCP Servers
+- **Valeur**: Développement custom à vitesse no-code avec qualité enterprise
+
+### Ce Que Je Livre
+
+- Applications production-ready
+- Intégrations MCP custom
+- Automatisations intelligentes (Claude + n8n)
+- Documentation complète
+
+### Standards Non-Négociables
+
+- ✅ **Type-safe**: 100% TypeScript strict
+- ✅ **Testé**: 80%+ coverage, E2E sur flows critiques
+- ✅ **Sécurisé**: OWASP Top 10 appliqué
+- ✅ **Accessible**: WCAG AA minimum
+- ✅ **Documenté**: README, API docs, CHANGELOG
+
+---
+
+## 🔄 WORKFLOW DÉVELOPPEMENT AVEC MCP
+
+### Vue d'ensemble
+
+```
+EXPLORE → PLAN → CODE → TEST → REVIEW → DEPLOY
+   ↓        ↓       ↓       ↓        ↓         ↓
+  MCP     MCP     MCP     MCP      MCP       MCP
+```
+
+### Phase 1: EXPLORE (Ne pas coder encore!)
+
+**Objectif**: Comprendre avant d'agir
+
+**MCP à utiliser**:
+- Filesystem: Lire structure existante
+- GitHub: Analyser repos similaires
+- Notion: Récupérer specs client
+
+**Prompt Template**:
+```
+Je dois implémenter [FEATURE].
+
+Avant d'écrire du code:
+1. Lis les fichiers pertinents: [liste]
+2. Analyse l'architecture existante
+3. Identifie les patterns utilisés
+4. Note les dépendances impactées
+
+Résume ta compréhension en 5 points clés.
+Ne propose PAS de solution encore.
+```
+
+### Phase 2: PLAN (Think hard!)
+
+**Objectif**: Plan détaillé avant implémentation
+
+**Prompt Template**:
+```
+Basé sur ton exploration, crée un plan détaillé pour [FEATURE].
+
+Le plan doit inclure:
+1. Architecture: composants, flux de données
+2. Database: schéma, migrations, indexes
+3. API: endpoints, payloads, responses
+4. UI: composants, states, interactions
+5. Tests: unit, integration, E2E
+6. Sécurité: validation, auth, sanitization
+7. Risques: edge cases, dépendances, breaking changes
+8. Rollback: comment annuler si problème
+
+Chaque étape doit toucher <5 fichiers.
+Pense HARD avant de répondre.
+```
+
+### Phase 3: CODE (Small diffs!)
+
+**Objectif**: Implémentation incrémentale
+
+**Règles absolues**:
+- Diffs < 200 lignes par commit
+- Un commit = une responsabilité
+- Tests écrits AVEC le code (pas après)
+- Checkpoints fréquents
+
+**Prompt Template**:
+```
+Implémente l'étape [N] du plan: [DESCRIPTION]
+
+Contraintes:
+- Diff < 200 lignes
+- Inclure les tests correspondants
+- Suivre les patterns existants du projet
+- Valider les inputs avec Zod
+- Gérer les erreurs explicitement
+
+Après implémentation:
+1. Run les tests
+2. Fix les erreurs
+3. Commit avec message conventionnel
+
+Format commit: type(scope): description
+```
+
+### Phase 4: TEST (TDD Loop)
+
+**Objectif**: Validation complète
+
+**Workflow TDD**:
+```
+1. Écrire le test (RED)
+2. Vérifier qu'il échoue
+3. Implémenter le minimum pour passer (GREEN)
+4. Refactor si nécessaire
+5. Commit
+```
+
+### Phase 5: REVIEW (Multi-Agent)
+
+**Objectif**: Qualité et sécurité
+
+**Utiliser des subagents spécialisés**:
+
+**Security Agent**:
+```
+Agis comme un expert sécurité.
+Review le code pour:
+- Injection (SQL, NoSQL, XSS)
+- Auth/AuthZ bypass
+- Secrets exposés
+- Input validation manquante
+- Rate limiting absent
+
+Liste chaque vulnérabilité avec sévérité et fix.
+```
+
+**Performance Agent**:
+```
+Agis comme un expert performance.
+Analyse:
+- Queries N+1
+- Missing indexes
+- Memory leaks
+- Bundle size
+- Lazy loading opportunities
+
+Propose des optimisations concrètes.
+```
+
+**Code Quality Agent**:
+```
+Agis comme un senior reviewer.
+Vérifie:
+- Naming conventions
+- DRY violations
+- SOLID principles
+- Error handling
+- Documentation
+
+Note de 1-10 avec justification.
+```
+
+### Phase 6: DEPLOY (Automated)
+
+**Objectif**: Mise en production sécurisée
+
+**Checklist pré-deploy**:
+- [ ] Tests passent (100%)
+- [ ] Build sans erreurs
+- [ ] Lint clean
+- [ ] Types check
+- [ ] Coverage > 80%
+- [ ] Env vars documentées
+- [ ] Migrations prêtes
+- [ ] Rollback plan
+
+---
+
+## 🧠 PROMPTS STRATÉGIQUES RÉUTILISABLES
+
+### Analyse de Codebase
+```
+Analyse ce projet et génère:
+1. Architecture diagram (mermaid)
+2. Tech stack détecté
+3. Patterns utilisés
+4. Points d'amélioration
+5. Technical debt identifié
+
+Format: markdown structuré
+```
+
+### Refactoring Sécurisé
+```
+Refactor [FILE/COMPONENT] pour [OBJECTIF].
+
+Contraintes:
+- Garder la même API publique
+- Pas de breaking changes
+- Tests existants doivent passer
+- Ajouter tests pour nouveau code
+
+Procède par petits diffs avec commits.
+```
+
+### Debug Complexe
+```
+J'ai cette erreur: [ERROR]
+
+Contexte:
+- Fichier: [path]
+- Action: [ce que je faisais]
+- Attendu: [comportement attendu]
+- Observé: [comportement réel]
+
+Analyse:
+1. Lis les fichiers pertinents
+2. Identifie la root cause
+3. Propose un fix
+4. Explique pourquoi ça résout le problème
+```
+
+### API Design
+```
+Design l'API pour [FEATURE].
+
+Inclure:
+1. Endpoints (REST ou GraphQL)
+2. Request/Response schemas (Zod)
+3. Error codes et messages
+4. Rate limiting strategy
+5. Auth requirements
+6. Exemples curl
+
+Format: OpenAPI 3.0 ou schema TypeScript
+```
+
+### Database Schema
+```
+Design le schema pour [FEATURE].
+
+Inclure:
+1. Collections/Tables
+2. Fields avec types
+3. Relations
+4. Indexes (performance)
+5. Validation rules
+6. Migration script
+
+Optimise pour les queries fréquentes: [liste]
+```
+
+### Component UI
+```
+Crée le composant [NAME].
+
+Specs:
+- Props: [interface TypeScript]
+- States: [liste des states]
+- Events: [handlers]
+- Responsive: mobile-first
+- Accessible: ARIA, keyboard nav
+- Style: Tailwind + Shadcn
+
+Inclure:
+1. Le composant
+2. Tests RTL
+3. Storybook story (si applicable)
+```
+
+---
+
+## 📋 PROJECT DOCUMENTATION
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -471,3 +754,150 @@ When implementing new features, ensure you follow this checklist:
 - [ ] Verify error logging works
 - [ ] Ensure database indexes exist for new queries
 - [ ] Update documentation if needed
+
+---
+
+## 🔌 CONFIGURATION MCP
+
+### MCP Essentiels
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/project"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_TOKEN": "$GITHUB_TOKEN" }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "$DATABASE_URL"]
+    }
+  }
+}
+```
+
+### MCP Business (Optional)
+
+```json
+{
+  "notion": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-notion"],
+    "env": { "NOTION_TOKEN": "$NOTION_TOKEN" }
+  },
+  "slack": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-slack"],
+    "env": { "SLACK_TOKEN": "$SLACK_TOKEN" }
+  }
+}
+```
+
+### Permissions Recommandées
+
+```bash
+# Auto-approve safe operations
+/permissions add Edit
+/permissions add "Bash(npm:*)"
+/permissions add "Bash(git commit:*)"
+/permissions add "Bash(git push:*)"
+/permissions add "Bash(npm test:*)"
+
+# MCP tools (adjust based on your MCP servers)
+/permissions add mcp__*
+```
+
+---
+
+## 📊 MÉTRIQUES SUCCÈS
+
+### Par Projet
+
+- **Time to first commit**: < 30min
+- **Test coverage**: > 80%
+- **Build time**: < 2min
+- **Lighthouse score**: > 90
+- **Zero critical vulnerabilities**
+
+### Par Sprint
+
+- **PRs merged sans rework**: > 90%
+- **Bugs en prod**: 0
+- **Client satisfaction**: 5/5
+
+### Core Web Vitals Targets
+
+- **LCP** (Largest Contentful Paint): < 2.5s
+- **FID** (First Input Delay): < 100ms
+- **CLS** (Cumulative Layout Shift): < 0.1
+- **TTFB** (Time to First Byte): < 200ms
+
+---
+
+## 🚀 SLASH COMMANDS CUSTOM
+
+Create these files in `.claude/commands/` for reusable workflows:
+
+### .claude/commands/fix-issue.md
+
+```markdown
+Analyse et fix le GitHub issue: $ARGUMENTS
+
+1. `gh issue view` pour les détails
+2. Comprendre le problème
+3. Chercher les fichiers pertinents
+4. Implémenter le fix
+5. Écrire/update les tests
+6. Commit avec "fix: [description]"
+7. Créer PR si nécessaire
+```
+
+### .claude/commands/create-component.md
+
+```markdown
+Crée le composant: $ARGUMENTS
+
+1. Génère le composant dans components/
+2. Ajoute les tests RTL
+3. Props typées avec interface
+4. Responsive + accessible
+5. Export depuis index.ts
+6. Update Storybook si applicable
+```
+
+### .claude/commands/deploy.md
+
+```markdown
+Prépare le déploiement:
+
+1. Run `npm run test`
+2. Run `npm run build`
+3. Check `npm run lint`
+4. Génère CHANGELOG si needed
+5. Crée PR avec description complète
+6. Tag version (semver)
+```
+
+### .claude/commands/security-audit.md
+
+```markdown
+Effectue un audit sécurité:
+
+1. Scan des dépendances: `npm audit`
+2. Check des secrets exposés
+3. Review validation inputs
+4. Vérifier auth/authz
+5. Test rate limiting
+6. Check CORS config
+7. Générer rapport avec recommandations
+```
+
+---
+
+**Version**: 2.0
+**Dernière mise à jour**: Novembre 2025
