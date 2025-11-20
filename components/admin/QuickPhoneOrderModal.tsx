@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Phone, Pizza } from 'lucide-react';
+import { X, Phone, Pizza, CupSoda } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { TimeSlot, Product } from '@/types';
 import { usePhoneOrder } from '@/hooks/usePhoneOrder';
@@ -168,7 +168,7 @@ export default function QuickPhoneOrderModal({
           {step === 'drinks' && (
             <ProductSelectionStep
               title="Boissons et Accompagnements (optionnel)"
-              icon={<span className="w-5 h-5 flex items-center justify-center" aria-hidden="true">🥤</span>}
+              icon={<CupSoda className="w-5 h-5 text-blue-600" aria-hidden="true" />}
               products={drinks}
               cart={cart}
               loading={loadingProducts}

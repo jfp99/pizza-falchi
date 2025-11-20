@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { User, MapPin } from 'lucide-react';
 import type { ChangeEvent } from 'react';
 
@@ -19,7 +20,7 @@ interface CustomerInfoStepProps {
   errors?: Partial<Record<keyof CustomerInfo, string>>;
 }
 
-export default function CustomerInfoStep({
+function CustomerInfoStep({
   customerInfo,
   onChange,
   onDeliveryTypeChange,
@@ -235,3 +236,5 @@ export default function CustomerInfoStep({
     </div>
   );
 }
+
+export default memo(CustomerInfoStep);

@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import type { TimeSlot } from '@/types';
 import type { CustomerInfo } from './CustomerInfoStep';
 import type { CartItem } from './ProductSelectionStep';
@@ -11,7 +12,7 @@ interface OrderConfirmationStepProps {
   deliveryFee?: number;
 }
 
-export default function OrderConfirmationStep({
+function OrderConfirmationStep({
   customerInfo,
   cart,
   slot,
@@ -154,3 +155,5 @@ export default function OrderConfirmationStep({
     </div>
   );
 }
+
+export default memo(OrderConfirmationStep);

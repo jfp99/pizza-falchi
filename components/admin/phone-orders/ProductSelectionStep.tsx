@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Plus, Minus, AlertCircle } from 'lucide-react';
 import type { Product } from '@/types';
 
@@ -20,7 +21,7 @@ interface ProductSelectionStepProps {
   warningMessage?: string;
 }
 
-export default function ProductSelectionStep({
+function ProductSelectionStep({
   title,
   icon,
   products,
@@ -159,3 +160,5 @@ export default function ProductSelectionStep({
     </div>
   );
 }
+
+export default memo(ProductSelectionStep);

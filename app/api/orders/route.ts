@@ -40,15 +40,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  // Apply CSRF protection (skip in development due to hot reload clearing tokens)
-  if (process.env.NODE_ENV === 'production') {
-    const csrfValidation = await validateCSRFMiddleware(request);
-    if (!csrfValidation.valid) {
-      return NextResponse.json(
-        { error: csrfValidation.error },
-        { status: 403 }
-      );
+  // Apply CSRF protection (always active for security)
+  const csrfValidation = await validateCSRFMiddleware(request);
+  if (!csrfValidation.valid) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️ CSRF validation failed in dev mode:', csrfValidation.error);
     }
+    return NextResponse.json(
+      { error: csrfValidation.error },
+      { status: 403 }
+    );
   }
 
   // Apply rate limiting for order creation
