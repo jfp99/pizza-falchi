@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import TimeSlot from '@/models/TimeSlot';
+import '@/models/Order'; // Import Order model to register schema for populate
 import {
   getSlotsByDateRange,
   getAvailableSlotsForDate,

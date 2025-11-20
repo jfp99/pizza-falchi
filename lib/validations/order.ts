@@ -41,6 +41,10 @@ export const orderItemSchema = z.object({
     .number()
     .positive('Le prix doit être positif')
     .max(1000, 'Prix maximum dépassé'),
+  total: z
+    .number()
+    .positive('Le total doit être positif')
+    .max(50000, 'Total maximum dépassé'),
 });
 
 /**

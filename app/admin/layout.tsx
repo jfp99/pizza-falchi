@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, Package, ShoppingCart, Users, BarChart3, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, BarChart3, LogOut, Phone, Clock } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
 export default function AdminLayout({
@@ -70,6 +70,14 @@ export default function AdminLayout({
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>Orders</span>
+                </Link>
+
+                <Link
+                  href="/admin/time-slots/dashboard"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-text-secondary dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Phone Orders</span>
                 </Link>
 
                 <Link

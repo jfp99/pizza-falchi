@@ -38,7 +38,7 @@ export const timeSlotSchema = z.object({
   date: z.coerce.date(),
   startTime: timeSchema,
   endTime: timeSchema,
-  capacity: z.number().int().min(1).max(10).default(2),
+  capacity: z.number().int().min(1).max(10).default(4), // 4 pizzas per slot (oven capacity)
   currentOrders: z.number().int().min(0).default(0),
   orders: z.array(z.string()).default([]),
   isAvailable: z.boolean().default(true),
@@ -52,7 +52,7 @@ export const createTimeSlotSchema = z.object({
   date: z.coerce.date(),
   startTime: timeSchema,
   endTime: timeSchema,
-  capacity: z.number().int().min(1).max(10).optional().default(2),
+  capacity: z.number().int().min(1).max(10).optional().default(4), // 4 pizzas per slot (oven capacity)
 });
 
 /**
@@ -73,7 +73,7 @@ export const openingHoursSchema = z.object({
   hours: timeRangeSchema.optional(),
   exceptions: z.array(exceptionSchema).default([]),
   slotDuration: z.number().int().min(5).max(60).default(10),
-  ordersPerSlot: z.number().int().min(1).max(10).default(2),
+  ordersPerSlot: z.number().int().min(1).max(10).default(4), // 4 pizzas per slot (oven capacity)
 });
 
 /**
@@ -84,7 +84,7 @@ export const createOpeningHoursSchema = z.object({
   isOpen: z.boolean(),
   hours: timeRangeSchema.optional(),
   slotDuration: z.number().int().min(5).max(60).optional().default(10),
-  ordersPerSlot: z.number().int().min(1).max(10).optional().default(2),
+  ordersPerSlot: z.number().int().min(1).max(10).optional().default(4), // 4 pizzas per slot (oven capacity)
 });
 
 /**

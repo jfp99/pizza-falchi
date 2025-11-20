@@ -19,7 +19,7 @@ export const phoneOrderCustomerSchema = z.object({
     .trim(),
 
   deliveryType: z.enum(['pickup', 'delivery'], {
-    errorMap: () => ({ message: 'Type de service invalide' }),
+    message: 'Type de service invalide (pickup ou delivery)',
   }),
 });
 

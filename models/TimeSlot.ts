@@ -1,4 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+// Import Order model to ensure it's registered before TimeSlot uses it in populate
+import './Order';
 
 /**
  * TimeSlot Interface
@@ -8,22 +10,25 @@ export interface ITimeSlot extends Document {
   date: Date;
   startTime: string; // Format: "HH:MM" (e.g., "18:00")
   endTime: string; // Format: "HH:MM" (e.g., "18:10")
-  capacity: number; // Maximum orders per slot (default: 2)
+  capacity: number; // Maximum pizzas per slot (default: 4 - oven capacity)
   currentOrders: number; // Number of currently assigned orders
+  pizzaCount: number; // Total number of pizzas in this slot (CRITICAL for oven capacity)
   orders: mongoose.Types.ObjectId[]; // References to Order documents
-  isAvailable: boolean; // Computed: currentOrders < capacity
+  isAvailable: boolean; // Computed: pizzaCount < capacity
   status: 'active' | 'full' | 'closed';
   createdAt: Date;
   updatedAt: Date;
 
   // Virtual properties
   timeRange: string; // Full time range as string (e.g., "18:00 - 18:10")
-  remainingCapacity: number; // Remaining capacity
+  remainingCapacity: number; // Remaining pizza capacity
+  remainingPizzas: number; // Remaining pizzas (capacity - pizzaCount)
 
   // Instance methods
-  canAcceptOrder(): boolean;
-  addOrder(orderId: mongoose.Types.ObjectId | string): Promise<ITimeSlot>;
-  removeOrder(orderId: mongoose.Types.ObjectId | string): Promise<ITimeSlot>;
+  canAcceptOrder(pizzaCount: number): boolean;
+  addOrder(orderId: mongoose.Types.ObjectId | string, pizzaCount: number): Promise<ITimeSlot>;
+  removeOrder(orderId: mongoose.Types.ObjectId | string, pizzaCount: number): Promise<ITimeSlot>;
+  calculatePizzaCount(): Promise<number>;
 }
 
 /**
@@ -59,7 +64,7 @@ const TimeSlotSchema = new Schema<ITimeSlot>(
     capacity: {
       type: Number,
       required: true,
-      default: 2,
+      default: 4, // 4 pizzas max per 10-minute slot (oven capacity)
       min: [1, 'Capacity must be at least 1'],
       max: [10, 'Capacity cannot exceed 10'],
     },
@@ -68,6 +73,12 @@ const TimeSlotSchema = new Schema<ITimeSlot>(
       required: true,
       default: 0,
       min: [0, 'Current orders cannot be negative'],
+    },
+    pizzaCount: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: [0, 'Pizza count cannot be negative'],
     },
     orders: [
       {
@@ -109,10 +120,10 @@ TimeSlotSchema.index({ status: 1 });
  * Pre-save middleware to compute isAvailable and update status
  */
 TimeSlotSchema.pre('save', function (next) {
-  // Compute isAvailable based on capacity
-  this.isAvailable = this.currentOrders < this.capacity;
+  // Compute isAvailable based on pizza count (not order count!)
+  this.isAvailable = this.pizzaCount < this.capacity;
 
-  // Auto-update status based on availability
+  // Auto-update status based on pizza availability
   if (this.status !== 'closed') {
     this.status = this.isAvailable ? 'active' : 'full';
   }
@@ -129,28 +140,54 @@ TimeSlotSchema.pre('save', function (next) {
  * Instance Methods
  */
 
-// Check if slot can accept a new order
-TimeSlotSchema.methods.canAcceptOrder = function (): boolean {
-  return this.isAvailable && this.status === 'active' && this.currentOrders < this.capacity;
+// Calculate total pizza count from all orders in this slot
+TimeSlotSchema.methods.calculatePizzaCount = async function (): Promise<number> {
+  // Populate orders if not already populated
+  if (!this.populated('orders')) {
+    await this.populate('orders');
+  }
+
+  // Sum up all pizza quantities from all orders
+  const total = this.orders.reduce((sum: number, order: any) => {
+    if (!order.items) return sum;
+
+    // Count only items where product category is 'pizza'
+    const pizzasInOrder = order.items
+      .filter((item: any) => item.product?.category === 'pizza')
+      .reduce((orderSum: number, item: any) => orderSum + item.quantity, 0);
+
+    return sum + pizzasInOrder;
+  }, 0);
+
+  return total;
+};
+
+// Check if slot can accept a new order with N pizzas
+TimeSlotSchema.methods.canAcceptOrder = function (pizzaCount: number): boolean {
+  const wouldExceedCapacity = this.pizzaCount + pizzaCount > this.capacity;
+  return this.status === 'active' && !wouldExceedCapacity;
 };
 
 // Add an order to the slot
 TimeSlotSchema.methods.addOrder = async function (
-  orderId: mongoose.Types.ObjectId
+  orderId: mongoose.Types.ObjectId,
+  pizzaCount: number
 ): Promise<ITimeSlot> {
-  if (!this.canAcceptOrder()) {
-    throw new Error('Time slot is not available for new orders');
+  if (!this.canAcceptOrder(pizzaCount)) {
+    throw new Error(`Time slot cannot accept ${pizzaCount} more pizza(s). Current: ${this.pizzaCount}/${this.capacity}`);
   }
 
   this.orders.push(orderId);
   this.currentOrders += 1;
+  this.pizzaCount += pizzaCount;
 
   return await this.save();
 };
 
 // Remove an order from the slot
 TimeSlotSchema.methods.removeOrder = async function (
-  orderId: mongoose.Types.ObjectId
+  orderId: mongoose.Types.ObjectId,
+  pizzaCount: number
 ): Promise<ITimeSlot> {
   const orderIndex = this.orders.findIndex((id: mongoose.Types.ObjectId) => id.equals(orderId));
 
@@ -160,6 +197,7 @@ TimeSlotSchema.methods.removeOrder = async function (
 
   this.orders.splice(orderIndex, 1);
   this.currentOrders -= 1;
+  this.pizzaCount -= pizzaCount;
 
   return await this.save();
 };
@@ -217,9 +255,14 @@ TimeSlotSchema.virtual('timeRange').get(function () {
   return `${this.startTime} - ${this.endTime}`;
 });
 
-// Remaining capacity
+// Remaining pizza capacity
 TimeSlotSchema.virtual('remainingCapacity').get(function () {
-  return this.capacity - this.currentOrders;
+  return this.capacity - this.pizzaCount;
+});
+
+// Remaining pizzas (same as remainingCapacity, for clarity)
+TimeSlotSchema.virtual('remainingPizzas').get(function () {
+  return this.capacity - this.pizzaCount;
 });
 
 /**

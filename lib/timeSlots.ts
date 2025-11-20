@@ -64,6 +64,7 @@ export async function generateTimeSlotsForDay(date: Date): Promise<ITimeSlot[]> 
         endTime,
         capacity,
         currentOrders: 0,
+        pizzaCount: 0,
         orders: [],
         isAvailable: true,
         status: 'active',
@@ -128,11 +129,12 @@ export async function getNextAvailableSlot(
 }
 
 /**
- * Check if a specific time slot is available
+ * Check if a specific time slot is available for N pizzas
  */
 export async function isSlotAvailable(
   date: Date,
-  startTime: string
+  startTime: string,
+  pizzaCount: number = 1
 ): Promise<boolean> {
   await connectDB();
 
@@ -148,7 +150,7 @@ export async function isSlotAvailable(
     return false;
   }
 
-  return slot.canAcceptOrder();
+  return slot.canAcceptOrder(pizzaCount);
 }
 
 /**
@@ -232,6 +234,7 @@ export async function calculatePickupTime(
  */
 export async function assignOrderToSlot(
   orderId: string,
+  pizzaCount: number,
   date: Date,
   startTime: string
 ): Promise<ITimeSlot> {
@@ -249,12 +252,12 @@ export async function assignOrderToSlot(
     throw new Error('Time slot not found');
   }
 
-  if (!slot.canAcceptOrder()) {
-    throw new Error('Time slot is full or not available');
+  if (!slot.canAcceptOrder(pizzaCount)) {
+    throw new Error(`Time slot cannot accept ${pizzaCount} pizza(s). Current: ${slot.pizzaCount}/${slot.capacity}`);
   }
 
-  // Add order to slot
-  await slot.addOrder(orderId as any);
+  // Add order to slot with pizza count
+  await slot.addOrder(orderId as any, pizzaCount);
 
   return slot;
 }
@@ -265,6 +268,7 @@ export async function assignOrderToSlot(
  */
 export async function assignOrderToNextAvailable(
   orderId: string,
+  pizzaCount: number,
   fromDate: Date = new Date()
 ): Promise<ITimeSlot> {
   await connectDB();
@@ -275,7 +279,11 @@ export async function assignOrderToNextAvailable(
     throw new Error('No available time slots found');
   }
 
-  await slot.addOrder(orderId as any);
+  if (!slot.canAcceptOrder(pizzaCount)) {
+    throw new Error(`Next available slot cannot accept ${pizzaCount} pizza(s). Current: ${slot.pizzaCount}/${slot.capacity}`);
+  }
+
+  await slot.addOrder(orderId as any, pizzaCount);
 
   return slot;
 }
@@ -285,7 +293,8 @@ export async function assignOrderToNextAvailable(
  */
 export async function removeOrderFromSlot(
   orderId: string,
-  slotId: string
+  slotId: string,
+  pizzaCount: number
 ): Promise<ITimeSlot> {
   await connectDB();
 
@@ -295,7 +304,7 @@ export async function removeOrderFromSlot(
     throw new Error('Time slot not found');
   }
 
-  await slot.removeOrder(orderId as any);
+  await slot.removeOrder(orderId as any, pizzaCount);
 
   return slot;
 }
@@ -311,7 +320,9 @@ export async function getSlotStatistics(
   availableSlots: number;
   fullSlots: number;
   totalOrders: number;
+  totalPizzas: number;
   averageOrdersPerSlot: number;
+  averagePizzasPerSlot: number;
   utilizationRate: number;
 }> {
   await connectDB();
@@ -322,6 +333,7 @@ export async function getSlotStatistics(
   const availableSlots = slots.filter((slot) => slot.isAvailable).length;
   const fullSlots = slots.filter((slot) => slot.status === 'full').length;
   const totalOrders = slots.reduce((sum, slot) => sum + slot.currentOrders, 0);
+  const totalPizzas = slots.reduce((sum, slot) => sum + slot.pizzaCount, 0);
   const totalCapacity = slots.reduce((sum, slot) => sum + slot.capacity, 0);
 
   return {
@@ -329,8 +341,10 @@ export async function getSlotStatistics(
     availableSlots,
     fullSlots,
     totalOrders,
+    totalPizzas,
     averageOrdersPerSlot: totalSlots > 0 ? totalOrders / totalSlots : 0,
-    utilizationRate: totalCapacity > 0 ? (totalOrders / totalCapacity) * 100 : 0,
+    averagePizzasPerSlot: totalSlots > 0 ? totalPizzas / totalSlots : 0,
+    utilizationRate: totalCapacity > 0 ? (totalPizzas / totalCapacity) * 100 : 0,
   };
 }
 
@@ -395,7 +409,7 @@ export function formatTimeSlot(slot: ITimeSlot): string {
     month: 'long',
   });
 
-  return `${dateStr} à ${slot.startTime} - ${slot.endTime} (${slot.remainingCapacity}/${slot.capacity} disponible${slot.remainingCapacity > 1 ? 's' : ''})`;
+  return `${dateStr} à ${slot.startTime} - ${slot.endTime} (${slot.remainingPizzas}/${slot.capacity} pizza${slot.remainingPizzas > 1 ? 's' : ''} disponible${slot.remainingPizzas > 1 ? 's' : ''})`;
 }
 
 /**

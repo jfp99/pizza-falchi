@@ -122,9 +122,9 @@ export function usePhoneOrder({
   const canProceed = useCallback((): boolean => {
     if (step === 'customer') {
       const hasRequiredFields =
-        customerInfo.customerName.trim() && customerInfo.phone.trim();
+        customerInfo.customerName.trim().length > 0 && customerInfo.phone.trim().length > 0;
       const hasAddress =
-        customerInfo.deliveryType === 'pickup' || customerInfo.address.trim();
+        customerInfo.deliveryType === 'pickup' || customerInfo.address.trim().length > 0;
       return hasRequiredFields && hasAddress;
     }
     if (step === 'pizzas' || step === 'drinks') {

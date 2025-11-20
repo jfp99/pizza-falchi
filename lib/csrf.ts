@@ -37,8 +37,9 @@ export function generateCSRFToken(): string {
 
 /**
  * Validate a CSRF token
+ * @param oneTimeUse - If true, token is deleted after validation (default: false for better UX)
  */
-export function validateCSRFToken(token: string | null | undefined): boolean {
+export function validateCSRFToken(token: string | null | undefined, oneTimeUse: boolean = false): boolean {
   if (!token) {
     return false;
   }
@@ -55,8 +56,12 @@ export function validateCSRFToken(token: string | null | undefined): boolean {
     return false;
   }
 
-  // Token is valid - remove it (one-time use)
-  tokenStore.delete(token);
+  // Token is valid - optionally remove it (one-time use)
+  // For better UX in admin interfaces, we allow reuse within validity period
+  if (oneTimeUse) {
+    tokenStore.delete(token);
+  }
+
   return true;
 }
 

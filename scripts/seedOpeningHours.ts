@@ -14,7 +14,7 @@ const DEFAULT_OPENING_HOURS = [
     dayOfWeek: 0, // Sunday - CLOSED
     isOpen: false,
     slotDuration: 10,
-    ordersPerSlot: 2,
+    ordersPerSlot: 4, // 4 pizzas per slot (oven capacity)
     exceptions: [],
   },
   {
@@ -25,7 +25,7 @@ const DEFAULT_OPENING_HOURS = [
       close: '21:30',
     },
     slotDuration: 10,
-    ordersPerSlot: 2,
+    ordersPerSlot: 4, // 4 pizzas per slot (oven capacity)
     exceptions: [],
   },
   {
@@ -36,7 +36,7 @@ const DEFAULT_OPENING_HOURS = [
       close: '21:30',
     },
     slotDuration: 10,
-    ordersPerSlot: 2,
+    ordersPerSlot: 4, // 4 pizzas per slot (oven capacity)
     exceptions: [],
   },
   {
@@ -47,7 +47,7 @@ const DEFAULT_OPENING_HOURS = [
       close: '21:30',
     },
     slotDuration: 10,
-    ordersPerSlot: 2,
+    ordersPerSlot: 4, // 4 pizzas per slot (oven capacity)
     exceptions: [],
   },
   {
@@ -58,7 +58,7 @@ const DEFAULT_OPENING_HOURS = [
       close: '21:30',
     },
     slotDuration: 10,
-    ordersPerSlot: 2,
+    ordersPerSlot: 4, // 4 pizzas per slot (oven capacity)
     exceptions: [],
   },
   {
@@ -69,7 +69,7 @@ const DEFAULT_OPENING_HOURS = [
       close: '21:30',
     },
     slotDuration: 10,
-    ordersPerSlot: 2,
+    ordersPerSlot: 4, // 4 pizzas per slot (oven capacity)
     exceptions: [],
   },
   {
@@ -80,7 +80,7 @@ const DEFAULT_OPENING_HOURS = [
       close: '21:30',
     },
     slotDuration: 10,
-    ordersPerSlot: 2,
+    ordersPerSlot: 4, // 4 pizzas per slot (oven capacity)
     exceptions: [],
   },
 ];

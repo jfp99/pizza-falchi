@@ -94,11 +94,13 @@ export interface TimeSlot {
   endTime: string; // Format: "HH:MM"
   capacity: number;
   currentOrders: number;
+  pizzaCount?: number; // Total pizzas in this slot (critical for oven capacity)
   orders: string[]; // Array of Order IDs
   isAvailable: boolean;
   status: 'active' | 'full' | 'closed';
   timeRange?: string; // Virtual property
   remainingCapacity?: number; // Virtual property
+  remainingPizzas?: number; // Virtual property (capacity - pizzaCount)
   createdAt?: Date;
   updatedAt?: Date;
 }

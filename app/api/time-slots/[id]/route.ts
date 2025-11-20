@@ -98,7 +98,8 @@ export async function PUT(
           );
         }
 
-        await slot.addOrder(orderId);
+        // Default to 1 pizza per order if not specified
+        await slot.addOrder(orderId, 1);
 
         return NextResponse.json({
           success: true,
@@ -114,7 +115,8 @@ export async function PUT(
           );
         }
 
-        await slot.removeOrder(orderId);
+        // Default to 1 pizza per order if not specified
+        await slot.removeOrder(orderId, 1);
 
         return NextResponse.json({
           success: true,
