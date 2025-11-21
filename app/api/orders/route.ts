@@ -21,8 +21,13 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
+    const timeSlot = searchParams.get('timeSlot');
 
-    const query = status ? { status } : {};
+    // Build query object based on provided parameters
+    const query: any = {};
+    if (status) query.status = status;
+    if (timeSlot) query.timeSlot = timeSlot;
+
     const orders = await Order.find(query)
       .populate('items.product')
       .populate('timeSlot')
