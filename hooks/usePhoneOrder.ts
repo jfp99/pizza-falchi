@@ -4,6 +4,7 @@ import type { Product, TimeSlot } from '@/types';
 import type { CustomerInfo } from '@/components/admin/phone-orders/CustomerInfoStep';
 import type { CartItem } from '@/components/admin/phone-orders/ProductSelectionStep';
 import { DELIVERY_FEE, DEFAULT_CITY, DEFAULT_POSTAL_CODE } from '@/lib/constants';
+import { capturePhoneOrderError, captureAPIError, addBreadcrumb } from '@/lib/monitoring';
 
 /**
  * Step type for phone order workflow progression
@@ -273,7 +274,7 @@ export function usePhoneOrder({
         const csrfData = await csrfResponse.json();
         csrfToken = csrfData.token;
       } catch (csrfError) {
-        console.error('CSRF token error:', csrfError);
+        captureAPIError(csrfError, '/api/csrf', 'GET');
         toast.error('Erreur de sécurité. Veuillez recharger la page.');
         setLoading(false);
         return;
@@ -328,16 +329,36 @@ export function usePhoneOrder({
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create order');
+        const errorData = await response.json();
+        captureAPIError(
+          new Error(errorData.error || 'Failed to create order'),
+          '/api/orders',
+          'POST',
+          response.status
+        );
+        throw new Error(errorData.error || 'Failed to create order');
       }
 
       await response.json();
+      addBreadcrumb('Phone order created successfully', 'phone-order', {
+        customerName: customerInfo.customerName,
+        pizzaCount,
+        slotId: slot._id,
+      });
       toast.success(`Commande créée pour ${customerInfo.customerName} !`);
 
       onOrderCreated();
     } catch (error) {
-      console.error('Error creating order:', error);
+      capturePhoneOrderError(error, {
+        step: 'submit',
+        slot,
+        pizzaCount: getPizzaCount(),
+        orderData: {
+          customerName: customerInfo.customerName,
+          deliveryType: customerInfo.deliveryType,
+          cartItems: cart.length,
+        },
+      });
       toast.error(error instanceof Error ? error.message : 'Erreur lors de la création');
     } finally {
       setLoading(false);
