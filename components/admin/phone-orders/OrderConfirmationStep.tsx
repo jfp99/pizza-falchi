@@ -4,6 +4,7 @@ import { memo } from 'react';
 import type { TimeSlot } from '@/types';
 import type { CustomerInfo } from './CustomerInfoStep';
 import type { CartItem } from './ProductSelectionStep';
+import { DELIVERY_FEE } from '@/lib/constants';
 
 /**
  * Props for the OrderConfirmationStep component
@@ -72,7 +73,7 @@ function OrderConfirmationStep({
   customerInfo,
   cart,
   slot,
-  deliveryFee = 3.0,
+  deliveryFee = DELIVERY_FEE,
 }: OrderConfirmationStepProps) {
   const getSubtotal = (): number => {
     return cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);

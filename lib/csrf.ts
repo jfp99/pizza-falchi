@@ -6,6 +6,7 @@
  */
 
 import { randomBytes } from 'crypto';
+import { CSRF_TOKEN_EXPIRATION_MS, CSRF_CLEANUP_INTERVAL_MS } from './constants';
 
 interface CSRFToken {
   token: string;
@@ -15,12 +16,6 @@ interface CSRFToken {
 // In-memory token storage (use Redis in production for multi-instance deployments)
 const tokenStore = new Map<string, CSRFToken>();
 
-// Token expiration time (15 minutes)
-const TOKEN_EXPIRATION_MS = 15 * 60 * 1000;
-
-// Cleanup interval (5 minutes)
-const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
-
 /**
  * Generate a new CSRF token
  */
@@ -29,7 +24,7 @@ export function generateCSRFToken(): string {
 
   tokenStore.set(token, {
     token,
-    expiresAt: Date.now() + TOKEN_EXPIRATION_MS,
+    expiresAt: Date.now() + CSRF_TOKEN_EXPIRATION_MS,
   });
 
   return token;
@@ -141,7 +136,7 @@ export async function validateCSRFMiddleware(
  */
 if (typeof window === 'undefined') {
   // Only run cleanup on server side
-  setInterval(cleanupExpiredTokens, CLEANUP_INTERVAL_MS);
+  setInterval(cleanupExpiredTokens, CSRF_CLEANUP_INTERVAL_MS);
 }
 
 /**

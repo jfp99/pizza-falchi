@@ -7,6 +7,7 @@ import type { TimeSlot } from '@/types';
 import TimeSlotGrid from '@/components/admin/TimeSlotGrid';
 import QuickPhoneOrderModal from '@/components/admin/QuickPhoneOrderModal';
 import SlotOrderHistoryModal from '@/components/admin/SlotOrderHistoryModal';
+import { AUTO_REFRESH_INTERVAL_MS } from '@/lib/constants';
 
 export default function TimeSlotDashboard() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -48,10 +49,10 @@ export default function TimeSlotDashboard() {
   useEffect(() => {
     fetchSlots();
 
-    // Auto-refresh every 30 seconds
+    // Auto-refresh at configured interval
     const interval = setInterval(() => {
       fetchSlots(true); // Silent refresh
-    }, 30000);
+    }, AUTO_REFRESH_INTERVAL_MS);
 
     return () => clearInterval(interval);
   }, [selectedDate]);

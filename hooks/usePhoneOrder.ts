@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import type { Product, TimeSlot } from '@/types';
 import type { CustomerInfo } from '@/components/admin/phone-orders/CustomerInfoStep';
 import type { CartItem } from '@/components/admin/phone-orders/ProductSelectionStep';
+import { DELIVERY_FEE, DEFAULT_CITY, DEFAULT_POSTAL_CODE } from '@/lib/constants';
 
 /**
  * Step type for phone order workflow progression
@@ -88,9 +89,6 @@ interface UsePhoneOrderReturn {
   resetForm: () => void;
 }
 
-/** Standard delivery fee in euros */
-const DELIVERY_FEE = 3.0;
-
 /**
  * Custom hook for phone order workflow management
  *
@@ -155,8 +153,8 @@ export function usePhoneOrder({
     phone: '',
     deliveryType: 'pickup',
     address: '',
-    city: 'Puyricard',
-    postalCode: '13540',
+    city: DEFAULT_CITY,
+    postalCode: DEFAULT_POSTAL_CODE,
   });
 
   // Cart state
@@ -354,8 +352,8 @@ export function usePhoneOrder({
       phone: '',
       deliveryType: 'pickup',
       address: '',
-      city: 'Puyricard',
-      postalCode: '13540',
+      city: DEFAULT_CITY,
+      postalCode: DEFAULT_POSTAL_CODE,
     });
     setCart([]);
   }, []);
