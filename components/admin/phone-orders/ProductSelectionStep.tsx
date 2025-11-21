@@ -4,11 +4,60 @@ import { memo } from 'react';
 import { Plus, Minus, AlertCircle } from 'lucide-react';
 import type { Product } from '@/types';
 
+/**
+ * Cart item structure representing a product with quantity
+ *
+ * @property product - The product object with all product details (name, price, category, etc.)
+ * @property quantity - Number of items in cart (positive integer)
+ *
+ * @example
+ * ```tsx
+ * const cartItem: CartItem = {
+ *   product: {
+ *     _id: 'p1',
+ *     name: 'Margherita',
+ *     price: 10.5,
+ *     category: 'pizza',
+ *     available: true
+ *   },
+ *   quantity: 2
+ * };
+ * ```
+ */
 export interface CartItem {
   product: Product;
   quantity: number;
 }
 
+/**
+ * Props for the ProductSelectionStep component
+ *
+ * This is a reusable component for product selection in the phone order workflow.
+ * Can be used for pizzas, drinks, or any other product category.
+ *
+ * @property title - Display title for the step (e.g., "Sélection des Pizzas")
+ * @property icon - React icon component to display next to title
+ * @property products - Array of available products to display
+ * @property cart - Current cart state with selected items
+ * @property loading - Optional loading state while fetching products
+ * @property onAddToCart - Callback fired when adding a product (increments quantity)
+ * @property onRemoveFromCart - Callback fired when removing a product (decrements quantity)
+ * @property keyboardHint - Optional flag to show keyboard shortcut hints (1-9)
+ * @property warningMessage - Optional warning message (e.g., capacity exceeded)
+ *
+ * @example
+ * ```tsx
+ * <ProductSelectionStep
+ *   title="Sélection des Pizzas"
+ *   icon={<Pizza className="w-5 h-5" />}
+ *   products={pizzas}
+ *   cart={cart}
+ *   onAddToCart={addToCart}
+ *   onRemoveFromCart={removeFromCart}
+ *   keyboardHint={true}
+ * />
+ * ```
+ */
 interface ProductSelectionStepProps {
   title: string;
   icon: React.ReactNode;
@@ -21,6 +70,49 @@ interface ProductSelectionStepProps {
   warningMessage?: string;
 }
 
+/**
+ * Reusable product selection step for phone orders
+ *
+ * Displays a grid of products with add/remove controls. Features keyboard
+ * shortcuts (1-9) for rapid product entry during phone calls. Shows current
+ * cart quantities and supports loading states.
+ *
+ * This component is reused for both pizza and drink selection steps,
+ * making it highly flexible and maintainable.
+ *
+ * Features:
+ * - Keyboard shortcuts (1-9) for first 9 products
+ * - Visual quantity indicators in cart
+ * - Loading skeleton for async product fetching
+ * - Empty state when no products available
+ * - Warning message support for capacity alerts
+ * - WCAG AA compliant with ARIA live regions
+ *
+ * @component
+ * @example
+ * ```tsx
+ * // For pizzas
+ * <ProductSelectionStep
+ *   title="Sélection des Pizzas"
+ *   icon={<Pizza />}
+ *   products={pizzas}
+ *   cart={cart}
+ *   onAddToCart={addToCart}
+ *   onRemoveFromCart={removeFromCart}
+ *   keyboardHint={true}
+ * />
+ *
+ * // For drinks
+ * <ProductSelectionStep
+ *   title="Boissons"
+ *   icon={<CupSoda />}
+ *   products={drinks}
+ *   cart={cart}
+ *   onAddToCart={addToCart}
+ *   onRemoveFromCart={removeFromCart}
+ * />
+ * ```
+ */
 function ProductSelectionStep({
   title,
   icon,

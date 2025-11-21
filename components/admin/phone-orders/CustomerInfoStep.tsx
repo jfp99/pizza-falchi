@@ -4,6 +4,28 @@ import { memo } from 'react';
 import { User, MapPin } from 'lucide-react';
 import type { ChangeEvent } from 'react';
 
+/**
+ * Customer information data structure for phone orders
+ *
+ * @property customerName - Full name of the customer (2-100 characters)
+ * @property phone - French phone number (validated format: 06 12 34 56 78)
+ * @property deliveryType - Type of order: 'pickup' for takeaway, 'delivery' for home delivery
+ * @property address - Street address (required for delivery orders only)
+ * @property city - City name (defaults to 'Puyricard')
+ * @property postalCode - French postal code (5 digits, defaults to '13540')
+ *
+ * @example
+ * ```tsx
+ * const customerInfo: CustomerInfo = {
+ *   customerName: 'Jean Dupont',
+ *   phone: '06 12 34 56 78',
+ *   deliveryType: 'pickup',
+ *   address: '',
+ *   city: 'Puyricard',
+ *   postalCode: '13540'
+ * };
+ * ```
+ */
 export interface CustomerInfo {
   customerName: string;
   phone: string;
@@ -13,6 +35,27 @@ export interface CustomerInfo {
   postalCode: string;
 }
 
+/**
+ * Props for the CustomerInfoStep component
+ *
+ * This component handles the first step of the phone order workflow,
+ * collecting customer contact information and delivery preferences.
+ *
+ * @property customerInfo - Current customer data state
+ * @property onChange - Callback fired when any field value changes
+ * @property onDeliveryTypeChange - Callback specifically for delivery type changes
+ * @property errors - Optional validation errors by field name
+ *
+ * @example
+ * ```tsx
+ * <CustomerInfoStep
+ *   customerInfo={customerInfo}
+ *   onChange={(field, value) => updateCustomerInfo(field, value)}
+ *   onDeliveryTypeChange={(type) => setDeliveryType(type)}
+ *   errors={{ phone: 'Numéro invalide' }}
+ * />
+ * ```
+ */
 interface CustomerInfoStepProps {
   customerInfo: CustomerInfo;
   onChange: (field: keyof CustomerInfo, value: string) => void;
@@ -20,6 +63,31 @@ interface CustomerInfoStepProps {
   errors?: Partial<Record<keyof CustomerInfo, string>>;
 }
 
+/**
+ * Customer information collection step for phone orders
+ *
+ * First step in the phone order workflow. Collects customer name, phone,
+ * and delivery preferences. Conditionally shows address fields when
+ * delivery type is selected. Fully accessible with ARIA labels and
+ * keyboard navigation support.
+ *
+ * Features:
+ * - Real-time validation with inline error messages
+ * - Auto-focus on first field for faster data entry
+ * - Conditional rendering of delivery address fields
+ * - French phone number format with validation
+ * - WCAG AA compliant accessibility
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CustomerInfoStep
+ *   customerInfo={customerInfo}
+ *   onChange={updateCustomerInfo}
+ *   onDeliveryTypeChange={setDeliveryType}
+ * />
+ * ```
+ */
 function CustomerInfoStep({
   customerInfo,
   onChange,

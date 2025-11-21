@@ -4,13 +4,63 @@ import type { Product, TimeSlot } from '@/types';
 import type { CustomerInfo } from '@/components/admin/phone-orders/CustomerInfoStep';
 import type { CartItem } from '@/components/admin/phone-orders/ProductSelectionStep';
 
+/**
+ * Step type for phone order workflow progression
+ * - customer: Collect customer information and delivery type
+ * - pizzas: Select pizzas to order
+ * - drinks: Select drinks and accompaniments (optional)
+ * - confirm: Review and submit order
+ */
 type Step = 'customer' | 'pizzas' | 'drinks' | 'confirm';
 
+/**
+ * Configuration options for usePhoneOrder hook
+ *
+ * @property slot - The time slot for this order (capacity and timing info)
+ * @property onOrderCreated - Callback invoked after successful order creation
+ *
+ * @example
+ * ```tsx
+ * const options: UsePhoneOrderOptions = {
+ *   slot: selectedTimeSlot,
+ *   onOrderCreated: () => {
+ *     refreshSlots();
+ *     closeModal();
+ *   }
+ * };
+ * ```
+ */
 interface UsePhoneOrderOptions {
   slot: TimeSlot;
   onOrderCreated: () => void;
 }
 
+/**
+ * Return value of usePhoneOrder hook
+ *
+ * Provides complete state management and business logic for the phone
+ * order workflow, including customer info, cart, navigation, and submission.
+ *
+ * @property step - Current step in the workflow
+ * @property customerInfo - Customer contact and delivery information
+ * @property cart - Array of selected products with quantities
+ * @property loading - Loading state during order submission
+ *
+ * @property updateCustomerInfo - Update a single customer info field
+ * @property setDeliveryType - Set pickup or delivery mode
+ *
+ * @property addToCart - Add product to cart (increments quantity if exists)
+ * @property removeFromCart - Remove product from cart (decrements quantity)
+ * @property getPizzaCount - Calculate total number of pizzas in cart
+ * @property getTotal - Calculate order total including delivery fee
+ *
+ * @property canProceed - Validate if current step can proceed to next
+ * @property handleNext - Navigate to next step
+ * @property handleBack - Navigate to previous step
+ * @property handleSubmit - Submit order to API with CSRF protection
+ *
+ * @property resetForm - Reset all state to initial values
+ */
 interface UsePhoneOrderReturn {
   // State
   step: Step;
@@ -38,8 +88,60 @@ interface UsePhoneOrderReturn {
   resetForm: () => void;
 }
 
+/** Standard delivery fee in euros */
 const DELIVERY_FEE = 3.0;
 
+/**
+ * Custom hook for phone order workflow management
+ *
+ * Centralizes all business logic for the phone order process including:
+ * - Multi-step form navigation (customer → pizzas → drinks → confirm)
+ * - Customer information management
+ * - Shopping cart with add/remove/quantity controls
+ * - Form validation at each step
+ * - Order submission with CSRF protection
+ * - Capacity validation against time slot limits
+ *
+ * This hook eliminates the need for complex state management in components,
+ * making the UI layer purely presentational.
+ *
+ * Features:
+ * - Step-by-step validation before proceeding
+ * - Automatic total calculations with delivery fee
+ * - Pizza count tracking for capacity validation
+ * - CSRF token fetching and submission
+ * - Toast notifications for user feedback
+ * - Error handling with user-friendly messages
+ * - Form reset for new orders
+ *
+ * @param options - Configuration with time slot and success callback
+ * @returns Complete phone order state and handlers
+ *
+ * @example
+ * ```tsx
+ * function PhoneOrderModal({ slot, onClose }) {
+ *   const {
+ *     step,
+ *     customerInfo,
+ *     cart,
+ *     loading,
+ *     updateCustomerInfo,
+ *     addToCart,
+ *     removeFromCart,
+ *     handleNext,
+ *     handleSubmit,
+ *   } = usePhoneOrder({
+ *     slot,
+ *     onOrderCreated: () => {
+ *       refreshData();
+ *       onClose();
+ *     }
+ *   });
+ *
+ *   // Use returned values in UI...
+ * }
+ * ```
+ */
 export function usePhoneOrder({
   slot,
   onOrderCreated,

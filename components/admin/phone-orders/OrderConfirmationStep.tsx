@@ -5,6 +5,27 @@ import type { TimeSlot } from '@/types';
 import type { CustomerInfo } from './CustomerInfoStep';
 import type { CartItem } from './ProductSelectionStep';
 
+/**
+ * Props for the OrderConfirmationStep component
+ *
+ * Final step in the phone order workflow that displays a complete
+ * summary of the order before submission.
+ *
+ * @property customerInfo - Customer contact and delivery information
+ * @property cart - Array of selected products with quantities
+ * @property slot - Time slot object with date, time range, and capacity info
+ * @property deliveryFee - Optional delivery fee (defaults to 3.0€)
+ *
+ * @example
+ * ```tsx
+ * <OrderConfirmationStep
+ *   customerInfo={customerInfo}
+ *   cart={cart}
+ *   slot={selectedSlot}
+ *   deliveryFee={3.0}
+ * />
+ * ```
+ */
 interface OrderConfirmationStepProps {
   customerInfo: CustomerInfo;
   cart: CartItem[];
@@ -12,6 +33,41 @@ interface OrderConfirmationStepProps {
   deliveryFee?: number;
 }
 
+/**
+ * Order confirmation and summary step for phone orders
+ *
+ * Final step that displays a complete order summary including customer
+ * information, selected products, time slot, and price breakdown. Uses
+ * semantic HTML (dl, dt, dd) for screen reader accessibility. Automatically
+ * calculates totals and validates pizza count against slot capacity.
+ *
+ * Features:
+ * - Complete order summary with all details
+ * - Automatic price calculations (subtotal, delivery fee, total)
+ * - Pizza count validation against slot capacity
+ * - Warning alerts if capacity exceeded
+ * - Semantic HTML for accessibility
+ * - Screen reader friendly summary
+ * - Read-only view (no editing)
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <OrderConfirmationStep
+ *   customerInfo={{
+ *     customerName: 'Jean Dupont',
+ *     phone: '06 12 34 56 78',
+ *     deliveryType: 'pickup',
+ *     // ...
+ *   }}
+ *   cart={[
+ *     { product: margherita, quantity: 2 },
+ *     { product: cola, quantity: 1 }
+ *   ]}
+ *   slot={timeSlot}
+ * />
+ * ```
+ */
 function OrderConfirmationStep({
   customerInfo,
   cart,
