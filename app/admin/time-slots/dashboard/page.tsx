@@ -49,9 +49,11 @@ export default function TimeSlotDashboard() {
   useEffect(() => {
     fetchSlots();
 
-    // Auto-refresh at configured interval
+    // Auto-refresh at configured interval, but only when tab is visible
     const interval = setInterval(() => {
-      fetchSlots(true); // Silent refresh
+      if (document.visibilityState === 'visible') {
+        fetchSlots(true); // Silent refresh only when tab is active
+      }
     }, AUTO_REFRESH_INTERVAL_MS);
 
     return () => clearInterval(interval);
