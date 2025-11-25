@@ -40,6 +40,14 @@
   --color-brand-green-light: #A8C686;
   --color-brand-green-lighter: #E8F5E0;
 
+  /* Warm Shadow System */
+  --shadow-soft-sm: 0 1px 2px 0 rgba(28, 20, 16, 0.04);
+  --shadow-soft: 0 2px 8px -2px rgba(28, 20, 16, 0.08);
+  --shadow-soft-md: 0 4px 12px -4px rgba(28, 20, 16, 0.10);
+  --shadow-soft-lg: 0 8px 24px -6px rgba(28, 20, 16, 0.12);
+  --shadow-soft-xl: 0 16px 40px -8px rgba(28, 20, 16, 0.15);
+  --shadow-card-hover: 0 12px 32px -8px rgba(28, 20, 16, 0.16);
+
   /* Legacy colors - keep for backward compatibility */
   --color-primary-red: #C41E1A;
   --color-primary-red-dark: #8B1A1D;
@@ -92,10 +100,10 @@
   --color-text-tertiary: #B8A88C;
   --color-text-on-dark: #1A1410;
 
-  /* Borders */
-  --color-border: #2C2419;
-  --color-border-medium: #3D3318;
-  --color-border-strong: #5C4A35;
+  /* Borders - Updated for WCAG 3:1 contrast ratio against dark surfaces */
+  --color-border: #5C4A35;           /* Was #2C2419 - now meets 3:1 contrast */
+  --color-border-medium: #6B5942;    /* Was #3D3318 - improved contrast */
+  --color-border-strong: #8B7355;    /* Was #5C4A35 - improved contrast */
 
   /* Brand - Red (brighter for dark mode) */
   --color-brand-red: #D63933;
@@ -212,16 +220,39 @@ select:focus-visible {
 }
 
 @layer components {
+  /* Primary Button - Solid red, no gradient */
   .btn-primary {
-    @apply bg-primary-red text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition duration-200 cursor-pointer;
+    @apply bg-brand-red text-white px-6 py-3 rounded-xl font-bold
+           shadow-soft-md hover:bg-brand-red-hover hover:shadow-soft-lg
+           active:scale-98 transition-all duration-200 cursor-pointer;
   }
 
+  /* Secondary Button - Gold accent */
   .btn-secondary {
-    @apply bg-primary-yellow text-black px-6 py-3 rounded-full font-bold hover:bg-yellow-500 transition duration-200 cursor-pointer;
+    @apply bg-brand-gold text-gray-900 px-6 py-3 rounded-xl font-bold
+           shadow-soft-md hover:bg-brand-gold-hover hover:shadow-soft-lg
+           active:scale-98 transition-all duration-200 cursor-pointer;
   }
 
+  /* Outline Button - Brand red border */
+  .btn-outline {
+    @apply border-2 border-brand-red text-brand-red px-6 py-3 rounded-xl font-bold
+           bg-transparent hover:bg-brand-red hover:text-white
+           active:scale-98 transition-all duration-200 cursor-pointer;
+  }
+
+  /* Card - Standardized hover effect */
   .card {
-    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition;
+    @apply bg-surface dark:bg-surface rounded-xl shadow-soft-md
+           border border-border dark:border-border
+           hover:shadow-card-hover hover:-translate-y-1 hover:scale-102
+           transition-all duration-200;
+  }
+
+  /* Card without hover (static) */
+  .card-static {
+    @apply bg-surface dark:bg-surface rounded-xl shadow-soft-md
+           border border-border dark:border-border;
   }
 }
 
@@ -230,51 +261,40 @@ select:focus-visible {
     text-wrap: balance;
   }
 
-  /* Animation delays */
-  .delay-500 {
-    animation-delay: 500ms;
+  /* Standardized hover utilities - ELEGANT & SUBTLE */
+
+  /* Card hover - lift + scale + shadow */
+  .hover-card {
+    @apply transition-all duration-200;
+  }
+  .hover-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px -8px rgba(28, 20, 16, 0.16);
+  }
+  .hover-card:active {
+    transform: scale(0.98);
   }
 
-  .delay-1000 {
-    animation-delay: 1000ms;
+  /* Button hover - scale only */
+  .hover-button {
+    @apply transition-all duration-150;
+  }
+  .hover-button:hover {
+    transform: scale(1.03);
+  }
+  .hover-button:active {
+    transform: scale(0.98);
   }
 
-  .delay-1500 {
-    animation-delay: 1500ms;
+  /* Icon hover - subtle scale */
+  .hover-icon {
+    @apply transition-transform duration-150;
+  }
+  .hover-icon:hover {
+    transform: scale(1.05);
   }
 
-  /* Pulse animation variant */
-  @keyframes pulse-slow {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
-  }
-
-  .animate-pulse-slow {
-    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  /* Button press micro-interaction */
-  @keyframes button-press {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(0.95);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  .animate-button-press {
-    animation: button-press 0.15s ease-in-out;
-  }
-
-  /* Smooth fade-in animation */
+  /* Smooth fade-in animation (kept - useful) */
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -287,8 +307,12 @@ select:focus-visible {
   }
 
   .animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
+    animation: fade-in 0.2s ease-out forwards;
   }
+
+  /* REMOVED: animate-pulse-slow - too playful */
+  /* REMOVED: animate-button-press - too playful */
+  /* REMOVED: delay-500, delay-1000, delay-1500 - rarely needed */
 }
 
 /* Performance optimization - CSS containment */

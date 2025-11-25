@@ -14,25 +14,40 @@ import {
   bulkGenerateTimeSlots,
 } from '@/lib/timeSlots';
 import { validateCSRFMiddleware } from '@/lib/csrf';
+import { validateQueryParams, timeSlotsQuerySchema } from '@/lib/validations/query';
 
 /**
  * GET /api/time-slots
  * Fetch time slots with optional filters
  * Query params:
- * - date: Specific date (ISO format)
- * - startDate: Start of date range (ISO format)
- * - endDate: End of date range (ISO format)
+ * - date: Specific date (ISO format YYYY-MM-DD)
  * - onlyAvailable: Filter to only available slots (boolean)
+ * - pizzaCount: Number of pizzas to filter slots by remaining capacity (number)
+ * - status: Slot status filter (active/full/closed)
+ *
+ * SECURITY FIX: Query parameters are now validated with Zod to prevent injection attacks
  */
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
     const { searchParams } = new URL(request.url);
-    const date = searchParams.get('date');
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
-    const onlyAvailable = searchParams.get('onlyAvailable') === 'true';
+
+    // SECURITY: Validate query parameters to prevent NoSQL injection
+    let validatedParams;
+    try {
+      validatedParams = validateQueryParams(timeSlotsQuerySchema, searchParams);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          error: 'Invalid query parameters',
+          message: error instanceof Error ? error.message : 'Unknown validation error'
+        },
+        { status: 400 }
+      );
+    }
+
+    const { date, startDate, endDate, onlyAvailable, pizzaCount, status } = validatedParams;
 
     // Single date query
     if (date) {
@@ -46,7 +61,7 @@ export async function GET(request: NextRequest) {
       }
 
       const slots = onlyAvailable
-        ? await getAvailableSlotsForDate(targetDate)
+        ? await getAvailableSlotsForDate(targetDate, pizzaCount)
         : await TimeSlot.find({
             date: {
               $gte: new Date(targetDate.setHours(0, 0, 0, 0)),
