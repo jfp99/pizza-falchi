@@ -45,6 +45,7 @@ export function sanitizeText(input: string): string {
 /**
  * Sanitize email address
  * Basic validation and sanitization
+ * Returns empty string for empty input (valid for optional fields)
  */
 export function sanitizeEmail(input: string): string {
   if (!input || typeof input !== 'string') {
@@ -54,12 +55,13 @@ export function sanitizeEmail(input: string): string {
   // Remove HTML and trim
   const cleaned = sanitizeText(input).toLowerCase();
 
-  // Basic email format validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(cleaned)) {
+  // If empty after sanitization, return empty string (valid for optional)
+  if (!cleaned) {
     return '';
   }
 
+  // Basic email format validation - return as-is and let Zod validate
+  // This prevents double validation and allows the error message to come from Zod
   return cleaned;
 }
 
