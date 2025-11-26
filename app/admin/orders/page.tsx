@@ -282,7 +282,7 @@ export default function AdminOrders() {
                             <p className="text-sm text-gray-500 dark:text-gray-400 italic transition-colors duration-300">Note: {item.customizations.notes}</p>
                           )}
                         </div>
-                        <p className="font-bold text-charcoal dark:text-gray-100 transition-colors duration-300">{item.total.toFixed(2)}€</p>
+                        <p className="font-bold text-charcoal dark:text-gray-100 transition-colors duration-300">{(item.total ?? 0).toFixed(2)}€</p>
                       </div>
                     ))}
                   </div>
@@ -300,21 +300,21 @@ export default function AdminOrders() {
                 <div className="border-t border-border dark:border-border pt-4 mb-6 transition-colors duration-300">
                   <div className="flex justify-between text-text-secondary dark:text-text-secondary mb-2 transition-colors duration-300">
                     <span>Sous-total</span>
-                    <span>{order.subtotal.toFixed(2)}€</span>
+                    <span>{(order.subtotal ?? 0).toFixed(2)}€</span>
                   </div>
                   <div className="flex justify-between text-text-secondary dark:text-text-secondary mb-2 transition-colors duration-300">
                     <span>TVA</span>
-                    <span>{order.tax.toFixed(2)}€</span>
+                    <span>{(order.tax ?? 0).toFixed(2)}€</span>
                   </div>
-                  {order.deliveryFee > 0 && (
+                  {(order.deliveryFee ?? 0) > 0 && (
                     <div className="flex justify-between text-text-secondary dark:text-text-secondary mb-2 transition-colors duration-300">
                       <span>Livraison</span>
-                      <span>{order.deliveryFee.toFixed(2)}€</span>
+                      <span>{(order.deliveryFee ?? 0).toFixed(2)}€</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center text-xl font-bold text-charcoal dark:text-gray-100 border-t border-border dark:border-border pt-2 transition-colors duration-300">
                     <span>Total</span>
-                    <span className="text-primary-red">{order.total.toFixed(2)}€</span>
+                    <span className="text-primary-red">{(order.total ?? 0).toFixed(2)}€</span>
                   </div>
                 </div>
 

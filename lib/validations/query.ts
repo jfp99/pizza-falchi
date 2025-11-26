@@ -63,7 +63,7 @@ export const timeSlotsQuerySchema = z.object({
   endDate: dateStringSchema.optional(),
   status: timeSlotStatusSchema.optional(),
   onlyAvailable: z.enum(['true', 'false']).transform(val => val === 'true').optional(),
-  pizzaCount: z.coerce.number().int().positive().max(10).optional(),
+  pizzaCount: z.coerce.number().int().nonnegative().max(10).optional(),
 }).strict();
 
 /**
