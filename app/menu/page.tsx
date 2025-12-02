@@ -183,7 +183,8 @@ function MenuContent() {
   };
 
   const handleAddToCart = (product: Product, customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean }, calculatedPrice?: number) => {
-    addItem(product, customizations, calculatedPrice);
+    // Note: customizations and calculatedPrice are captured for toast message but cart uses base product
+    addItem(product);
 
     let message = `${product.name} ajouté au panier !`;
     if (customizations) {
