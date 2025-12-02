@@ -185,12 +185,14 @@ export const N8nWebhookRequestSchema = z.object({
     // For send_notification
     notificationType: z.enum([
       'order_confirmation',
+      'order_status',
       'order_ready',
       'driver_assigned',
       'out_for_delivery',
       'delivered',
+      'abandoned_cart',
     ]).optional(),
-    channel: z.enum(['whatsapp', 'email', 'sms']).optional(),
+    channel: z.enum(['email', 'whatsapp', 'sms', 'all']).optional(),
     message: z.string().optional(),
 
     // For update_delivery_status
