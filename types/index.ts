@@ -1,6 +1,7 @@
 export interface ProductSizeOption {
   priceModifier: number;
   label?: string;
+  available?: boolean;
 }
 
 export interface ProductExtra {
