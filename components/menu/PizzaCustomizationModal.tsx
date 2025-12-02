@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react';
-import { Product, ProductExtra } from '@/types';
+import { Product } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import Badge from '@/components/ui/Badge';
 
