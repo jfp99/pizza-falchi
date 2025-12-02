@@ -1,0 +1,156 @@
+{
+  "name": "Pizza Falchi - Daily Summary Report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 23 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-daily-summary",
+      "name": "Every Day at 23:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/health/database?stats=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "fetch-daily-stats",
+      "name": "Fetch Daily Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "calc-conversion",
+              "name": "completionRate",
+              "value": "={{ $json.orders.total > 0 ? Math.round(($json.orders.completed / $json.orders.total) * 100) : 0 }}",
+              "type": "number"
+            },
+            {
+              "id": "calc-cancel-rate",
+              "name": "cancellationRate",
+              "value": "={{ $json.orders.total > 0 ? Math.round(($json.orders.cancelled / $json.orders.total) * 100) : 0 }}",
+              "type": "number"
+            },
+            {
+              "id": "format-revenue",
+              "name": "formattedRevenue",
+              "value": "={{ $json.revenue.total.toFixed(2) }}",
+              "type": "string"
+            },
+            {
+              "id": "format-avg",
+              "name": "formattedAverage",
+              "value": "={{ $json.revenue.average.toFixed(2) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "calculate-metrics",
+      "name": "Calculate Metrics",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.ADMIN_EMAIL_FROM || 'noreply@pizzafalchi.com' }}",
+        "toEmail": "={{ $env.ADMIN_EMAIL }}",
+        "subject": "=Pizza Falchi - Daily Summary ({{ $json.date }})",
+        "emailType": "html",
+        "html": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <h1 style=\"color: #E30613; border-bottom: 2px solid #FFD200; padding-bottom: 10px;\">Daily Summary Report</h1>\n  <p style=\"color: #666;\">{{ $json.date }}</p>\n\n  <h2 style=\"color: #333;\">Orders Overview</h2>\n  <table style=\"border-collapse: collapse; width: 100%; margin-bottom: 20px;\">\n    <tr style=\"background: #E30613; color: white;\">\n      <th style=\"padding: 12px; text-align: left;\">Metric</th>\n      <th style=\"padding: 12px; text-align: right;\">Value</th>\n    </tr>\n    <tr style=\"background: #f9f9f9;\">\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">Total Orders</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold;\">{{ $json.orders.total }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">Completed</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right; color: #16a34a;\">{{ $json.orders.completed }} ({{ $json.completionRate }}%)</td>\n    </tr>\n    <tr style=\"background: #f9f9f9;\">\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">Cancelled</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right; color: #dc2626;\">{{ $json.orders.cancelled }} ({{ $json.cancellationRate }}%)</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">Still Pending</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right; color: #f59e0b;\">{{ $json.orders.pending }}</td>\n    </tr>\n  </table>\n\n  <h2 style=\"color: #333;\">Revenue</h2>\n  <table style=\"border-collapse: collapse; width: 100%; margin-bottom: 20px;\">\n    <tr style=\"background: #16a34a; color: white;\">\n      <th style=\"padding: 12px; text-align: left;\">Metric</th>\n      <th style=\"padding: 12px; text-align: right;\">Value</th>\n    </tr>\n    <tr style=\"background: #f9f9f9;\">\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">Total Revenue</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold; font-size: 18px;\">{{ $json.formattedRevenue }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">Average Order Value</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right;\">{{ $json.formattedAverage }}</td>\n    </tr>\n  </table>\n\n  <h2 style=\"color: #333;\">Customers</h2>\n  <table style=\"border-collapse: collapse; width: 100%; margin-bottom: 20px;\">\n    <tr style=\"background: #2563eb; color: white;\">\n      <th style=\"padding: 12px; text-align: left;\">Type</th>\n      <th style=\"padding: 12px; text-align: right;\">Count</th>\n    </tr>\n    <tr style=\"background: #f9f9f9;\">\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">New Customers</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right;\">{{ $json.customers.new }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">Returning Customers</td>\n      <td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right;\">{{ $json.customers.returning }}</td>\n    </tr>\n  </table>\n\n  <h2 style=\"color: #333;\">Top Products</h2>\n  <table style=\"border-collapse: collapse; width: 100%; margin-bottom: 20px;\">\n    <tr style=\"background: #FFD200; color: #333;\">\n      <th style=\"padding: 12px; text-align: left;\">Product</th>\n      <th style=\"padding: 12px; text-align: right;\">Quantity Sold</th>\n    </tr>\n    {{ $json.topProducts.map((p, i) => '<tr style=\"background: ' + (i % 2 === 0 ? '#f9f9f9' : 'white') + ';\"><td style=\"padding: 12px; border-bottom: 1px solid #ddd;\">' + p.name + '</td><td style=\"padding: 12px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold;\">' + p.quantity + '</td></tr>').join('') }}\n  </table>\n\n  <p style=\"color: #999; font-size: 12px; text-align: center; margin-top: 30px;\">\n    This report was automatically generated by Pizza Falchi n8n workflows.\n  </p>\n</div>",
+        "options": {}
+      },
+      "id": "send-summary-email",
+      "name": "Send Summary Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Pizza Falchi - Daily Summary Report\n\nThis workflow runs every day at 23:00 to send a comprehensive daily report:\n\n### Report Contents:\n- Total orders and completion rate\n- Cancellation statistics\n- Revenue (total and average)\n- New vs returning customers\n- Top 5 selling products\n\n### Environment Variables:\n- `PIZZA_FALCHI_API_URL`: Your app URL\n- `ADMIN_EMAIL`: Admin email for reports\n- `ADMIN_EMAIL_FROM`: Sender email (optional)\n\n### Schedule:\nRuns daily at 23:00 (configurable)",
+        "height": 320,
+        "width": 380
+      },
+      "id": "note-summary-docs",
+      "name": "Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [60, 60]
+    }
+  ],
+  "connections": {
+    "Every Day at 23:00": {
+      "main": [
+        [
+          {
+            "node": "Fetch Daily Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Daily Stats": {
+      "main": [
+        [
+          {
+            "node": "Calculate Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Metrics": {
+      "main": [
+        [
+          {
+            "node": "Send Summary Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "Pizza Falchi",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Reporting",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,216 @@
+{
+  "name": "Pizza Falchi - Daily Health Check",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule-health-check",
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/health/database",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "fetch-health-report",
+      "name": "Fetch Health Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-critical",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "critical",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "is-critical",
+      "name": "Is Critical?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [690, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-warning",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "warning",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "is-warning",
+      "name": "Is Warning?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [690, 400]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.ADMIN_EMAIL_FROM || 'noreply@pizzafalchi.com' }}",
+        "toEmail": "={{ $env.ADMIN_EMAIL }}",
+        "subject": "=CRITICAL: Pizza Falchi Database Health Alert",
+        "emailType": "html",
+        "html": "=<h1 style=\"color: #dc2626;\">Critical Database Health Issue</h1>\n<p>The Pizza Falchi database health check has detected <strong>critical issues</strong> that require immediate attention.</p>\n\n<h2>Status: {{ $json.status.toUpperCase() }}</h2>\n\n<h3>Issues Found:</h3>\n<ul>\n{{ $json.issues.map(issue => '<li>' + issue + '</li>').join('') }}\n</ul>\n\n<h3>Database Summary:</h3>\n<table style=\"border-collapse: collapse; width: 100%;\">\n  <tr style=\"background: #f3f4f6;\">\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Products</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.products.count }} total ({{ $json.products.availableCount }} available)</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Time Slots</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.timeSlots.futureSlots }} future slots</td>\n  </tr>\n  <tr style=\"background: #f3f4f6;\">\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Pending Orders</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.orders.pendingCount }}</td>\n  </tr>\n</table>\n\n<h3>Recommendations:</h3>\n<ul>\n{{ $json.recommendations.map(rec => '<li>' + rec + '</li>').join('') }}\n</ul>\n\n<p style=\"color: #6b7280; font-size: 12px;\">Checked at: {{ $json.timestamp }}</p>",
+        "options": {}
+      },
+      "id": "send-critical-alert",
+      "name": "Send Critical Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [910, 100]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.ADMIN_EMAIL_FROM || 'noreply@pizzafalchi.com' }}",
+        "toEmail": "={{ $env.ADMIN_EMAIL }}",
+        "subject": "=WARNING: Pizza Falchi Database Health Alert",
+        "emailType": "html",
+        "html": "=<h1 style=\"color: #f59e0b;\">Database Health Warning</h1>\n<p>The Pizza Falchi database health check has detected <strong>warnings</strong> that should be reviewed.</p>\n\n<h2>Status: {{ $json.status.toUpperCase() }}</h2>\n\n<h3>Issues Found:</h3>\n<ul>\n{{ $json.issues.map(issue => '<li>' + issue + '</li>').join('') }}\n</ul>\n\n<h3>Database Summary:</h3>\n<table style=\"border-collapse: collapse; width: 100%;\">\n  <tr style=\"background: #f3f4f6;\">\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Products</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.products.count }} total ({{ $json.products.availableCount }} available)</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Time Slots</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.timeSlots.futureSlots }} future slots</td>\n  </tr>\n  <tr style=\"background: #f3f4f6;\">\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Pending Orders</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.orders.pendingCount }}</td>\n  </tr>\n</table>\n\n<h3>Recommendations:</h3>\n<ul>\n{{ $json.recommendations.map(rec => '<li>' + rec + '</li>').join('') }}\n</ul>\n\n<p style=\"color: #6b7280; font-size: 12px;\">Checked at: {{ $json.timestamp }}</p>",
+        "options": {}
+      },
+      "id": "send-warning-alert",
+      "name": "Send Warning Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Pizza Falchi - Daily Health Check\n\nThis workflow runs every 6 hours to monitor database health:\n\n1. **Fetches** comprehensive health report from API\n2. **Analyzes** status (healthy/warning/critical)\n3. **Sends alerts** for critical or warning conditions\n\n### Checks Performed:\n- Product count and availability\n- Missing product images\n- Time slot availability\n- Pending orders count\n- Customer statistics\n\n### Environment Variables:\n- `PIZZA_FALCHI_API_URL`: Your app URL\n- `ADMIN_EMAIL`: Admin email for alerts\n- `ADMIN_EMAIL_FROM`: Sender email (optional)\n\n### Schedule:\nRuns at 00:00, 06:00, 12:00, 18:00",
+        "height": 380,
+        "width": 380
+      },
+      "id": "note-health-docs",
+      "name": "Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [60, 60]
+    },
+    {
+      "parameters": {
+        "content": "=### Health Check: {{ $json.status }}\n\nProducts: {{ $json.products.count }}\nTime Slots: {{ $json.timeSlots.futureSlots }}\nPending Orders: {{ $json.orders.pendingCount }}\n\nNo action needed - system healthy."
+      },
+      "id": "log-healthy",
+      "name": "Log Healthy Status",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [910, 500]
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": {
+      "main": [
+        [
+          {
+            "node": "Fetch Health Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Health Report": {
+      "main": [
+        [
+          {
+            "node": "Is Critical?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Is Warning?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Critical?": {
+      "main": [
+        [
+          {
+            "node": "Send Critical Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Warning?": {
+      "main": [
+        [
+          {
+            "node": "Send Warning Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "Pizza Falchi",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Monitoring",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

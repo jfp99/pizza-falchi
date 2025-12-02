@@ -10,6 +10,8 @@ import { connectDB } from '@/lib/mongodb';
 import Order from '@/models/Order';
 import { webhookEvents } from '@/lib/webhooks/events';
 import { WebhookEventType } from '@/types/webhooks';
+import { sendOrderConfirmationEmail, sendOrderStatusEmail, sendAbandonedCartEmail } from '@/lib/email';
+import { sendWhatsAppNotification, sendOrderReadyNotification } from '@/lib/whatsapp';
 
 /**
  * Rate limiter for webhook endpoints
@@ -250,21 +252,113 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'send_notification':
-        // Mark notification as sent
-        if (data.channel === 'whatsapp') {
-          order.notificationSent = true;
-          order.notificationChannels = {
-            ...order.notificationChannels,
-            whatsapp: true,
-          };
-        } else if (data.channel === 'email') {
-          order.notificationChannels = {
-            ...order.notificationChannels,
-            email: true,
-          };
+        // Actually send the notification based on type and channel
+        const notificationResults: Record<string, any> = {};
+        const populatedOrder = await Order.findById(orderId).populate('items.product').lean();
+
+        if (!populatedOrder) {
+          return NextResponse.json(
+            { success: false, error: { code: 'ORDER_NOT_FOUND', message: 'Order not found for notification' } },
+            { status: 404 }
+          );
+        }
+
+        // Send email notifications
+        if (data.channel === 'email' || data.channel === 'all') {
+          if (populatedOrder.email) {
+            if (data.notificationType === 'order_confirmation') {
+              const emailResult = await sendOrderConfirmationEmail({
+                orderId: populatedOrder.orderId || populatedOrder._id.toString().slice(-6).toUpperCase(),
+                customerName: populatedOrder.customerName,
+                customerEmail: populatedOrder.email,
+                items: populatedOrder.items.map((item: any) => ({
+                  name: item.product?.name || 'Produit',
+                  quantity: item.quantity,
+                  price: item.price,
+                  customizations: item.customizations,
+                })),
+                subtotal: populatedOrder.subtotal,
+                tax: populatedOrder.tax || 0,
+                deliveryFee: populatedOrder.deliveryFee || 0,
+                total: populatedOrder.total,
+                deliveryType: populatedOrder.deliveryType,
+                deliveryAddress: populatedOrder.deliveryAddress,
+                paymentMethod: populatedOrder.paymentMethod,
+                pickupTimeRange: populatedOrder.pickupTimeRange,
+                notes: populatedOrder.notes,
+              });
+              notificationResults.email = emailResult;
+            } else if (data.notificationType === 'order_status') {
+              const statusEmailResult = await sendOrderStatusEmail({
+                orderId: populatedOrder.orderId || populatedOrder._id.toString().slice(-6).toUpperCase(),
+                customerName: populatedOrder.customerName,
+                customerEmail: populatedOrder.email,
+                status: data.status || populatedOrder.status,
+                trackingUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pizzafalchi.com'}/order-confirmation/${populatedOrder._id}`,
+              });
+              notificationResults.email = statusEmailResult;
+            } else if (data.notificationType === 'abandoned_cart' && data.cartData) {
+              const cartEmailResult = await sendAbandonedCartEmail({
+                email: populatedOrder.email,
+                customerName: populatedOrder.customerName,
+                items: data.cartData.items || [],
+                totalValue: data.cartData.totalValue || 0,
+                cartUrl: data.cartData.cartUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'https://pizzafalchi.com'}/cart`,
+              });
+              notificationResults.email = cartEmailResult;
+            }
+
+            order.notificationChannels = {
+              ...order.notificationChannels,
+              email: true,
+            };
+          }
+        }
+
+        // Send WhatsApp notifications
+        if (data.channel === 'whatsapp' || data.channel === 'all') {
+          const phone = populatedOrder.phone || populatedOrder.phoneNumber;
+          if (phone) {
+            if (data.notificationType === 'order_ready') {
+              const whatsappResult = await sendOrderReadyNotification({
+                orderId: populatedOrder.orderId || populatedOrder._id.toString().slice(-6).toUpperCase(),
+                customerName: populatedOrder.customerName,
+                customerPhone: phone,
+                deliveryType: populatedOrder.deliveryType,
+              });
+              notificationResults.whatsapp = whatsappResult;
+            } else if (data.notificationType === 'order_confirmation') {
+              try {
+                const whatsappUrl = await sendWhatsAppNotification({
+                  orderId: populatedOrder._id.toString().slice(-6).toUpperCase(),
+                  customerName: populatedOrder.customerName,
+                  phone: phone,
+                  total: populatedOrder.total,
+                  items: populatedOrder.items.map((item: any) => ({
+                    name: item.product?.name || 'Produit',
+                    quantity: item.quantity,
+                    price: item.price,
+                  })),
+                  deliveryType: populatedOrder.deliveryType,
+                  deliveryAddress: populatedOrder.deliveryAddress,
+                  paymentMethod: populatedOrder.paymentMethod,
+                });
+                notificationResults.whatsapp = { success: true, url: whatsappUrl };
+              } catch (err) {
+                notificationResults.whatsapp = { success: false, error: String(err) };
+              }
+            }
+
+            order.notificationSent = true;
+            order.notificationChannels = {
+              ...order.notificationChannels,
+              whatsapp: true,
+            };
+          }
         }
 
         order.lastNotificationTime = new Date();
+        order.notificationSentAt = new Date();
         await order.save();
 
         result = {
@@ -272,6 +366,7 @@ export async function POST(request: NextRequest) {
           orderNumber: order.orderId,
           notificationType: data.notificationType,
           channel: data.channel,
+          results: notificationResults,
         };
         break;
 
@@ -381,14 +476,64 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET /api/webhooks/n8n
- * Health check endpoint
+ * Health check and documentation endpoint
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json({
     success: true,
     message: 'n8n webhook endpoint is active',
     version: '1.0',
     timestamp: new Date().toISOString(),
+    documentation: {
+      description: 'n8n Webhook Receiver for Pizza Falchi - receives commands from n8n workflows',
+      authentication: 'HMAC signature required (x-webhook-signature, x-webhook-timestamp)',
+      supportedActions: [
+        {
+          action: 'update_order_status',
+          description: 'Update order status',
+          requiredFields: ['orderId', 'data.status'],
+          statuses: ['pending', 'confirmed', 'preparing', 'ready', 'completed', 'cancelled'],
+        },
+        {
+          action: 'send_notification',
+          description: 'Send email/WhatsApp notifications to customers',
+          requiredFields: ['orderId', 'data.notificationType', 'data.channel'],
+          notificationTypes: ['order_confirmation', 'order_status', 'order_ready', 'abandoned_cart'],
+          channels: ['email', 'whatsapp', 'all'],
+        },
+        {
+          action: 'assign_driver',
+          description: 'Assign a delivery driver to an order',
+          requiredFields: ['orderId', 'data.driver'],
+        },
+        {
+          action: 'update_kds',
+          description: 'Update Kitchen Display System status',
+          requiredFields: ['orderId', 'data.kdsStatus'],
+          kdsStatuses: ['acknowledged', 'completed'],
+        },
+        {
+          action: 'update_delivery_status',
+          description: 'Update delivery tracking status',
+          requiredFields: ['orderId', 'data.deliveryStatus'],
+          deliveryStatuses: ['assigned', 'picking_up', 'in_transit', 'arriving', 'delivered'],
+        },
+        {
+          action: 'cancel_order',
+          description: 'Cancel an order with optional reason',
+          requiredFields: ['orderId'],
+          optionalFields: ['data.cancellationReason', 'data.refundAmount'],
+        },
+      ],
+      examplePayload: {
+        action: 'send_notification',
+        orderId: '507f1f77bcf86cd799439011',
+        data: {
+          notificationType: 'order_ready',
+          channel: 'all',
+        },
+      },
+    },
   });
 }
 

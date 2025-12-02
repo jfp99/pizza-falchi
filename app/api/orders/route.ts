@@ -4,6 +4,7 @@ import Order from '@/models/Order';
 import Customer from '@/models/Customer';
 import TimeSlot from '@/models/TimeSlot';
 import { sendWhatsAppNotification } from '@/lib/whatsapp';
+import { sendOrderConfirmationEmail, sendAdminNotificationEmail } from '@/lib/email';
 import { readLimiter, orderLimiter } from '@/lib/rateLimiter';
 import { orderSchema } from '@/lib/validations/order';
 import { validateCSRFMiddleware } from '@/lib/csrf';
@@ -317,9 +318,67 @@ export async function POST(request: NextRequest) {
       // Don't fail order creation if webhook fails
     }
 
-    // Send WhatsApp notification
-    try {
-      const whatsappUrl = await sendWhatsAppNotification({
+    // Prepare email data for notifications
+    const emailData = {
+      orderId: populatedOrder.orderId || populatedOrder._id.toString().slice(-6).toUpperCase(),
+      customerName: populatedOrder.customerName,
+      customerEmail: populatedOrder.email,
+      items: populatedOrder.items.map((item: any) => ({
+        name: item.product?.name || 'Produit',
+        quantity: item.quantity,
+        price: item.price,
+        customizations: item.customizations,
+      })),
+      subtotal: populatedOrder.subtotal,
+      tax: populatedOrder.tax || 0,
+      deliveryFee: populatedOrder.deliveryFee || 0,
+      total: populatedOrder.total,
+      deliveryType: populatedOrder.deliveryType,
+      deliveryAddress: populatedOrder.deliveryAddress,
+      paymentMethod: populatedOrder.paymentMethod,
+      estimatedTime: populatedOrder.estimatedDelivery
+        ? new Date(populatedOrder.estimatedDelivery).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+        : undefined,
+      pickupTimeRange: populatedOrder.pickupTimeRange,
+      notes: populatedOrder.notes,
+    };
+
+    // Send notifications in parallel (non-blocking)
+    // These are fire-and-forget operations that won't block the response
+    const notificationPromises: Promise<any>[] = [];
+
+    // 1. Email confirmation to customer (if email provided)
+    if (populatedOrder.email) {
+      notificationPromises.push(
+        sendOrderConfirmationEmail(emailData)
+          .then(result => {
+            if (result.success) {
+              console.log(`Order confirmation email sent to ${populatedOrder.email}`);
+            } else {
+              console.warn(`Failed to send order confirmation email: ${result.error}`);
+            }
+          })
+          .catch(err => console.error('Email notification error:', err))
+      );
+    }
+
+    // 2. Admin notification email
+    notificationPromises.push(
+      sendAdminNotificationEmail(emailData)
+        .then(result => {
+          if (result.success) {
+            console.log('Admin notification email sent');
+          } else {
+            console.warn(`Failed to send admin notification email: ${result.error}`);
+          }
+        })
+        .catch(err => console.error('Admin email notification error:', err))
+    );
+
+    // 3. WhatsApp notification to restaurant
+    let whatsappUrl: string | null = null;
+    notificationPromises.push(
+      sendWhatsAppNotification({
         orderId: populatedOrder._id.toString().slice(-6).toUpperCase(),
         customerName: populatedOrder.customerName,
         phone: populatedOrder.phone,
@@ -332,19 +391,44 @@ export async function POST(request: NextRequest) {
         deliveryType: populatedOrder.deliveryType,
         deliveryAddress: populatedOrder.deliveryAddress,
         paymentMethod: populatedOrder.paymentMethod
-      });
+      })
+        .then(url => {
+          whatsappUrl = url;
+          console.log('WhatsApp notification sent to restaurant');
+        })
+        .catch(err => console.error('WhatsApp notification error:', err))
+    );
 
-      // Return the WhatsApp URL in the response so frontend can optionally use it
-      // Note: populatedOrder is already a plain object from .lean(), no need for .toObject()
-      return NextResponse.json({
-        ...populatedOrder,
-        whatsappNotificationUrl: whatsappUrl
-      }, { status: 201 });
-    } catch (whatsappError) {
-      console.error('WhatsApp notification error:', whatsappError);
-      // Don't fail the order creation if WhatsApp fails
-      return NextResponse.json(populatedOrder, { status: 201 });
+    // Wait for all notifications (with timeout to not delay response too much)
+    try {
+      await Promise.race([
+        Promise.allSettled(notificationPromises),
+        new Promise(resolve => setTimeout(resolve, 3000)) // 3 second timeout
+      ]);
+    } catch (notificationError) {
+      console.error('Notification batch error:', notificationError);
+      // Don't fail order creation if notifications fail
     }
+
+    // Update order with notification status
+    try {
+      await Order.findByIdAndUpdate(order._id, {
+        $set: {
+          notificationSent: true,
+          notificationSentAt: new Date(),
+          'notificationChannels.email': !!populatedOrder.email,
+          'notificationChannels.whatsapp': !!whatsappUrl,
+        },
+      });
+    } catch (updateError) {
+      console.error('Failed to update notification status:', updateError);
+    }
+
+    // Return the response
+    return NextResponse.json({
+      ...populatedOrder,
+      whatsappNotificationUrl: whatsappUrl
+    }, { status: 201 });
   } catch (error) {
     console.error('Error creating order:', error);
     return NextResponse.json(

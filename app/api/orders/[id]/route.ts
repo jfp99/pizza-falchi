@@ -4,6 +4,8 @@ import Order from '@/models/Order';
 import { validateCSRFMiddleware } from '@/lib/csrf';
 import { dispatchOrderStatusChanged } from '@/lib/webhooks/dispatcher';
 import { webhookEvents, getEventTypeForOrderStatus } from '@/lib/webhooks/events';
+import { sendOrderStatusEmail } from '@/lib/email';
+import { sendOrderReadyNotification } from '@/lib/whatsapp';
 
 export async function GET(
   request: NextRequest,
@@ -67,8 +69,9 @@ export async function PATCH(
       { new: true, runValidators: true }
     ).populate('items.product');
 
-    // If status changed, emit webhook event
+    // If status changed, emit webhook event and send notifications
     if (hasStatusChanged) {
+      // 1. Dispatch webhook to n8n (primary automation)
       try {
         await dispatchOrderStatusChanged(order, previousStatus, body.status);
 
@@ -114,6 +117,62 @@ export async function PATCH(
             },
           },
         });
+      }
+
+      // 2. Send customer notifications (fallback/complement to n8n)
+      // These are fire-and-forget to not block the API response
+      const notificationPromises: Promise<any>[] = [];
+
+      // Send email notification to customer (if email provided)
+      if (order.email && ['confirmed', 'preparing', 'ready', 'completed', 'cancelled'].includes(body.status)) {
+        notificationPromises.push(
+          sendOrderStatusEmail({
+            orderId: order.orderId || order._id.toString().slice(-6).toUpperCase(),
+            customerName: order.customerName,
+            customerEmail: order.email,
+            status: body.status as 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled',
+            estimatedTime: order.estimatedDelivery
+              ? new Date(order.estimatedDelivery).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+              : undefined,
+            trackingUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://pizzafalchi.com'}/order-confirmation/${order._id}`,
+          })
+            .then(result => {
+              if (result.success) {
+                console.log(`Status update email (${body.status}) sent to ${order.email}`);
+              } else {
+                console.warn(`Failed to send status email: ${result.error}`);
+              }
+            })
+            .catch(err => console.error('Status email error:', err))
+        );
+      }
+
+      // Send WhatsApp notification when order is ready (high priority)
+      if (body.status === 'ready' && order.phone) {
+        notificationPromises.push(
+          sendOrderReadyNotification({
+            orderId: order.orderId || order._id.toString().slice(-6).toUpperCase(),
+            customerName: order.customerName,
+            customerPhone: order.phone,
+            deliveryType: order.deliveryType,
+          })
+            .then(result => {
+              if (result.success) {
+                console.log(`Order ready WhatsApp sent to ${order.phone}`);
+              } else {
+                console.warn(`Failed to send order ready WhatsApp: ${result.error}`);
+              }
+            })
+            .catch(err => console.error('Order ready WhatsApp error:', err))
+        );
+      }
+
+      // Wait for notifications with timeout (don't block response)
+      if (notificationPromises.length > 0) {
+        Promise.race([
+          Promise.allSettled(notificationPromises),
+          new Promise(resolve => setTimeout(resolve, 2000)) // 2 second timeout
+        ]).catch(err => console.error('Notification batch error:', err));
       }
     }
 

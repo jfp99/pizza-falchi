@@ -1,0 +1,379 @@
+{
+  "name": "Pizza Falchi - Order Status Change",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pizza-falchi/order-status-changed",
+        "options": {}
+      },
+      "id": "webhook-status-changed",
+      "name": "Status Changed Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "order-status-changed-trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "extract-order-id",
+              "name": "orderId",
+              "value": "={{ $json.data.orderId }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-order-number",
+              "name": "orderNumber",
+              "value": "={{ $json.data.orderNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-previous-status",
+              "name": "previousStatus",
+              "value": "={{ $json.data.previousStatus }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-new-status",
+              "name": "newStatus",
+              "value": "={{ $json.data.newStatus }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-customer-name",
+              "name": "customerName",
+              "value": "={{ $json.data.customer.name }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-customer-email",
+              "name": "customerEmail",
+              "value": "={{ $json.data.customer.email }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-customer-phone",
+              "name": "customerPhone",
+              "value": "={{ $json.data.customer.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-event-type",
+              "name": "eventType",
+              "value": "={{ $json.eventType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-status-data",
+      "name": "Extract Status Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value": "order.confirmed",
+              "label": "Confirmed"
+            },
+            {
+              "value": "order.preparing",
+              "label": "Preparing"
+            },
+            {
+              "value": "order.ready",
+              "label": "Ready"
+            },
+            {
+              "value": "order.completed",
+              "label": "Completed"
+            },
+            {
+              "value": "order.cancelled",
+              "label": "Cancelled"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      },
+      "id": "route-by-status",
+      "name": "Route by Status",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [690, 300],
+      "parameters.matchingValue": "={{ $json.eventType }}"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_notification\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"notificationType\": \"order_status\",\n    \"channel\": \"email\",\n    \"status\": \"confirmed\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-status-change\"\n  }\n}",
+        "options": {}
+      },
+      "id": "notify-confirmed",
+      "name": "Notify Confirmed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [910, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_notification\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"notificationType\": \"order_status\",\n    \"channel\": \"email\",\n    \"status\": \"preparing\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-status-change\"\n  }\n}",
+        "options": {}
+      },
+      "id": "notify-preparing",
+      "name": "Notify Preparing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [910, 150]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_notification\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"notificationType\": \"order_ready\",\n    \"channel\": \"all\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-status-change\",\n    \"priority\": \"high\"\n  }\n}",
+        "options": {}
+      },
+      "id": "notify-ready",
+      "name": "Notify Ready (All Channels)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_notification\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"notificationType\": \"order_status\",\n    \"channel\": \"email\",\n    \"status\": \"completed\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-status-change\"\n  }\n}",
+        "options": {}
+      },
+      "id": "notify-completed",
+      "name": "Notify Completed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [910, 450]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_notification\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"notificationType\": \"order_status\",\n    \"channel\": \"all\",\n    \"status\": \"cancelled\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-status-change\"\n  }\n}",
+        "options": {}
+      },
+      "id": "notify-cancelled",
+      "name": "Notify Cancelled",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [910, 600]
+    },
+    {
+      "parameters": {
+        "content": "## Pizza Falchi - Order Status Change\n\nThis workflow handles all order status transitions:\n\n### Status → Notification:\n- **Confirmed**: Email notification\n- **Preparing**: Email notification\n- **Ready**: Email + WhatsApp (high priority)\n- **Completed**: Email notification\n- **Cancelled**: Email + WhatsApp\n\n### Webhook URL:\n`{n8n_url}/webhook/pizza-falchi/order-status-changed`\n\n### Events Handled:\n- order.confirmed\n- order.preparing\n- order.ready\n- order.completed\n- order.cancelled",
+        "height": 340,
+        "width": 380
+      },
+      "id": "note-status-docs",
+      "name": "Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [60, 60]
+    }
+  ],
+  "connections": {
+    "Status Changed Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Status Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Status Data": {
+      "main": [
+        [
+          {
+            "node": "Route by Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Status": {
+      "main": [
+        [
+          {
+            "node": "Notify Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Preparing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Ready (All Channels)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Completed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Cancelled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "Pizza Falchi",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Orders",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

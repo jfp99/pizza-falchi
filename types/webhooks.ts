@@ -17,6 +17,7 @@ export enum WebhookEventType {
   ORDER_IN_DELIVERY = 'order.in_delivery',
   ORDER_COMPLETED = 'order.completed',
   ORDER_CANCELLED = 'order.cancelled',
+  ORDER_REMINDER = 'order.reminder',
 
   // Payment events
   PAYMENT_RECEIVED = 'payment.received',
@@ -35,6 +36,22 @@ export enum WebhookEventType {
   DRIVER_ASSIGNED = 'delivery.driver_assigned',
   DRIVER_DEPARTED = 'delivery.driver_departed',
   DRIVER_ARRIVED = 'delivery.driver_arrived',
+
+  // System/Health events (for n8n monitoring)
+  DATABASE_HEALTH_CHECK = 'database.health_check',
+  DATABASE_HEALTH_WARNING = 'database.health_warning',
+  DATABASE_HEALTH_CRITICAL = 'database.health_critical',
+
+  // Scheduled events (triggered by n8n)
+  DAILY_SUMMARY = 'scheduled.daily_summary',
+  WEEKLY_REPORT = 'scheduled.weekly_report',
+  LOW_INVENTORY_ALERT = 'scheduled.low_inventory',
+  TIMESLOT_CAPACITY_WARNING = 'scheduled.timeslot_capacity',
+
+  // Marketing events
+  ABANDONED_CART = 'marketing.abandoned_cart',
+  LOYALTY_MILESTONE = 'marketing.loyalty_milestone',
+  BIRTHDAY_REMINDER = 'marketing.birthday_reminder',
 }
 
 /**
@@ -175,13 +192,102 @@ export interface KDSEventPayload extends BaseWebhookPayload {
 }
 
 /**
+ * Database Health Check Event Payload
+ */
+export interface DatabaseHealthPayload extends BaseWebhookPayload {
+  eventType: WebhookEventType.DATABASE_HEALTH_CHECK | WebhookEventType.DATABASE_HEALTH_WARNING | WebhookEventType.DATABASE_HEALTH_CRITICAL;
+  data: {
+    status: 'healthy' | 'warning' | 'critical';
+    issues: string[];
+    products: {
+      count: number;
+      availableCount: number;
+      missingImages: string[];
+    };
+    timeSlots: {
+      futureSlots: number;
+      availableSlots: number;
+      nearCapacitySlots: number;
+    };
+    orders: {
+      pendingCount: number;
+      inProgressCount: number;
+    };
+    recommendations: string[];
+    checkedAt: Date;
+  };
+}
+
+/**
+ * Daily Summary Event Payload
+ */
+export interface DailySummaryPayload extends BaseWebhookPayload {
+  eventType: WebhookEventType.DAILY_SUMMARY;
+  data: {
+    date: string;
+    orders: {
+      total: number;
+      completed: number;
+      cancelled: number;
+      pending: number;
+    };
+    revenue: {
+      total: number;
+      average: number;
+    };
+    customers: {
+      new: number;
+      returning: number;
+    };
+    topProducts: Array<{ name: string; quantity: number }>;
+  };
+}
+
+/**
+ * Order Reminder Event Payload
+ */
+export interface OrderReminderPayload extends BaseWebhookPayload {
+  eventType: WebhookEventType.ORDER_REMINDER;
+  data: {
+    orderId: string;
+    orderNumber: string;
+    customer: {
+      name: string;
+      phone: string;
+      email?: string;
+    };
+    pickupTime: Date;
+    reminderType: 'pickup_soon' | 'delivery_soon' | 'order_late';
+    minutesUntilPickup: number;
+  };
+}
+
+/**
+ * Marketing Event Payload (Abandoned Cart, Loyalty, Birthday)
+ */
+export interface MarketingEventPayload extends BaseWebhookPayload {
+  eventType: WebhookEventType.ABANDONED_CART | WebhookEventType.LOYALTY_MILESTONE | WebhookEventType.BIRTHDAY_REMINDER;
+  data: {
+    customerId?: string;
+    customerName: string;
+    customerEmail?: string;
+    customerPhone?: string;
+    eventDetails: Record<string, any>;
+  };
+}
+
+/**
  * Union type for all webhook payloads
  */
 export type WebhookPayload =
   | OrderCreatedPayload
   | OrderStatusChangedPayload
   | DriverAssignedPayload
-  | KDSEventPayload;
+  | KDSEventPayload
+  | DatabaseHealthPayload
+  | DailySummaryPayload
+  | OrderReminderPayload
+  | MarketingEventPayload;
 
 /**
  * Webhook request from n8n to our API

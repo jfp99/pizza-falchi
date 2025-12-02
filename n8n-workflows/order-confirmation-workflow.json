@@ -1,0 +1,397 @@
+{
+  "name": "Pizza Falchi - Order Confirmation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pizza-falchi/order-created",
+        "options": {}
+      },
+      "id": "webhook-order-created",
+      "name": "Order Created Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "order-created-trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-event-type",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "order.created",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "validate-event",
+      "name": "Validate Event Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "extract-order-id",
+              "name": "orderId",
+              "value": "={{ $json.data.orderId }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-order-number",
+              "name": "orderNumber",
+              "value": "={{ $json.data.orderNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-customer-name",
+              "name": "customerName",
+              "value": "={{ $json.data.customer.name }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-customer-email",
+              "name": "customerEmail",
+              "value": "={{ $json.data.customer.email }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-customer-phone",
+              "name": "customerPhone",
+              "value": "={{ $json.data.customer.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-total",
+              "name": "totalAmount",
+              "value": "={{ $json.data.totalAmount }}",
+              "type": "number"
+            },
+            {
+              "id": "extract-delivery-type",
+              "name": "deliveryType",
+              "value": "={{ $json.data.deliveryType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-order-data",
+      "name": "Extract Order Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [690, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-email",
+              "leftValue": "={{ $json.customerEmail }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-email",
+      "name": "Has Email?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [910, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_notification\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"notificationType\": \"order_confirmation\",\n    \"channel\": \"email\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-confirmation\"\n  }\n}",
+        "options": {}
+      },
+      "id": "send-email-notification",
+      "name": "Send Email Confirmation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1130, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-phone",
+              "leftValue": "={{ $json.customerPhone }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-phone",
+      "name": "Has Phone?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"send_notification\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"notificationType\": \"order_confirmation\",\n    \"channel\": \"whatsapp\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-confirmation\"\n  }\n}",
+        "options": {}
+      },
+      "id": "send-whatsapp-notification",
+      "name": "Send WhatsApp Confirmation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1130, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.PIZZA_FALCHI_API_URL }}/api/webhooks/n8n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-signature",
+              "value": "={{ $env.N8N_WEBHOOK_SECRET }}"
+            },
+            {
+              "name": "x-webhook-timestamp",
+              "value": "={{ Date.now() }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"update_order_status\",\n  \"orderId\": \"{{ $json.orderId }}\",\n  \"data\": {\n    \"status\": \"confirmed\",\n    \"statusReason\": \"Auto-confirmed via n8n workflow\"\n  },\n  \"metadata\": {\n    \"source\": \"n8n\",\n    \"workflowId\": \"order-confirmation\"\n  }\n}",
+        "options": {}
+      },
+      "id": "auto-confirm-order",
+      "name": "Auto-Confirm Order",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1350, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Pizza Falchi - Order Confirmation Workflow\n\nThis workflow is triggered when a new order is created:\n\n1. **Validates** the incoming webhook event\n2. **Extracts** order and customer data\n3. **Sends email** confirmation (if email provided)\n4. **Sends WhatsApp** notification (if phone provided)\n5. **Auto-confirms** the order\n\n### Environment Variables Required:\n- `PIZZA_FALCHI_API_URL`: Your app URL (e.g., https://pizzafalchi.com)\n- `N8N_WEBHOOK_SECRET`: Shared secret for webhook signing\n\n### Webhook URL:\nConfigure your app to send order.created events to:\n`{n8n_url}/webhook/pizza-falchi/order-created`",
+        "height": 340,
+        "width": 380
+      },
+      "id": "note-docs",
+      "name": "Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [60, 60]
+    },
+    {
+      "parameters": {},
+      "id": "merge-notifications",
+      "name": "Merge Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [1350, 100]
+    }
+  ],
+  "connections": {
+    "Order Created Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Event Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Event Type": {
+      "main": [
+        [
+          {
+            "node": "Extract Order Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Order Data": {
+      "main": [
+        [
+          {
+            "node": "Has Email?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Has Phone?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Email?": {
+      "main": [
+        [
+          {
+            "node": "Send Email Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Phone?": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Results": {
+      "main": [
+        [
+          {
+            "node": "Auto-Confirm Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "Pizza Falchi",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Orders",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
