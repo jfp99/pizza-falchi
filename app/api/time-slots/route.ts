@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       }
 
       const slots = onlyAvailable
-        ? await getAvailableSlotsForDate(targetDate, pizzaCount)
+        ? await getAvailableSlotsForDate(targetDate)
         : await TimeSlot.find({
             date: {
               $gte: new Date(targetDate.setHours(0, 0, 0, 0)),
