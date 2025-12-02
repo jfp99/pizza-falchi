@@ -1,3 +1,13 @@
+export interface ProductSizeOption {
+  priceModifier: number;
+  label?: string;
+}
+
+export interface ProductExtra {
+  name: string;
+  price: number;
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -11,6 +21,11 @@ export interface Product {
   spicy?: boolean;
   vegetarian?: boolean;
   tags?: string[];
+  sizeOptions?: {
+    medium: ProductSizeOption;
+    large: ProductSizeOption;
+  };
+  availableExtras?: ProductExtra[];
 }
 
 export interface CartItem {
