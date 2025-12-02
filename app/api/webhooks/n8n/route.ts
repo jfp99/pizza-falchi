@@ -254,7 +254,7 @@ export async function POST(request: NextRequest) {
       case 'send_notification':
         // Actually send the notification based on type and channel
         const notificationResults: Record<string, any> = {};
-        const populatedOrder = await Order.findById(orderId).populate('items.product').lean();
+        const populatedOrder = await Order.findById(orderId).populate('items.product').lean() as any;
 
         if (!populatedOrder) {
           return NextResponse.json(
