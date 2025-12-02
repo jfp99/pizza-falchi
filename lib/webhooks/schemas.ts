@@ -194,6 +194,11 @@ export const N8nWebhookRequestSchema = z.object({
     ]).optional(),
     channel: z.enum(['email', 'whatsapp', 'sms', 'all']).optional(),
     message: z.string().optional(),
+    cartData: z.object({
+      items: z.array(z.any()).optional(),
+      totalValue: z.number().optional(),
+      cartUrl: z.string().optional(),
+    }).optional(),
 
     // For update_delivery_status
     deliveryStatus: z.enum([
