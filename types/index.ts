@@ -9,6 +9,17 @@ export interface ProductExtra {
   price: number;
 }
 
+export interface SizeOptions {
+  medium: {
+    available: boolean;
+    priceModifier: number;
+  };
+  large: {
+    available: boolean;
+    priceModifier: number;
+  };
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -22,10 +33,7 @@ export interface Product {
   spicy?: boolean;
   vegetarian?: boolean;
   tags?: string[];
-  sizeOptions?: {
-    medium: ProductSizeOption;
-    large: ProductSizeOption;
-  };
+  sizeOptions?: SizeOptions;
   availableExtras?: ProductExtra[];
 }
 
@@ -33,10 +41,12 @@ export interface CartItem {
   product: Product;
   quantity: number;
   customizations?: {
-    size?: string;
-    toppings?: string[];
+    size?: 'medium' | 'large';
+    extras?: string[];
+    cut?: boolean;
     notes?: string;
   };
+  calculatedPrice?: number;
 }
 
 export interface Category {
@@ -50,8 +60,9 @@ export interface OrderItem {
   quantity: number;
   price: number;
   customizations?: {
-    size?: string;
-    toppings?: string[];
+    size?: 'medium' | 'large';
+    extras?: string[];
+    cut?: boolean;
     notes?: string;
   };
   total: number;
@@ -151,4 +162,68 @@ export interface TimeSlotResponse {
   count?: number;
   message?: string;
   error?: string;
+}
+
+// ============================================================================
+// MENU SECTION TYPES (Menu Engineering - Option B Par Popularite)
+// ============================================================================
+
+export type MenuSectionId =
+  | 'best-sellers'
+  | 'classiques'
+  | 'cremes'
+  | 'specialites'
+  | 'boissons';
+
+export interface MenuSection {
+  id: MenuSectionId;
+  title: string;
+  subtitle?: string;
+  iconName: string;
+  layout: 'hero' | 'grid' | 'compact';
+  featured?: boolean;
+}
+
+export interface GroupedMenuProducts {
+  bestSellers: Product[];
+  classiques: Product[];
+  cremes: Product[];
+  specialites: Product[];
+  boissons: Product[];
+}
+
+// ============================================================================
+// FLYER TYPES
+// ============================================================================
+
+export interface FlyerProduct {
+  name: string;
+  price: number;
+  description?: string;
+  isVegetarian?: boolean;
+  isSpicy?: boolean;
+  isBestSeller?: boolean;
+}
+
+export interface FlyerFormule {
+  name: string;
+  price: number;
+  originalPrice: number;
+  description: string;
+}
+
+export interface FlyerContactInfo {
+  phone: string;
+  address: string;
+  city: string;
+  website: string;
+  hours: string;
+  closedDay: string;
+}
+
+export interface FlyerHeritage {
+  since: string;
+  tagline: string;
+  cooking: string;
+  loyalty: string;
 }
