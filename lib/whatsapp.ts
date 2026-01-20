@@ -150,7 +150,7 @@ Merci de votre commande ! 😊`;
     return { success: true, messageSid: twilioMessage.sid };
   } catch (error) {
     console.error('❌ Twilio WhatsApp error:', error);
-    return { success: false, error: error };
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown WhatsApp error' };
   }
 };
 
