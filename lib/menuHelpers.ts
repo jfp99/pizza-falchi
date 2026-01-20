@@ -6,12 +6,12 @@
 
 import { Product } from '@/types';
 
-// Stars - user selected best-sellers for Golden Triangle
+// Stars - best-sellers matching the flyer (Golden Triangle)
 export const STAR_PIZZA_NAMES = [
   'chèvre miel',
   'regina',
   '4 fromages',
-  'arménienne',
+  'savoyarde',
 ];
 
 export type MenuSectionId =

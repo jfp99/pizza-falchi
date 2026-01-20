@@ -1,4 +1,4 @@
-import { Plus, Star, Flame, Leaf, Settings } from 'lucide-react';
+import { Plus, Flame, Leaf, Settings } from 'lucide-react';
 import { Product } from '@/types';
 import Link from 'next/link';
 import { useState, memo } from 'react';
@@ -87,11 +87,6 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
         
         {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-1.5">
-          {product.popular && (
-            <Badge variant="popular" size="md" icon={<Star className="w-3 h-3 fill-current" />}>
-              Populaire
-            </Badge>
-          )}
           {product.spicy && (
             <Badge variant="spicy" size="md" icon={<Flame className="w-3 h-3" />}>
               Épicé
