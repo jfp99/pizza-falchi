@@ -3,33 +3,27 @@ import { useState, useEffect, Suspense, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-import { Search, Filter, Star, Flame, Leaf, Gift, Pizza, ShoppingCart, Sparkles, ChefHat, Eye, Calculator, CheckCircle, X, AlertCircle } from 'lucide-react';
+import { Search, Filter, Leaf, Pizza, ShoppingCart, ChefHat, Eye, Calculator, CheckCircle, X, AlertCircle } from 'lucide-react';
 import { Product, Category } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import ProductCard from '@/components/menu/ProductCard';
 import ProductCardSkeleton from '@/components/menu/ProductCardSkeleton';
 import CategoryFilterWithIcons from '@/components/menu/CategoryFilterWithIcons';
-import PackageCard from '@/components/packages/PackageCard';
 import toast from 'react-hot-toast';
-import { SPACING, TYPOGRAPHY, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
+import { SPACING, ROUNDED } from '@/lib/design-constants';
 import { motion, AnimatePresence } from 'framer-motion';
-import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations';
-import Link from 'next/link';
 import HeroBadge from '@/components/ui/HeroBadge';
 // New section-based components
 import SectionHeader from '@/components/menu/SectionHeader';
 import FeaturedProductCard from '@/components/menu/FeaturedProductCard';
 import MenuSectionNav from '@/components/menu/MenuSectionNav';
-import { groupProductsBySection, menuSections, type GroupedProducts } from '@/lib/menuHelpers';
+import { groupProductsBySection } from '@/lib/menuHelpers';
 
 // Dynamically import heavy components for better performance
 const CartSidebar = dynamic(() => import('@/components/cart/CartSidebar'), {
   loading: () => <div className="fixed right-0 top-0 h-full w-96 bg-surface dark:bg-surface animate-pulse" />,
 });
 
-const ComboSelectionModal = dynamic(() => import('@/components/packages/ComboSelectionModal'), {
-  loading: () => <div className="fixed inset-0 bg-black/50 flex items-center justify-center"><div className="bg-surface dark:bg-surface p-8 rounded-3xl animate-pulse w-96 h-96" /></div>,
-});
 
 const PizzaBuilderModal = dynamic(() => import('@/components/pizza-builder/PizzaBuilderModal'), {
   loading: () => <div className="fixed inset-0 bg-black/50 flex items-center justify-center"><div className="bg-surface dark:bg-surface p-8 rounded-3xl animate-pulse w-96 h-96" /></div>,
@@ -40,32 +34,14 @@ const categories: Category[] = [
   { id: 'all', name: 'Tout le Menu', icon: 'PizzaSliceIcon' },
   { id: 'pizza', name: 'Pizzas', icon: 'PizzaSliceIcon' },
   { id: 'boisson', name: 'Boissons', icon: 'DrinkIcon' },
-  { id: 'combo', name: 'Combos', icon: 'GiftBoxIcon' },
 ];
 
-interface PackageType {
-  _id: string;
-  name: string;
-  description: string;
-  originalPrice: number;
-  discountedPrice: number;
-  discount: number;
-  items: Array<{
-    type: string;
-    quantity: number;
-    description: string;
-  }>;
-  icon: string;
-  color: string;
-  popular: boolean;
-  badge?: string;
-}
 
 // Section-Based Menu Component for Option B - Par Popularite layout
 interface SectionBasedMenuProps {
   products: Product[];
   isLoading: boolean;
-  error: { type: 'products' | 'packages' | null; message: string };
+  error: { type: 'products' | null; message: string };
   onAddToCart: (
     product: Product,
     customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean },
@@ -331,17 +307,14 @@ function OrderSuccessHandler({
 function MenuContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [packages, setPackages] = useState<PackageType[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isComboModalOpen, setIsComboModalOpen] = useState(false);
   const [isPizzaBuilderOpen, setIsPizzaBuilderOpen] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<PackageType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successOrderId, setSuccessOrderId] = useState<string | null>(null);
-  const [error, setError] = useState<{ type: 'products' | 'packages' | null; message: string }>({ type: null, message: '' });
+  const [error, setError] = useState<{ type: 'products' | null; message: string }>({ type: null, message: '' });
   const { addItem, getTotalItems } = useCart();
 
   const handleShowSuccess = useCallback((orderId: string) => {
@@ -372,38 +345,13 @@ function MenuContent() {
     }
   }, []);
 
-  const fetchPackages = useCallback(async () => {
-    try {
-      const response = await fetch('/api/packages');
-      if (!response.ok) {
-        throw new Error(`Erreur ${response.status}: Impossible de charger les combos`);
-      }
-      const data = await response.json();
-      setPackages(data);
-    } catch (err) {
-      console.error('Error fetching packages:', err);
-      // Don't set error state for packages as they're secondary content
-    }
-  }, []);
-
   // Initial data fetch
   useEffect(() => {
     fetchProducts();
-    fetchPackages();
-  }, [fetchProducts, fetchPackages]);
+  }, [fetchProducts]);
 
   useEffect(() => {
-    filterProducts();
-  }, [products, selectedCategory, searchTerm]);
-
-  const filterProducts = () => {
     let filtered = products;
-
-    // Don't show products when 'combo' is selected
-    if (selectedCategory === 'combo') {
-      setFilteredProducts([]);
-      return;
-    }
 
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(product => product.category === selectedCategory);
@@ -418,10 +366,10 @@ function MenuContent() {
     }
 
     setFilteredProducts(filtered);
-  };
+  }, [products, selectedCategory, searchTerm]);
 
-  const handleAddToCart = (product: Product, customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean }, calculatedPrice?: number) => {
-    // Note: customizations and calculatedPrice are captured for toast message but cart uses base product
+  const handleAddToCart = (product: Product, customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean }, _calculatedPrice?: number) => {
+    // Note: customizations and _calculatedPrice are captured for toast message but cart uses base product
     addItem(product);
 
     let message = `${product.name} ajouté au panier !`;
@@ -457,35 +405,16 @@ function MenuContent() {
     setIsCartOpen(true);
   };
 
-  const handleSelectPackage = (pkg: PackageType) => {
-    setSelectedPackage(pkg);
-    setIsComboModalOpen(true);
-  };
-
-  const handleComboConfirm = (selectedProducts: Product[], totalPrice: number) => {
-    // Add each product to cart with combo pricing logic
-    selectedProducts.forEach(product => {
-      addItem(product);
-    });
-
-    toast.success(
-      `${selectedPackage?.name} ajouté au panier pour ${totalPrice.toFixed(2)}€ !`,
-      {
-        duration: 3000,
-        style: {
-          background: '#FFF9F0',
-          color: '#1a1a1a',
-          fontWeight: '600',
-          borderRadius: '16px',
-          border: '1px solid #E30613',
-        },
-      }
-    );
-    setIsCartOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-warm-cream dark:bg-gray-900 transition-colors duration-300">
+      {/* Skip Link for Accessibility */}
+      <a
+        href="#menu-section"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-red focus:text-white focus:px-6 focus:py-3 focus:rounded-xl focus:font-bold focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-red"
+      >
+        Aller au menu
+      </a>
+
       {/* Order Success Handler wrapped in Suspense */}
       <Suspense fallback={null}>
         <OrderSuccessHandler onShowSuccess={handleShowSuccess} />
@@ -571,7 +500,7 @@ function MenuContent() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-describedby="search-results-count"
-              className="w-full pl-16 md:pl-20 pr-14 py-4 md:py-5 bg-surface dark:bg-surface border-2 border-border dark:border-border rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-base md:text-lg font-medium text-charcoal dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 placeholder:font-normal"
+              className="w-full pl-16 md:pl-20 pr-14 py-4 md:py-5 bg-surface dark:bg-surface border-2 border-border dark:border-border-dark rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-base md:text-lg font-medium text-charcoal dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 placeholder:font-normal"
             />
             {searchTerm && (
               <button
@@ -597,8 +526,7 @@ function MenuContent() {
         </div>
 
         {/* Product Count & Filters Summary - Enhanced with ARIA live region */}
-        {selectedCategory !== 'combo' && (
-          <div className={`flex flex-col sm:flex-row justify-between items-center mb-10 bg-surface dark:bg-surface ${ROUNDED.lg} ${SPACING.cardPadding} shadow-soft-md border border-border dark:border-border hover:shadow-soft-lg transition-all duration-200`}>
+        <div className={`flex flex-col sm:flex-row justify-between items-center mb-10 bg-surface dark:bg-surface ${ROUNDED.lg} ${SPACING.cardPadding} shadow-soft-md border border-border dark:border-border-dark hover:shadow-soft-lg transition-all duration-200`}>
             <div className="flex items-center gap-4">
               <div className="bg-brand-red p-3 rounded-xl shadow-soft-sm" aria-hidden="true">
                 <Filter className="w-5 h-5 text-white" />
@@ -625,24 +553,20 @@ function MenuContent() {
               </button>
             )}
           </div>
-        )}
 
         {/* Section-Based Menu Layout */}
-        {selectedCategory !== 'combo' && !searchTerm && selectedCategory === 'all' && (
+        {!searchTerm && selectedCategory === 'all' && (
           <SectionBasedMenu
             products={products}
             isLoading={isLoading}
             error={error}
             onAddToCart={handleAddToCart}
-            onRetry={() => {
-              fetchProducts();
-              fetchPackages();
-            }}
+            onRetry={fetchProducts}
           />
         )}
 
         {/* Traditional Grid (for search results or category filters) */}
-        {selectedCategory !== 'combo' && (searchTerm || selectedCategory !== 'all') && (
+        {(searchTerm || selectedCategory !== 'all') && (
           <div id="products-section" className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}>
             {isLoading ? (
               // Show skeleton loaders while loading
@@ -668,10 +592,7 @@ function MenuContent() {
                   </p>
                   <button
                     type="button"
-                    onClick={() => {
-                      fetchProducts();
-                      fetchPackages();
-                    }}
+                    onClick={fetchProducts}
                     className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 rounded-xl font-bold transition-all duration-200 active:scale-98 shadow-soft-md hover:shadow-soft-lg inline-flex items-center gap-2"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -710,54 +631,11 @@ function MenuContent() {
           </div>
         )}
 
-        {/* Packages Section - Now at bottom or prominent when combo selected */}
-        {packages.length > 0 && (selectedCategory === 'combo' || selectedCategory === 'all') && (
-          <div className={`${selectedCategory === 'combo' ? 'mb-12' : 'mb-16'}`} id="combos-section">
-            {/* Header - More prominent for combo filter, discrete for all */}
-            {selectedCategory === 'combo' ? (
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <div className="bg-brand-red p-3 rounded-2xl shadow-soft-md" aria-hidden="true">
-                    <Gift className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl md:text-4xl font-black text-text-primary dark:text-text-primary">
-                      Nos <span className="text-brand-red">Combos</span>
-                    </h2>
-                    <p className="text-text-secondary dark:text-text-secondary text-lg font-medium">
-                      Des offres exceptionnelles pour régaler tout le monde !
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-brand-red p-2.5 rounded-xl shadow-soft-sm" aria-hidden="true">
-                  <Gift className="w-5 h-5 text-white" />
-                </div>
-                <h2 className="text-xl md:text-2xl font-bold text-text-primary dark:text-text-primary">
-                  Nos <span className="text-brand-red">Combos</span>
-                </h2>
-              </div>
-            )}
-
-            {/* Packages Grid */}
-            <div className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap}`}>
-              {packages.map((pkg) => (
-                <PackageCard
-                  key={pkg._id}
-                  package={pkg}
-                  onSelect={handleSelectPackage}
-                />
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Message si aucun résultat - Enhanced */}
-        {!isLoading && filteredProducts.length === 0 && selectedCategory !== 'combo' && (
+        {!isLoading && filteredProducts.length === 0 && (
           <div className="text-center py-20">
-            <div className="bg-surface dark:bg-surface rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-border dark:border-border hover:shadow-3xl transition-all duration-300">
+            <div className="bg-surface dark:bg-surface rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-border dark:border-border-dark hover:shadow-3xl transition-all duration-300">
               <div className="inline-block bg-soft-red-lighter dark:bg-primary-red/20 rounded-3xl p-6 mb-6 transition-colors duration-300" aria-hidden="true">
                 <Pizza className="w-16 h-16 text-primary-red dark:text-primary-red-light transition-colors duration-300" />
               </div>
@@ -793,7 +671,7 @@ function MenuContent() {
                 setIsPizzaBuilderOpen(true);
               }
             }}
-            className="bg-surface dark:bg-surface rounded-3xl p-6 md:p-8 shadow-soft-md hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 border border-border dark:border-border group cursor-pointer"
+            className="bg-surface dark:bg-surface rounded-3xl p-6 md:p-8 shadow-soft-md hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 border border-border dark:border-border-dark group cursor-pointer"
             aria-label="Ouvrir le créateur de pizza personnalisée"
           >
               <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
@@ -858,7 +736,7 @@ function MenuContent() {
         <button
           suppressHydrationWarning
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-brand-red hover:bg-brand-red-hover text-white p-4 md:p-5 rounded-full shadow-soft-lg md:hidden z-50 transition-all duration-200 active:scale-98"
+          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-brand-red hover:bg-brand-red-hover text-white p-5 rounded-full shadow-soft-lg md:hidden z-50 transition-all duration-200 active:scale-98 min-w-[56px] min-h-[56px] flex items-center justify-center"
           aria-label={`Ouvrir le panier ${getTotalItems() > 0 ? `(${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''})` : '(vide)'}`}
         >
           <div className="relative">
@@ -870,17 +748,6 @@ function MenuContent() {
             )}
           </div>
         </button>
-
-        {/* Combo Selection Modal */}
-        {selectedPackage && (
-          <ComboSelectionModal
-            isOpen={isComboModalOpen}
-            onClose={() => setIsComboModalOpen(false)}
-            package={selectedPackage}
-            onConfirm={handleComboConfirm}
-            allProducts={products}
-          />
-        )}
 
         {/* Pizza Builder Modal */}
         <PizzaBuilderModal
@@ -997,9 +864,9 @@ function MenuContent() {
 export default function Menu() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-warm-cream dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-warm-cream dark:bg-gray-900 flex items-center justify-center" role="status" aria-busy="true" aria-label="Chargement du menu en cours">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-red border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-red border-t-transparent mx-auto mb-4" aria-hidden="true"></div>
           <p className="text-xl text-gray-600 dark:text-gray-400">Chargement du menu...</p>
         </div>
       </div>

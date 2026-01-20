@@ -10,8 +10,6 @@ export { default as BookletPage } from './BookletPage';
 
 // Page components (legacy)
 export { default as CoverPage } from './pages/CoverPage';
-export { default as MenuLeftPage } from './pages/MenuLeftPage';
-export { default as MenuRightPage } from './pages/MenuRightPage';
 export { default as BackPage } from './pages/BackPage';
 
 // New simplified components

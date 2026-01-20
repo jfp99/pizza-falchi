@@ -4,9 +4,8 @@ import { BOOKLET_SCREEN_DIMENSIONS, BOOKLET_COLORS, BOOKLET_PAGE_ORDER } from '@
 import type { BookletSheetProps } from './types';
 import BookletPage from './BookletPage';
 import CoverPage from './pages/CoverPage';
-import MenuLeftPage from './pages/MenuLeftPage';
-import MenuRightPage from './pages/MenuRightPage';
 import BackPage from './pages/BackPage';
+import BookletMenuSpread from './BookletMenuSpread';
 
 /**
  * BookletSheet - A4 landscape sheet with 2 A5 pages side by side
@@ -18,13 +17,27 @@ export default function BookletSheet({
   showFoldLine = false,
 }: BookletSheetProps) {
   const { sheet } = BOOKLET_SCREEN_DIMENSIONS;
+
+  // For the inside sheet (pages 2+3), use BookletMenuSpread directly
+  // as it renders both pages as a single spread
+  if (side === 'inside') {
+    return (
+      <div
+        className={`relative ${className}`}
+        data-sheet={side}
+        aria-label="Feuille intérieure"
+      >
+        <BookletMenuSpread showFoldLine={showFoldLine} />
+      </div>
+    );
+  }
+
+  // For outside sheet (pages 4+1), render individual pages
   const pageOrder = BOOKLET_PAGE_ORDER[side];
 
-  // Map page numbers to components
+  // Map page numbers to components (only for outside sheet)
   const pageComponents: Record<number, React.ReactNode> = {
     1: <CoverPage />,
-    2: <MenuLeftPage />,
-    3: <MenuRightPage />,
     4: <BackPage />,
   };
 
@@ -37,7 +50,7 @@ export default function BookletSheet({
         backgroundColor: BOOKLET_COLORS.cream,
       }}
       data-sheet={side}
-      aria-label={`Feuille ${side === 'outside' ? 'extérieure' : 'intérieure'}`}
+      aria-label="Feuille extérieure"
     >
       {/* Left page */}
       <BookletPage pageNumber={pageOrder.left as 1 | 2 | 3 | 4}>

@@ -31,6 +31,7 @@ module.exports = {
           DEFAULT: '#E6DED0',
           medium: '#D4C4A0',
           strong: '#B8A88C',
+          dark: '#4A4A4A', // Dark mode border with sufficient contrast
         },
         // Brand colors (logo-based)
         brand: {

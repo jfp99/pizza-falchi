@@ -33,7 +33,7 @@ const ProductSchema = new mongoose.Schema({
     },
     large: {
       available: { type: Boolean, default: true },
-      priceModifier: { type: Number, default: 1 }
+      priceModifier: { type: Number, default: 1.5 }
     }
   },
   availableExtras: [{

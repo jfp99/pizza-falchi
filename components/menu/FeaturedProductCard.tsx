@@ -11,6 +11,7 @@ import { Product } from '@/types';
 import Link from 'next/link';
 import { useState, memo, useEffect, useRef, useCallback } from 'react';
 import { ProductImage } from '@/components/menu/ProductImage';
+import { IngredientIcon } from '@/components/icons/IngredientIcons';
 import { motion, useReducedMotion } from 'framer-motion';
 import Badge from '@/components/ui/Badge';
 import PizzaCustomizationModal from './PizzaCustomizationModal';
@@ -49,6 +50,33 @@ const FeaturedProductCard = memo(function FeaturedProductCard({
 
   // Check if this pizza supports dual base (tomate/crème)
   const hasDualBase = DUAL_BASE_PIZZAS.includes(product.name.toLowerCase());
+
+  // Get color for ingredient type (matching ProductCard logic)
+  const getIngredientColor = (ingredient: string): string => {
+    const lower = ingredient.toLowerCase();
+    // Vegetables = green
+    if (lower.includes('tomate') || lower.includes('poivron') || lower.includes('oignon') ||
+        lower.includes('champignon') || lower.includes('basilic') || lower.includes('olive')) {
+      return '#16A34A';
+    }
+    // Cheese = yellow/orange
+    if (lower.includes('fromage') || lower.includes('mozzarella') || lower.includes('emmental') ||
+        lower.includes('chèvre') || lower.includes('parmesan') || lower.includes('raclette')) {
+      return '#F59E0B';
+    }
+    // Meats = red/brown
+    if (lower.includes('jambon') || lower.includes('poulet') || lower.includes('viande') ||
+        lower.includes('merguez') || lower.includes('chorizo') || lower.includes('lardons')) {
+      return '#DC2626';
+    }
+    // Seafood = blue
+    if (lower.includes('anchois') || lower.includes('thon') || lower.includes('saumon') ||
+        lower.includes('fruits de mer')) {
+      return '#0EA5E9';
+    }
+    // Default = brand red
+    return '#E30613';
+  };
 
   // Cleanup timeout on unmount to prevent memory leaks
   useEffect(() => {
@@ -259,18 +287,27 @@ const FeaturedProductCard = memo(function FeaturedProductCard({
           </div>
         )}
 
-        {/* Description with base info */}
-        <p
-          className="text-sm leading-relaxed mb-3 line-clamp-2"
-          style={{ color: colors.gray[700] }}
-        >
-          {hasDualBase && (
-            <span className="font-medium" style={{ color: selectedBase === 'tomato' ? '#E63946' : '#8B7355' }}>
-              Base {selectedBase === 'tomato' ? 'tomate' : 'crème fraîche'} •{' '}
-            </span>
-          )}
-          {product.ingredients?.join(', ') || product.description}
-        </p>
+        {/* Ingredients with SVG Icons (matching ProductCard) */}
+        {product.ingredients && product.ingredients.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3 max-h-16 overflow-hidden">
+            {product.ingredients.map(ingredient => {
+              const iconColor = getIngredientColor(ingredient);
+              return (
+                <span
+                  key={ingredient}
+                  className="bg-white/80 text-gray-700 px-1.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 border border-gray-200/50 transition-colors"
+                >
+                  <IngredientIcon
+                    ingredient={ingredient}
+                    size={14}
+                    style={{ color: iconColor }}
+                  />
+                  <span className="capitalize text-xs line-clamp-1">{ingredient}</span>
+                </span>
+              );
+            })}
+          </div>
+        )}
 
         {/* Add to Cart Button */}
         <div className="mt-auto">

@@ -22,7 +22,7 @@ const COLORS = {
   cream: '#FFFBF5',
   creamDark: '#FDF6E9',
   text: '#1F1510',
-  textMuted: '#5C4A3D',
+  textMuted: '#4A3F35', // Improved contrast ratio (was #5C4A3D)
   green: '#166534',
   white: '#FFFFFF',
 };
@@ -38,7 +38,7 @@ function MenuItem({ item, showDualBase = false }: { item: FlyerProduct; showDual
   const isDualBase = item.hasDualBase || DUAL_BASE_PIZZAS.includes(item.name);
 
   return (
-    <div className="py-[3px] border-b border-dotted" style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}>
+    <div className="py-[3px] border-b border-dotted" style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}>
       <div className="flex items-baseline justify-between">
         <div className="flex items-center gap-1">
           <span
@@ -144,7 +144,7 @@ function BestSellerCard({ item }: { item: FlyerProduct }) {
 // Section header - Compact
 function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
-    <div className="mb-5">
+    <div className="mb-2">
       <div className="flex items-center gap-2">
         <h3
           className="text-[15px] font-black tracking-wide uppercase"
@@ -175,6 +175,11 @@ interface BookletMenuSpreadProps {
 
 export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSpreadProps) {
   const { bestSellers, classiques, cremes, specialites, boissons } = flyerMenuData;
+
+  // Filter out "Pizza du Moment" as it's now on page 2
+  const specialitesSansPizzaDuMoment = specialites.filter(
+    (pizza) => pizza.name !== 'Pizza du Moment'
+  );
 
   return (
     <div
@@ -313,7 +318,7 @@ export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSp
         {/* ===== RIGHT PAGE (Page 3) ===== */}
         <div className="flex-1 p-3 flex flex-col">
           {/* Les Crèmes */}
-          <div className="mb-9">
+          <div className="mb-4">
             <SectionHeader title="Les Crèmes" subtitle="base crème fraîche" />
             <div className="grid grid-cols-2 gap-x-3">
               {cremes.map((item) => (
@@ -323,17 +328,48 @@ export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSp
           </div>
 
           {/* Les Spécialités */}
-          <div className="mb-9">
+          <div className="mb-3">
             <SectionHeader title="Les Spécialités" subtitle="créations maison" />
             <div className="grid grid-cols-2 gap-x-3">
-              {specialites.map((item) => (
+              {specialitesSansPizzaDuMoment.map((item) => (
                 <MenuItem key={item.name} item={item} />
               ))}
             </div>
           </div>
 
+          {/* Pizza du Moment - Compact version */}
+          <div
+            className="mb-3 px-3 py-1.5 rounded-lg flex items-center justify-between"
+            style={{
+              background: `linear-gradient(135deg, rgba(185, 28, 28, 0.06) 0%, rgba(184, 134, 11, 0.10) 100%)`,
+              border: `1.5px dashed rgba(185, 28, 28, 0.35)`,
+            }}
+          >
+            <div className="flex items-center gap-1.5">
+              <span className="text-[11px]">✨</span>
+              <span
+                className="text-[11px] font-bold tracking-wide"
+                style={{ color: COLORS.primary }}
+              >
+                PIZZA DU MOMENT
+              </span>
+              <span
+                className="text-[9px] italic"
+                style={{ color: COLORS.textMuted }}
+              >
+                - Demandez la recette du jour
+              </span>
+            </div>
+            <span
+              className="text-[11px] font-bold"
+              style={{ color: COLORS.primary }}
+            >
+              13.00€
+            </span>
+          </div>
+
           {/* Boissons Section */}
-          <div className="mb-9">
+          <div className="mb-4">
             <SectionHeader title="Nos Boissons" />
             <div className="grid grid-cols-3 gap-x-4 gap-y-1">
               {/* Vins */}

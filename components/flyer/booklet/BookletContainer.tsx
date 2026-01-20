@@ -6,9 +6,8 @@ import type { BookletContainerProps, PageNumber } from './types';
 import BookletSheet from './BookletSheet';
 import BookletPage from './BookletPage';
 import CoverPage from './pages/CoverPage';
-import MenuLeftPage from './pages/MenuLeftPage';
-import MenuRightPage from './pages/MenuRightPage';
 import BackPage from './pages/BackPage';
+import BookletMenuSpread from './BookletMenuSpread';
 
 /**
  * BookletContainer - Main orchestrator for the 4-page booklet
@@ -27,10 +26,11 @@ const BookletContainer = forwardRef<HTMLDivElement, BookletContainerProps>(
     const { sheet, page } = BOOKLET_SCREEN_DIMENSIONS;
 
     // Map page numbers to components
+    // Note: Pages 2-3 are now handled by BookletMenuSpread as a single spread
     const pageComponents: Record<PageNumber, React.ReactNode> = {
       1: <CoverPage />,
-      2: <MenuLeftPage />,
-      3: <MenuRightPage />,
+      2: null, // Handled by BookletMenuSpread
+      3: null, // Handled by BookletMenuSpread
       4: <BackPage />,
     };
 
@@ -48,38 +48,10 @@ const BookletContainer = forwardRef<HTMLDivElement, BookletContainerProps>(
 
     if (viewMode === 'spread') {
       // Interior spread view (pages 2-3 side by side)
+      // Now using BookletMenuSpread which handles both pages together
       return (
-        <div
-          ref={ref}
-          className={`inline-flex ${className}`}
-          style={{
-            width: `${sheet.width}px`,
-            height: `${page.height}px`,
-            backgroundColor: BOOKLET_COLORS.cream,
-          }}
-        >
-          <BookletPage pageNumber={2}>
-            <MenuLeftPage />
-          </BookletPage>
-          {showFoldLine && (
-            <div
-              className="flex-shrink-0"
-              style={{
-                width: '2px',
-                background: `repeating-linear-gradient(
-                  to bottom,
-                  ${BOOKLET_COLORS.primaryYellowDark} 0px,
-                  ${BOOKLET_COLORS.primaryYellowDark} 8px,
-                  transparent 8px,
-                  transparent 16px
-                )`,
-                opacity: 0.5,
-              }}
-            />
-          )}
-          <BookletPage pageNumber={3}>
-            <MenuRightPage />
-          </BookletPage>
+        <div ref={ref} className={`inline-block ${className}`}>
+          <BookletMenuSpread showFoldLine={showFoldLine} />
         </div>
       );
     }

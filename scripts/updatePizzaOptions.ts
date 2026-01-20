@@ -15,14 +15,14 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 // Common extras for pizzas
 const commonExtras = [
-  { name: 'fromage supplémentaire', price: 1 },
-  { name: 'champignons', price: 1 },
-  { name: 'olives', price: 1 },
-  { name: 'jambon', price: 1 },
-  { name: 'oignons', price: 1 },
-  { name: 'poivrons', price: 1 },
+  { name: 'mozzarella', price: 1 },
+  { name: 'chèvre', price: 1 },
   { name: 'chorizo', price: 1 },
-  { name: 'merguez', price: 1 },
+  { name: 'figatelli', price: 1 },
+  { name: 'emmental', price: 1 },
+  { name: 'thon', price: 1 },
+  { name: 'anchois', price: 1 },
+  { name: 'câpres', price: 1 },
 ];
 
 // Size options for all pizzas
@@ -33,7 +33,7 @@ const sizeOptions = {
   },
   large: {
     available: true,
-    priceModifier: 1
+    priceModifier: 1.5
   }
 };
 

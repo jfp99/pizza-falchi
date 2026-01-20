@@ -112,7 +112,7 @@ export const flyerMenuData: FlyerMenuData = {
     { name: 'Roquefort', price: 12.50, priceGrande: 14.00, isVegetarian: true, description: 'Emmental, Roquefort' },
     { name: 'Figatelli', price: 12.50, priceGrande: 14.00, description: 'Emmental, Figatelli' },
     { name: 'Fruits de Mer', price: 12.50, priceGrande: 14.00, description: 'Emmental, Fruits de mer, Ail, Persil' },
-    { name: 'Kebab', price: 12.50, priceGrande: 14.00, description: 'Emmental, Viande de kebab' },
+    { name: 'Kebab', price: 12.50, priceGrande: 14.00, description: 'Emmental, Viande de kebab', hasDualBase: true },
   ],
 
   // LES CREMES FRAICHES (Base Creme) - "Crème fraîche" omis car induit par la catégorie
@@ -135,6 +135,9 @@ export const flyerMenuData: FlyerMenuData = {
     { name: 'Napoléon', price: 13.00, priceGrande: 14.50, description: 'Tomate, Emmental, Figatelli, Brousse' },
     { name: 'Orientale', price: 13.00, priceGrande: 14.50, isSpicy: true, description: 'Tomate, Emmental, Oignons, Poivrons, Merguez' },
     { name: 'Végétarienne', price: 13.00, priceGrande: 14.50, isVegetarian: true, description: 'Tomate, Oignons, Poivrons, Champignons, Emmental' },
+    { name: 'Anti-Pasti', price: 13.00, priceGrande: 14.50, description: 'Tomate, Mozzarella, Artichauts, Ail, Persil, Jambon cru' },
+    { name: 'Parmesane', price: 13.00, priceGrande: 14.50, isVegetarian: true, description: 'Tomate, Emmental, Aubergines, Parmesan, Filet de crème fraîche' },
+    { name: 'Justine', price: 13.00, priceGrande: 14.50, description: 'Tomate, Anchois, Mozzarella' },
   ],
 
   // BOISSONS
