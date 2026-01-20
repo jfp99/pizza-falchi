@@ -1,23 +1,38 @@
-import { Plus, Star, Flame, Leaf } from 'lucide-react';
+import { Plus, Star, Flame, Leaf, Settings } from 'lucide-react';
 import { Product } from '@/types';
 import Link from 'next/link';
 import { useState, memo } from 'react';
 import { IngredientIcon } from '@/components/icons/IngredientIcons';
 import { ProductImage } from '@/components/menu/ProductImage';
 import { motion } from 'framer-motion';
-import { hoverLift, staggerItem } from '@/lib/animations';
+import { staggerItem } from '@/lib/animations';
 import Badge from '@/components/ui/Badge';
+import PizzaCustomizationModal from './PizzaCustomizationModal';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (product: Product) => void;
+  onAddToCart: (product: Product, customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean }, calculatedPrice?: number) => void;
 }
 
 const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const [isAdded, setIsAdded] = useState(false);
+  const [isCustomizationOpen, setIsCustomizationOpen] = useState(false);
+
+  const isPizza = product.category === 'pizza';
+  const hasCustomization = isPizza && (product.sizeOptions || (product.availableExtras && product.availableExtras.length > 0));
 
   const handleAddToCart = () => {
-    onAddToCart(product);
+    if (hasCustomization) {
+      setIsCustomizationOpen(true);
+    } else {
+      onAddToCart(product);
+      setIsAdded(true);
+      setTimeout(() => setIsAdded(false), 1000);
+    }
+  };
+
+  const handleCustomizedAddToCart = (product: Product, customizations: { size: 'medium' | 'large'; extras: string[]; cut: boolean }, calculatedPrice: number) => {
+    onAddToCart(product, customizations, calculatedPrice);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1000);
   };
@@ -53,17 +68,15 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
   return (
     <motion.div
       variants={staggerItem}
-      whileHover="hover"
-      whileTap="tap"
       initial="initial"
       animate="animate"
       exit="exit"
-      className="group bg-surface dark:bg-surface rounded-2xl shadow-lg hover:shadow-2xl dark:shadow-brand-red/10 border border-border dark:border-border overflow-hidden h-full flex flex-col transition-colors duration-300">
+      className="group bg-surface dark:bg-surface rounded-2xl shadow-soft-md hover:shadow-card-hover hover:-translate-y-1 border border-border dark:border-border overflow-hidden h-full flex flex-col transition-all duration-200">
       <Link href={`/products/${product._id}`} className="relative overflow-hidden aspect-[4/3] cursor-pointer bg-background-secondary dark:bg-background-tertiary">
         <motion.div
           className="w-full h-full"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          whileHover={{ scale: 1.03 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
         >
           <ProductImage
             product={product}
@@ -73,56 +86,30 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
         </motion.div>
         
         {/* Badges */}
-        <motion.div
-          className="absolute top-3 left-3 flex gap-1.5"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
-        >
+        <div className="absolute top-3 left-3 flex gap-1.5">
           {product.popular && (
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Badge variant="popular" size="md" icon={<Star className="w-3 h-3 fill-current" />}>
-                Populaire
-              </Badge>
-            </motion.div>
+            <Badge variant="popular" size="md" icon={<Star className="w-3 h-3 fill-current" />}>
+              Populaire
+            </Badge>
           )}
           {product.spicy && (
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Badge variant="spicy" size="md" icon={<Flame className="w-3 h-3" />}>
-                Épicé
-              </Badge>
-            </motion.div>
+            <Badge variant="spicy" size="md" icon={<Flame className="w-3 h-3" />}>
+              Épicé
+            </Badge>
           )}
           {product.vegetarian && (
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Badge variant="vegetarian" size="md" icon={<Leaf className="w-3 h-3" />}>
-                Végétarien
-              </Badge>
-            </motion.div>
+            <Badge variant="vegetarian" size="md" icon={<Leaf className="w-3 h-3" />}>
+              Végétarien
+            </Badge>
           )}
-        </motion.div>
+        </div>
 
         {/* Price */}
-        <motion.div
-          className="absolute top-3 right-3 bg-surface/95 dark:bg-surface/95 backdrop-blur-sm px-3 py-2 rounded-xl shadow-xl border border-border dark:border-border transition-colors"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.15, duration: 0.3 }}
-          whileHover={{ scale: 1.05 }}
-        >
+        <div className="absolute top-3 right-3 bg-surface/95 dark:bg-surface/95 backdrop-blur-sm px-3 py-2 rounded-xl shadow-soft-md border border-border dark:border-border transition-colors">
           <span className="text-xl font-bold text-text-primary dark:text-text-primary transition-colors">
             {product.price}€
           </span>
-        </motion.div>
+        </div>
       </Link>
 
       <div className="p-4 sm:p-5 flex flex-col flex-1">
@@ -155,7 +142,7 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
         )}
 
         <div className="mt-auto space-y-3">
-          <motion.button
+          <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -164,28 +151,15 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
             disabled={!product.available}
             suppressHydrationWarning
             aria-label={`Ajouter ${product.name} au panier`}
-            className={`w-full lg:w-auto lg:px-6 py-3 rounded-xl font-bold flex items-center justify-center lg:justify-start gap-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm shadow-lg hover:shadow-2xl transition-colors ${
+            className={`w-full lg:w-auto lg:px-6 py-3 rounded-xl font-bold flex items-center justify-center lg:justify-start gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm shadow-soft-md hover:shadow-soft-lg active:scale-98 transition-all duration-200 ${
               isAdded
                 ? 'bg-brand-green text-white'
                 : 'bg-brand-red hover:bg-brand-red-hover text-white'
             }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            animate={isAdded ? { scale: [1, 1.2, 1] } : {}}
-            transition={
-              isAdded
-                ? { duration: 0.3, ease: "easeInOut" }
-                : { type: "spring", stiffness: 400, damping: 17 }
-            }
           >
-            <motion.div
-              animate={isAdded ? { rotate: [0, -10, 10, -10, 10, 0] } : {}}
-              transition={{ duration: 0.5 }}
-            >
-              <Plus className="w-4 h-4" />
-            </motion.div>
-            <span>{isAdded ? 'Ajouté!' : 'Ajouter au panier'}</span>
-          </motion.button>
+            {hasCustomization ? <Settings className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+            <span>{isAdded ? 'Ajouté!' : hasCustomization ? 'Personnaliser' : 'Ajouter au panier'}</span>
+          </button>
 
           {!product.available && (
             <div className="bg-background-secondary dark:bg-background-tertiary border border-border-medium dark:border-border-medium rounded-xl p-3 text-center transition-colors">
@@ -194,6 +168,16 @@ const ProductCard = memo(function ProductCard({ product, onAddToCart }: ProductC
           )}
         </div>
       </div>
+
+      {/* Customization Modal */}
+      {hasCustomization && (
+        <PizzaCustomizationModal
+          isOpen={isCustomizationOpen}
+          onClose={() => setIsCustomizationOpen(false)}
+          product={product}
+          onAddToCart={handleCustomizedAddToCart}
+        />
+      )}
     </motion.div>
   );
 });

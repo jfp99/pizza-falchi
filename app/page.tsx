@@ -4,6 +4,7 @@ import { Pizza, Truck, Clock, Star, ChefHat, Award, Heart, MapPin, Timer, Flame 
 import StorySection from '@/components/home/StorySection';
 import StructuredData from '@/components/seo/StructuredData';
 import CompactLoyaltyBanner from '@/components/promotions/CompactLoyaltyBanner';
+import HeroBadge from '@/components/ui/HeroBadge';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
 export default function Home() {
@@ -77,39 +78,11 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 py-20 w-full">
           <div className="max-w-3xl mx-auto text-center">
             {/* Info Badge - Main Focus */}
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-white/10 backdrop-blur-lg rounded-3xl p-4 sm:p-6 md:p-8 border border-white/20 shadow-2xl mb-10 max-w-2xl">
-              {/* Logo */}
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 flex-shrink-0">
-                <Image
-                  src="/images/branding/logo-badge.png"
-                  alt="Pizza Falchi Logo"
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                />
-              </div>
-
-              {/* Info */}
-              <div className="flex flex-col gap-1 text-center sm:text-left">
-                <div className="inline-block mb-2">
-                  <span className="bg-primary-red text-white px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg">
-                    Pizzas Artisanales
-                  </span>
-                </div>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-                  PIZZA FALCHI
-                </h1>
-                <p className="text-primary-yellow font-bold text-xl md:text-2xl">
-                  depuis 2001
-                </p>
-                <p className="text-white/90 font-medium text-base md:text-lg">
-                  Puyricard Aix-en-Provence
-                </p>
-                <div className="inline-block mt-2">
-                  <span className="bg-primary-red px-4 py-1.5 rounded-full text-white text-sm font-bold uppercase tracking-wider shadow-lg">
-                    À EMPORTER
-                  </span>
-                </div>
-              </div>
+            <div className="mb-10">
+              <HeroBadge
+                categoryBadge="Pizzas Artisanales"
+                additionalBadge="À EMPORTER"
+              />
             </div>
 
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-medium">

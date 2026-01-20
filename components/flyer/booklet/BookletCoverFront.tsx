@@ -67,11 +67,13 @@ export default function BookletCoverFront() {
         {/* Top: Logo badge */}
         <div className="flex justify-center pt-4">
           <div
-            className="px-6 py-3 rounded-2xl flex items-center gap-3"
+            className="px-6 rounded-2xl flex items-center gap-3"
             style={{
               backgroundColor: 'rgba(255,255,255,0.95)',
               boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
               border: `3px solid ${COLORS.gold}`,
+              paddingTop: '12px',
+              paddingBottom: '16px',
             }}
           >
             <img
@@ -87,7 +89,10 @@ export default function BookletCoverFront() {
               >
                 PIZZA FALCHI
               </p>
-              <p className="text-[10px] font-semibold tracking-wide" style={{ color: COLORS.gold }}>
+              <p
+                className="text-[10px] font-semibold tracking-wide"
+                style={{ color: COLORS.gold, paddingTop: '2px', paddingBottom: '2px' }}
+              >
                 Depuis {flyerHeritage.since} &bull; {flyerHeritage.cooking}
               </p>
             </div>
@@ -98,10 +103,12 @@ export default function BookletCoverFront() {
         <div className="flex flex-col items-center gap-6 pb-4">
           {/* Tagline banner */}
           <div
-            className="px-8 py-3 rounded-lg"
+            className="px-8 rounded-lg"
             style={{
               background: `linear-gradient(135deg, ${COLORS.primary}, ${COLORS.primaryDark})`,
               boxShadow: '0 4px 20px rgba(185, 28, 28, 0.4)',
+              paddingTop: '12px',
+              paddingBottom: '16px',
             }}
           >
             <p
@@ -114,11 +121,13 @@ export default function BookletCoverFront() {
 
           {/* Phone number */}
           <div
-            className="flex items-center gap-3 px-6 py-3 rounded-xl"
+            className="flex items-center gap-3 px-6 rounded-xl"
             style={{
               backgroundColor: 'rgba(255,255,255,0.95)',
               boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
               border: `2px solid ${COLORS.gold}`,
+              paddingTop: '12px',
+              paddingBottom: '16px',
             }}
           >
             <div

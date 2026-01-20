@@ -68,11 +68,13 @@ export default function BookletCoverBack() {
             </p>
 
             <div
-              className="p-3 rounded-2xl mb-3"
+              className="rounded-2xl mb-3"
               style={{
                 backgroundColor: COLORS.white,
                 boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                 border: `3px solid ${COLORS.gold}`,
+                padding: '12px',
+                paddingBottom: '16px',
               }}
             >
               <FlyerQRCode size={140} />
@@ -114,11 +116,13 @@ export default function BookletCoverBack() {
 
         {/* Hours Section */}
         <div
-          className="flex items-center justify-center gap-4 py-4 px-6 rounded-xl mb-6"
+          className="flex items-center justify-center gap-4 px-6 rounded-xl mb-6"
           style={{
             backgroundColor: COLORS.white,
             boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
             border: `1px solid rgba(184, 134, 11, 0.2)`,
+            paddingTop: '16px',
+            paddingBottom: '20px',
           }}
         >
           <div
@@ -162,10 +166,12 @@ export default function BookletCoverBack() {
 
         {/* Loyalty Banner */}
         <div
-          className="py-4 px-6 rounded-2xl text-center"
+          className="px-6 rounded-2xl text-center"
           style={{
             background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldLight})`,
             boxShadow: '0 4px 20px rgba(184, 134, 11, 0.4)',
+            paddingTop: '16px',
+            paddingBottom: '20px',
           }}
         >
           <p

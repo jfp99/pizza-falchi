@@ -26,6 +26,20 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     default: 10
   },
+  sizeOptions: {
+    medium: {
+      available: { type: Boolean, default: true },
+      priceModifier: { type: Number, default: 0 }
+    },
+    large: {
+      available: { type: Boolean, default: true },
+      priceModifier: { type: Number, default: 1 }
+    }
+  },
+  availableExtras: [{
+    name: { type: String, required: true },
+    price: { type: Number, required: true, default: 1 }
+  }]
 }, {
   timestamps: true
 });

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Clock, Plus, Save, X, AlertCircle, CheckCircle2, Settings, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useCSRF } from '@/hooks/useCSRF';
 
 interface OpeningHours {
   _id?: string;
@@ -28,6 +29,7 @@ interface Exception {
 }
 
 export default function AdminOpeningHours() {
+  const { getHeaders } = useCSRF();
   const [openingHours, setOpeningHours] = useState<OpeningHours[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -77,18 +79,24 @@ export default function AdminOpeningHours() {
 
       const response = await fetch('/api/opening-hours', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getHeaders(),
+        },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error('Failed to update');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update');
+      }
 
-      toast.success('Horaires mis à jour');
+      toast.success('Horaires mis à jour avec succès!');
       fetchOpeningHours();
       setEditingDay(null);
     } catch (error) {
       console.error('Error updating:', error);
-      toast.error('Erreur lors de la mise à jour');
+      toast.error(error instanceof Error ? error.message : 'Erreur lors de la mise à jour');
     } finally {
       setSaving(false);
     }

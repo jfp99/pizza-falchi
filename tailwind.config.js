@@ -91,14 +91,45 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      // Standardized scale utilities
+      scale: {
+        '98': '0.98',   // Active/tap state
+        '102': '1.02',  // Card hover
+        '103': '1.03',  // Button hover
+      },
+      // Standardized translate utilities
+      translate: {
+        'lift': '-4px', // Card hover lift
+      },
+      // Standardized transition durations
+      transitionDuration: {
+        '150': '150ms',  // Fast interactions
+        '200': '200ms',  // Standard (PREFERRED)
+        '300': '300ms',  // Slow/complex only
+      },
+      // Warm shadow system for elegant Italian aesthetic
+      boxShadow: {
+        'soft-sm': '0 1px 2px 0 rgba(28, 20, 16, 0.04)',
+        'soft': '0 2px 8px -2px rgba(28, 20, 16, 0.08)',
+        'soft-md': '0 4px 12px -4px rgba(28, 20, 16, 0.10)',
+        'soft-lg': '0 8px 24px -6px rgba(28, 20, 16, 0.12)',
+        'soft-xl': '0 16px 40px -8px rgba(28, 20, 16, 0.15)',
+        'card-hover': '0 12px 32px -8px rgba(28, 20, 16, 0.16)',
+      },
       keyframes: {
         shimmer: {
           '0%': { backgroundPosition: '-1000px 0' },
           '100%': { backgroundPosition: '1000px 0' },
         },
+        // Subtle cart badge pulse (opacity only)
+        'badge-pulse': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
+        },
       },
       animation: {
         shimmer: 'shimmer 2s infinite linear',
+        'badge-pulse': 'badge-pulse 2s ease-in-out infinite',
       },
     },
   },

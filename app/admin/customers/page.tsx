@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Users, Mail, Phone, MapPin, ShoppingBag, Euro, Search, Calendar } from 'lucide-react';
+import { Users, Mail, Phone, MapPin, ShoppingBag, Euro, Search, Calendar, Pizza, Gift, Star } from 'lucide-react';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface Customer {
   _id: string;
@@ -15,10 +16,20 @@ interface Customer {
   };
   totalOrders: number;
   totalSpent: number;
+  totalPizzas: number;
+  loyaltyPizzasRedeemed: number;
   lastOrderDate?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Calculate loyalty status: every 10 pizzas = 1 free pizza (11th is free)
+const getLoyaltyInfo = (totalPizzas: number, redeemed: number) => {
+  const earnedFreePizzas = Math.floor(totalPizzas / 10);
+  const availableFreePizzas = earnedFreePizzas - redeemed;
+  const progressToNext = totalPizzas % 10;
+  return { earnedFreePizzas, availableFreePizzas, progressToNext };
+};
 
 export default function AdminCustomers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -27,14 +38,19 @@ export default function AdminCustomers() {
   const [sortBy, setSortBy] = useState<string>('lastOrderDate');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
+  // PERFORMANCE: Debounce search to prevent API call on every keystroke
+  // Waits 500ms after user stops typing before making API request
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   useEffect(() => {
     fetchCustomers();
-  }, [searchTerm, sortBy, sortOrder]);
+  }, [debouncedSearchTerm, sortBy, sortOrder]);
 
   const fetchCustomers = async () => {
     try {
       const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
+      // PERFORMANCE: Use debounced search term for API calls
+      if (debouncedSearchTerm) params.append('search', debouncedSearchTerm);
       params.append('sortBy', sortBy);
       params.append('sortOrder', sortOrder);
 
@@ -143,6 +159,16 @@ export default function AdminCustomers() {
               Montant dépensé {sortBy === 'totalSpent' && (sortOrder === 'asc' ? '↑' : '↓')}
             </button>
             <button
+              onClick={() => handleSort('totalPizzas')}
+              className={`px-4 py-2 rounded-xl font-semibold transition-colors duration-300 ${
+                sortBy === 'totalPizzas'
+                  ? 'bg-primary-red text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-charcoal dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              Pizzas {sortBy === 'totalPizzas' && (sortOrder === 'asc' ? '↑' : '↓')}
+            </button>
+            <button
               onClick={() => handleSort('name')}
               className={`px-4 py-2 rounded-xl font-semibold transition-colors duration-300 ${
                 sortBy === 'name'
@@ -218,6 +244,63 @@ export default function AdminCustomers() {
                       </div>
                       <p className="text-3xl font-black text-charcoal dark:text-gray-100 transition-colors duration-300">{customer.totalSpent.toFixed(2)}€</p>
                     </div>
+
+                    {/* Pizza Count Card */}
+                    <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-orange-900/30 dark:to-orange-900/10 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Pizza className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors duration-300">Pizzas commandées</span>
+                      </div>
+                      <p className="text-3xl font-black text-charcoal dark:text-gray-100 transition-colors duration-300">{customer.totalPizzas || 0}</p>
+                    </div>
+
+                    {/* Loyalty Card */}
+                    {(() => {
+                      const loyalty = getLoyaltyInfo(customer.totalPizzas || 0, customer.loyaltyPizzasRedeemed || 0);
+                      return (
+                        <div className={`rounded-2xl p-4 border transition-colors duration-300 ${
+                          loyalty.availableFreePizzas > 0
+                            ? 'bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/50 dark:to-amber-800/30 border-amber-300 dark:border-amber-700 animate-pulse'
+                            : 'bg-gradient-to-br from-purple-50 to-purple-100/50 dark:from-purple-900/30 dark:to-purple-900/10 border-gray-100 dark:border-gray-700'
+                        }`}>
+                          <div className="flex items-center gap-2 mb-2">
+                            {loyalty.availableFreePizzas > 0 ? (
+                              <Gift className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                            ) : (
+                              <Star className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                            )}
+                            <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                              {loyalty.availableFreePizzas > 0 ? 'Pizza(s) offerte(s)!' : 'Fidélité'}
+                            </span>
+                          </div>
+                          {loyalty.availableFreePizzas > 0 ? (
+                            <div>
+                              <p className="text-2xl font-black text-amber-700 dark:text-amber-300">
+                                {loyalty.availableFreePizzas} pizza{loyalty.availableFreePizzas > 1 ? 's' : ''} gratuite{loyalty.availableFreePizzas > 1 ? 's' : ''}!
+                              </p>
+                              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                11e pizza offerte
+                              </p>
+                            </div>
+                          ) : (
+                            <div>
+                              <p className="text-lg font-bold text-charcoal dark:text-gray-100">
+                                {loyalty.progressToNext}/10
+                              </p>
+                              <div className="mt-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-gradient-to-r from-purple-500 to-primary-red rounded-full transition-all duration-500"
+                                  style={{ width: `${(loyalty.progressToNext / 10) * 100}%` }}
+                                />
+                              </div>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Encore {10 - loyalty.progressToNext} pizza{10 - loyalty.progressToNext > 1 ? 's' : ''} pour la gratuite
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
 
                     <div className="col-span-2 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/30 dark:to-blue-900/10 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
                       <div className="flex items-center gap-2 mb-2">

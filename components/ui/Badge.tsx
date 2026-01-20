@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'success' | 'warning' | 'error' | 'info' | 'popular' | 'spicy' | 'vegetarian' | 'default';
+  variant?: 'success' | 'warning' | 'error' | 'info' | 'popular' | 'spicy' | 'vegetarian' | 'star' | 'default';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
   icon?: React.ReactNode;
@@ -11,15 +11,17 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
   ({ variant = 'default', size = 'md', children, icon, className = '', ...props }, ref) => {
     const baseStyles = 'inline-flex items-center gap-1 font-bold rounded-full transition-all duration-200';
 
+    // REFINED: Solid colors, no gradients, warm shadows
     const variants = {
-      success: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700',
-      warning: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700',
-      error: 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700',
-      info: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700',
-      popular: 'bg-gradient-to-r from-primary-yellow to-soft-yellow text-gray-800 dark:text-gray-900 shadow-md',
-      spicy: 'bg-primary-red text-white shadow-md',
-      vegetarian: 'bg-basil-light text-white shadow-md',
-      default: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
+      success: 'bg-brand-green-lighter dark:bg-brand-green/20 text-brand-green dark:text-brand-green-light border border-brand-green/20',
+      warning: 'bg-brand-gold-lighter dark:bg-brand-gold/20 text-brand-gold-hover dark:text-brand-gold border border-brand-gold/20',
+      error: 'bg-brand-red-lighter dark:bg-brand-red/20 text-brand-red dark:text-brand-red-light border border-brand-red/20',
+      info: 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700',
+      popular: 'bg-brand-gold text-gray-900 shadow-soft-sm',  // SOLID gold, no gradient
+      spicy: 'bg-brand-red text-white shadow-soft-sm',
+      vegetarian: 'bg-basil-green text-white shadow-soft-sm',
+      star: 'bg-[#D4AF37] text-[#1A1410] shadow-[0_0_12px_rgba(212,175,55,0.4)]',  // Golden star for best-sellers
+      default: 'bg-background-tertiary dark:bg-surface text-text-secondary dark:text-text-secondary border border-border',
     };
 
     const sizes = {

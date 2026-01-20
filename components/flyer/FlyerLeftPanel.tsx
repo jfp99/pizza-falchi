@@ -23,22 +23,33 @@ const COLORS = {
   white: '#FFFFFF',
 };
 
-// Text styles for better PDF rendering
+// Text styles for crisp PDF/PNG export rendering
 const TEXT_STYLES = {
   letterSpacing: '0.02em',
   wordSpacing: '0.1em',
+  WebkitFontSmoothing: 'antialiased' as const,
+  MozOsxFontSmoothing: 'grayscale' as const,
+  textRendering: 'geometricPrecision' as const,
 };
 
-// Menu item row - Good font size for readability
+// Helper to create proper rgba colors from hex + opacity
+function hexToRgba(hex: string, opacity: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+// Menu item row - Compact font size to fit content
 function MenuItem({ item, showDualBase = false }: { item: FlyerProduct; showDualBase?: boolean }) {
   const isDualBase = item.hasDualBase || DUAL_BASE_PIZZAS.includes(item.name);
 
   return (
-    <div className="py-[3px]">
+    <div className="py-[1px]">
       <div className="flex items-baseline justify-between">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <span
-            className="font-semibold text-[11px] leading-tight"
+            className="font-semibold text-[10px] leading-tight"
             style={{ color: COLORS.text, ...TEXT_STYLES }}
           >
             {item.name}
@@ -47,7 +58,7 @@ function MenuItem({ item, showDualBase = false }: { item: FlyerProduct; showDual
             <span
               className="text-[6px] font-bold px-0.5 rounded"
               style={{
-                backgroundColor: `${COLORS.gold}25`,
+                backgroundColor: hexToRgba(COLORS.gold, 0.25),
                 color: COLORS.text,
               }}
               title="Base tomate ou crème au choix"
@@ -75,7 +86,7 @@ function MenuItem({ item, showDualBase = false }: { item: FlyerProduct; showDual
           )}
         </div>
         <span
-          className="font-bold text-[11px]"
+          className="font-bold text-[10px]"
           style={{ color: COLORS.primary, ...TEXT_STYLES }}
         >
           {item.price.toFixed(2)}€
@@ -83,7 +94,7 @@ function MenuItem({ item, showDualBase = false }: { item: FlyerProduct; showDual
       </div>
       {item.description && (
         <p
-          className="text-[8px] leading-tight -mt-0.5"
+          className="text-[8px] leading-tight"
           style={{ color: COLORS.textLight, ...TEXT_STYLES }}
         >
           {item.description}
@@ -93,33 +104,33 @@ function MenuItem({ item, showDualBase = false }: { item: FlyerProduct; showDual
   );
 }
 
-// Best-seller card - Compact version
+// Best-seller card - Ultra compact version
 function BestSellerCard({ item }: { item: FlyerProduct }) {
   const isDualBase = item.hasDualBase || DUAL_BASE_PIZZAS.includes(item.name);
 
   return (
     <div
-      className="p-2 rounded-lg relative overflow-hidden"
+      className="p-1.5 rounded-lg relative overflow-hidden"
       style={{
-        backgroundColor: `${COLORS.gold}15`,
-        border: `1.5px solid ${COLORS.gold}`,
+        backgroundColor: hexToRgba(COLORS.gold, 0.12),
+        border: `1px solid ${COLORS.gold}`,
       }}
     >
       {/* Star badge */}
       <div
-        className="absolute -top-0.5 -right-0.5 w-4 h-4 flex items-center justify-center rounded-full"
+        className="absolute -top-0.5 -right-0.5 w-3 h-3 flex items-center justify-center rounded-full"
         style={{
           background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldLight})`,
         }}
       >
-        <span className="text-[8px]" style={{ color: COLORS.white }}>★</span>
+        <span className="text-[7px]" style={{ color: COLORS.white }}>★</span>
       </div>
 
       <div className="flex items-start justify-between pr-2">
         <div className="flex-1">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             <span
-              className="font-black text-[11px]"
+              className="font-black text-[10px]"
               style={{ color: COLORS.text, ...TEXT_STYLES }}
             >
               {item.name}
@@ -128,7 +139,7 @@ function BestSellerCard({ item }: { item: FlyerProduct }) {
               <span
                 className="text-[6px] font-bold px-0.5 rounded"
                 style={{
-                  backgroundColor: `${COLORS.gold}30`,
+                  backgroundColor: hexToRgba(COLORS.gold, 0.30),
                   color: COLORS.text,
                 }}
               >
@@ -149,7 +160,7 @@ function BestSellerCard({ item }: { item: FlyerProduct }) {
           )}
         </div>
         <span
-          className="font-black text-[12px] ml-1"
+          className="font-black text-[11px] ml-1"
           style={{ color: COLORS.primary, ...TEXT_STYLES }}
         >
           {item.price.toFixed(2)}€
@@ -159,31 +170,31 @@ function BestSellerCard({ item }: { item: FlyerProduct }) {
   );
 }
 
-// Section header
+// Section header - compact typography
 function SectionHeader({ title, subtitle, accent = false }: { title: string; subtitle?: string; accent?: boolean }) {
   return (
     <div className="mb-1">
       <h3
-        className="text-[12px] font-black tracking-wider uppercase"
-        style={{ color: accent ? COLORS.gold : COLORS.primary, letterSpacing: '0.08em' }}
+        className="text-[11px] font-black tracking-wider uppercase"
+        style={{ color: accent ? COLORS.gold : COLORS.primary, ...TEXT_STYLES, letterSpacing: '0.06em' }}
       >
         {title}
       </h3>
       {subtitle && (
         <p
-          className="text-[9px] italic -mt-0.5"
+          className="text-[8px] italic"
           style={{ color: COLORS.textLight, ...TEXT_STYLES }}
         >
           {subtitle}
         </p>
       )}
       <div
-        className="h-[1.5px] mt-1 rounded-full"
+        className="h-[1px] mt-0.5 rounded-full"
         style={{
           background: accent
             ? `linear-gradient(to right, ${COLORS.gold}, ${COLORS.goldLight}, transparent)`
             : `linear-gradient(to right, ${COLORS.primary}, ${COLORS.primaryLight}, transparent)`,
-          width: '70%',
+          width: '60%',
         }}
       />
     </div>
@@ -208,23 +219,23 @@ export default function FlyerLeftPanel() {
       />
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col p-3">
+      <div className="relative z-10 h-full flex flex-col p-1.5">
         {/* Header */}
-        <div className="flex items-center justify-between mb-1.5 pb-1 border-b" style={{ borderColor: `${COLORS.gold}40` }}>
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between mb-1 pb-0.5 border-b" style={{ borderColor: hexToRgba(COLORS.gold, 0.25) }}>
+          <div className="flex items-center gap-1.5">
             <img
               src="/images/branding/logo-badge.png"
               alt="Logo Pizza Falchi - Pizzeria artisanale au feu de bois"
-              className="w-9 h-9 object-contain"
+              className="w-7 h-7 object-contain"
             />
             <div>
               <h1
-                className="text-[13px] font-black tracking-wider"
+                className="text-[11px] font-black tracking-wider"
                 style={{ color: COLORS.primary }}
               >
                 PIZZA FALCHI
               </h1>
-              <p className="text-[7px] font-medium" style={{ color: COLORS.textLight }}>
+              <p className="text-[6px] font-medium" style={{ color: COLORS.textLight }}>
                 {flyerHeritage.cooking} &bull; Depuis {flyerHeritage.since}
               </p>
             </div>
@@ -232,17 +243,17 @@ export default function FlyerLeftPanel() {
 
           {/* Quality badge */}
           <div
-            className="px-2.5 py-1 rounded-full"
+            className="px-2 py-0.5 rounded-full"
             style={{
               background: `linear-gradient(135deg, ${COLORS.gold} 0%, ${COLORS.goldLight} 50%, ${COLORS.gold} 100%)`,
-              boxShadow: '0 2px 8px rgba(212, 168, 75, 0.4)',
+              boxShadow: '0 2px 6px rgba(212, 168, 75, 0.4)',
             }}
           >
             <span
-              className="text-[7px] font-black tracking-wide uppercase flex items-center gap-1"
+              className="text-[6px] font-black tracking-wide uppercase flex items-center gap-0.5"
               style={{ color: COLORS.text }}
             >
-              <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill={COLORS.green}>
+              <svg className="w-2 h-2" viewBox="0 0 24 24" fill={COLORS.green}>
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
               </svg>
               Fait Maison
@@ -251,13 +262,13 @@ export default function FlyerLeftPanel() {
         </div>
 
         {/* Best Sellers */}
-        <div className="mb-1">
+        <div className="mb-0.5">
           <SectionHeader
             title="Nos Best-Sellers"
             subtitle="Les pizzas préférées"
             accent
           />
-          <div className="grid grid-cols-2 gap-1">
+          <div className="grid grid-cols-2 gap-0.5">
             {bestSellers.map((item) => (
               <BestSellerCard key={item.name} item={item} />
             ))}
@@ -265,7 +276,7 @@ export default function FlyerLeftPanel() {
         </div>
 
         {/* Main Menu Grid - 2 Columns: Classiques | Crèmes+Spécialités */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-1">
           {/* Column 1: Les Classiques */}
           <div>
             <SectionHeader title="Les Classiques" subtitle="Base tomate" />
@@ -279,7 +290,7 @@ export default function FlyerLeftPanel() {
           {/* Column 2: Crèmes + Spécialités */}
           <div className="flex flex-col">
             {/* Crèmes Fraîches */}
-            <div className="mb-2">
+            <div className="mb-0.5">
               <SectionHeader title="Les Crèmes Fraîches" subtitle="Base crème" />
               <div className="space-y-0">
                 {cremes.map((item) => (
@@ -301,53 +312,53 @@ export default function FlyerLeftPanel() {
         </div>
 
         {/* Bottom Section: Sizes + Boissons + Légende */}
-        <div className="mt-auto pt-1 border-t" style={{ borderColor: `${COLORS.gold}30` }}>
+        <div className="mt-auto pt-0.5 border-t" style={{ borderColor: hexToRgba(COLORS.gold, 0.20) }}>
           {/* Pizza Sizes */}
-          <div className="flex items-center justify-center gap-4 mb-1.5">
-            <div className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full border-2" style={{ borderColor: COLORS.primary }} />
-              <span className="text-[8px] font-semibold" style={{ color: COLORS.text }}>Moyenne 30cm</span>
+          <div className="flex items-center justify-center gap-3 mb-0.5">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full border-[1.5px]" style={{ borderColor: COLORS.primary }} />
+              <span className="text-[8px] font-semibold" style={{ color: COLORS.text, ...TEXT_STYLES }}>Moyenne 30cm</span>
             </div>
-            <div className="w-px h-4" style={{ backgroundColor: `${COLORS.gold}40` }} />
-            <div className="flex items-center gap-1.5">
-              <div className="w-5 h-5 rounded-full border-2" style={{ borderColor: COLORS.gold }} />
-              <span className="text-[8px] font-semibold" style={{ color: COLORS.text }}>Grande 34.5cm <span style={{ color: COLORS.gold }}>(+1.50€)</span></span>
+            <div className="w-px h-3" style={{ backgroundColor: hexToRgba(COLORS.gold, 0.25) }} />
+            <div className="flex items-center gap-1">
+              <div className="w-4 h-4 rounded-full border-[1.5px]" style={{ borderColor: COLORS.gold }} />
+              <span className="text-[8px] font-semibold" style={{ color: COLORS.text, ...TEXT_STYLES }}>Grande 34.5cm <span style={{ color: COLORS.gold }}>(+1.50€)</span></span>
             </div>
           </div>
 
           {/* Boissons + Légende Row */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1">
             {/* Boissons */}
             <div>
               <h3
-                className="text-[10px] font-black tracking-wider uppercase mb-1"
-                style={{ color: COLORS.gold, letterSpacing: '0.08em' }}
+                className="text-[9px] font-black tracking-wider uppercase mb-0.5"
+                style={{ color: COLORS.gold, ...TEXT_STYLES, letterSpacing: '0.06em' }}
               >
                 Boissons
               </h3>
-              <div className="grid grid-cols-3 gap-x-2 gap-y-[2px]">
+              <div className="grid grid-cols-3 gap-x-1.5 gap-y-0">
                 <div>
-                  <p className="text-[7px] font-bold mb-0.5" style={{ color: COLORS.text }}>Vins 75cl</p>
+                  <p className="text-[7px] font-bold" style={{ color: COLORS.text, ...TEXT_STYLES }}>Vins 75cl</p>
                   {boissons.vins.map((item) => (
-                    <div key={item.name} className="text-[7px] flex justify-between" style={{ color: COLORS.text }}>
+                    <div key={item.name} className="text-[7px] flex justify-between" style={{ color: COLORS.text, ...TEXT_STYLES }}>
                       <span>{item.name.replace('Vin ', '')}</span>
                       <span className="font-semibold">{item.price.toFixed(2)}€</span>
                     </div>
                   ))}
                 </div>
                 <div>
-                  <p className="text-[7px] font-bold mb-0.5" style={{ color: COLORS.text }}>Bières</p>
+                  <p className="text-[7px] font-bold" style={{ color: COLORS.text, ...TEXT_STYLES }}>Bières</p>
                   {boissons.bieres.slice(0, 3).map((item) => (
-                    <div key={item.name} className="text-[7px] flex justify-between" style={{ color: COLORS.text }}>
+                    <div key={item.name} className="text-[7px] flex justify-between" style={{ color: COLORS.text, ...TEXT_STYLES }}>
                       <span>{item.name.split(' ')[0]}</span>
                       <span className="font-semibold">{item.price.toFixed(2)}€</span>
                     </div>
                   ))}
                 </div>
                 <div>
-                  <p className="text-[7px] font-bold mb-0.5" style={{ color: COLORS.text }}>Softs</p>
+                  <p className="text-[7px] font-bold" style={{ color: COLORS.text, ...TEXT_STYLES }}>Softs</p>
                   {boissons.softs.slice(0, 3).map((item) => (
-                    <div key={item.name} className="text-[7px] flex justify-between" style={{ color: COLORS.text }}>
+                    <div key={item.name} className="text-[7px] flex justify-between" style={{ color: COLORS.text, ...TEXT_STYLES }}>
                       <span>{item.name.split(' ')[0]}</span>
                       <span className="font-semibold">{item.price.toFixed(2)}€</span>
                     </div>
@@ -356,42 +367,31 @@ export default function FlyerLeftPanel() {
               </div>
             </div>
 
-            {/* Légende */}
+            {/* Légende - centrée */}
             <div
-              className="p-2 rounded-lg flex flex-col items-center justify-center"
+              className="p-1.5 rounded-lg flex items-center justify-center"
               style={{
-                backgroundColor: `${COLORS.cream}`,
-                border: `1px solid ${COLORS.gold}40`,
+                backgroundColor: COLORS.cream,
+                border: `1px solid ${hexToRgba(COLORS.gold, 0.25)}`,
               }}
             >
-              <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1">
-                <span className="text-[8px] flex items-center gap-1">
-                  <span className="font-bold text-[9px]" style={{ color: COLORS.green }}>V</span>
+              <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-0.5">
+                <span className="text-[7px] flex items-center gap-0.5" style={TEXT_STYLES}>
+                  <span className="font-bold text-[8px]" style={{ color: COLORS.green }}>V</span>
                   <span style={{ color: COLORS.textLight }}>Végétarien</span>
                 </span>
-                <span className="text-[8px] flex items-center gap-1">
-                  <span className="font-bold text-[9px]" style={{ color: COLORS.primary }}>*</span>
+                <span className="text-[7px] flex items-center gap-0.5" style={TEXT_STYLES}>
+                  <span className="font-bold text-[8px]" style={{ color: COLORS.primary }}>*</span>
                   <span style={{ color: COLORS.textLight }}>Épicé</span>
                 </span>
-                <span className="text-[8px] flex items-center gap-1">
+                <span className="text-[7px] flex items-center gap-0.5" style={TEXT_STYLES}>
                   <span
-                    className="text-[6px] font-bold px-0.5 rounded"
-                    style={{ backgroundColor: `${COLORS.gold}25`, color: COLORS.text }}
+                    className="text-[5px] font-bold px-0.5 rounded"
+                    style={{ backgroundColor: hexToRgba(COLORS.gold, 0.25), color: COLORS.text }}
                   >
                     T/C
                   </span>
                   <span style={{ color: COLORS.textLight }}>Tomate ou Crème</span>
-                </span>
-              </div>
-              <div
-                className="mt-1.5 px-2 py-0.5 rounded-full"
-                style={{
-                  backgroundColor: `${COLORS.primary}10`,
-                  border: `1px solid ${COLORS.primary}30`,
-                }}
-              >
-                <span className="text-[7px] font-bold" style={{ color: COLORS.primary }}>
-                  Ingrédient supplémentaire +1€
                 </span>
               </div>
             </div>

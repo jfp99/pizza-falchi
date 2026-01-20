@@ -2,12 +2,14 @@
 import { useCart } from '@/contexts/CartContext';
 import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus, Clock, Truck, Shield, Star } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 import { PizzaSliceIcon, StarFilledIcon } from '@/components/icons/CategoryIcons';
 import { motion } from 'framer-motion';
 import { fadeInUp, buttonPress } from '@/lib/animations';
+import HeroBadge from '@/components/ui/HeroBadge';
 
 export default function CartPage() {
   const router = useRouter();

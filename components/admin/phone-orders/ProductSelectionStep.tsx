@@ -3,6 +3,7 @@
 import { memo } from 'react';
 import { Plus, Minus, AlertCircle } from 'lucide-react';
 import type { Product } from '@/types';
+import Badge from '@/components/ui/Badge';
 
 /**
  * Cart item structure representing a product with quantity
@@ -150,34 +151,49 @@ function ProductSelectionStep({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-charcoal flex items-center gap-2">
-          {icon}
+    <div className="space-y-6">
+      {/* Enhanced Header */}
+      <div className="flex items-center justify-between pb-4 border-b-2 border-gray-200 dark:border-gray-700">
+        <h3 className="text-2xl font-black text-charcoal dark:text-white flex items-center gap-3">
+          <div className="p-2.5 bg-gradient-to-br from-primary-red/10 to-primary-yellow/10 rounded-xl">
+            {icon}
+          </div>
           {title}
         </h3>
         {keyboardHint && (
           <div
-            className="text-xs text-gray-500 font-semibold"
+            className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-xl border border-blue-200 dark:border-blue-700"
             aria-label="Raccourcis clavier disponibles"
           >
-            💡 Raccourcis: 1-9 pour ajouter, Entrée pour continuer
+            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <rect x="2" y="4" width="20" height="16" rx="2" strokeWidth="2"/>
+              <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M6 16h8" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <div className="text-xs text-blue-700 dark:text-blue-300 font-bold">
+              <div>Touches 1-9 : Ajouter</div>
+              <div>Entrée : Continuer</div>
+            </div>
           </div>
         )}
       </div>
 
       {warningMessage && (
         <div
-          className="bg-red-50 border-2 border-red-300 rounded-xl p-4 flex items-center gap-3"
+          className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-2 border-red-300 dark:border-red-600 rounded-2xl p-5 flex items-start gap-4 shadow-lg"
           role="alert"
         >
-          <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" aria-hidden="true" />
-          <p className="text-sm font-semibold text-red-700">{warningMessage}</p>
+          <div className="p-2 bg-red-100 dark:bg-red-800 rounded-xl">
+            <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400 flex-shrink-0" aria-hidden="true" />
+          </div>
+          <div>
+            <p className="font-bold text-red-900 dark:text-red-200 mb-1">Attention - Capacité dépassée</p>
+            <p className="text-sm font-medium text-red-700 dark:text-red-300">{warningMessage}</p>
+          </div>
         </div>
       )}
 
       <div
-        className="grid grid-cols-1 md:grid-cols-2 gap-3"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
         role="list"
         aria-label={`Liste des ${title.toLowerCase()}`}
       >
@@ -188,60 +204,90 @@ function ProductSelectionStep({
           return (
             <div
               key={product._id}
-              className="bg-white border-2 border-gray-200 rounded-xl p-4 hover:border-primary-red transition-colors relative"
+              className={`
+                group relative bg-white dark:bg-gray-800 rounded-2xl p-5
+                transition-all duration-300 hover:shadow-xl
+                ${quantity > 0
+                  ? 'border-2 border-primary-red shadow-lg shadow-primary-red/20'
+                  : 'border-2 border-gray-200 dark:border-gray-700 hover:border-primary-red/50'
+                }
+              `}
               role="listitem"
             >
-              {/* Keyboard Shortcut Badge */}
+              {/* Keyboard Shortcut Badge - Redesigned */}
               {keyboardHint && shortcutNumber <= 9 && (
                 <div
-                  className="absolute top-2 left-2 w-6 h-6 bg-gray-200 text-gray-700 rounded-md flex items-center justify-center text-xs font-bold"
+                  className="absolute -top-2 -left-2 w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg flex items-center justify-center text-xs font-black shadow-lg z-10"
                   aria-label={`Raccourci clavier: ${shortcutNumber}`}
                 >
                   {shortcutNumber}
                 </div>
               )}
 
-              <div className="flex items-center justify-between mb-2">
-                <div className={`flex-1 ${shortcutNumber <= 9 && keyboardHint ? 'ml-8' : ''}`}>
-                  <h4 className="font-bold text-charcoal">{product.name}</h4>
-                  <p className="text-sm text-gray-600 font-semibold">
-                    {product.price.toFixed(2)}€
-                  </p>
+              {/* Quantity Badge */}
+              {quantity > 0 && (
+                <div className="absolute -top-2 -right-2 min-w-7 h-7 bg-gradient-to-br from-primary-red to-primary-yellow text-white rounded-lg flex items-center justify-center px-2 text-sm font-black shadow-lg z-10 animate-pulse">
+                  ×{quantity}
+                </div>
+              )}
+
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-bold text-charcoal dark:text-white text-lg mb-1 truncate">
+                    {product.name}
+                  </h4>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg font-black text-primary-red">
+                      {product.price.toFixed(2)}€
+                    </span>
+                  </div>
                   {product.description && (
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed">
                       {product.description}
                     </p>
                   )}
+
+                  {/* Size and Extras Badges for Pizzas - Enhanced */}
+                  {product.category === 'pizza' && (product.sizeOptions || (product.availableExtras && product.availableExtras.length > 0)) && (
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {product.sizeOptions && (
+                        <>
+                          {product.sizeOptions.medium.available && (
+                            <Badge variant="info" size="sm">Medium</Badge>
+                          )}
+                          {product.sizeOptions.large.available && (
+                            <Badge variant="warning" size="sm">Large +{product.sizeOptions.large.priceModifier}€</Badge>
+                          )}
+                        </>
+                      )}
+                      {product.availableExtras && product.availableExtras.length > 0 && (
+                        <Badge variant="success" size="sm" icon={<Plus className="w-3 h-3" />}>
+                          {product.availableExtras.length} extras
+                        </Badge>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                {/* Quantity Controls */}
-                <div className="flex items-center gap-2" role="group" aria-label={`Quantité de ${product.name}`}>
+                {/* Enhanced Quantity Controls */}
+                <div className="flex flex-col items-center gap-2" role="group" aria-label={`Quantité de ${product.name}`}>
                   {quantity > 0 && (
-                    <>
-                      <button
-                        onClick={() => onRemoveFromCart(product._id!)}
-                        className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
-                        aria-label={`Retirer ${product.name}`}
-                        type="button"
-                      >
-                        <Minus className="w-4 h-4" aria-hidden="true" />
-                      </button>
-                      <span
-                        className="w-8 text-center font-bold"
-                        aria-live="polite"
-                        aria-label={`${quantity} dans le panier`}
-                      >
-                        {quantity}
-                      </span>
-                    </>
+                    <button
+                      onClick={() => onRemoveFromCart(product._id!)}
+                      className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-red-100 dark:hover:bg-red-900/30 text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm"
+                      aria-label={`Retirer ${product.name}`}
+                      type="button"
+                    >
+                      <Minus className="w-5 h-5" aria-hidden="true" />
+                    </button>
                   )}
                   <button
                     onClick={() => onAddToCart(product)}
-                    className="w-8 h-8 rounded-lg bg-primary-red text-white hover:bg-primary-red/90 flex items-center justify-center transition-colors"
+                    className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-red to-primary-yellow text-white hover:from-primary-yellow hover:to-primary-red flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-lg hover:shadow-xl"
                     aria-label={`Ajouter ${product.name}`}
                     type="button"
                   >
-                    <Plus className="w-4 h-4" aria-hidden="true" />
+                    <Plus className="w-5 h-5 font-bold" aria-hidden="true" />
                   </button>
                 </div>
               </div>

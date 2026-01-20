@@ -4,9 +4,9 @@ import type { Product, CartItem } from '@/types';
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean }, calculatedPrice?: number) => void;
+  removeItem: (productId: string, customizationKey?: string) => void;
+  updateQuantity: (productId: string, quantity: number, customizationKey?: string) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
@@ -41,38 +41,94 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, isLoaded]);
 
-  const addItem = (product: Product) => {
+  // Helper to generate unique key for customized items
+  const getCustomizationKey = (customizations?: { size?: 'medium' | 'large'; extras?: string[]; cut?: boolean }) => {
+    if (!customizations) return '';
+    const size = customizations.size || '';
+    const extras = (customizations.extras || []).sort().join(',');
+    const cut = customizations.cut !== undefined ? (customizations.cut ? 'cut' : 'whole') : '';
+    return `${size}|${extras}|${cut}`;
+  };
+
+  const addItem = (product: Product, customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean }, calculatedPrice?: number) => {
     setItems(currentItems => {
-      const existingItem = currentItems.find(item => item.product._id === product._id);
+      const customizationKey = getCustomizationKey(customizations);
+
+      // Find existing item with same product AND customizations
+      const existingItem = currentItems.find(item => {
+        if (item.product._id !== product._id) return false;
+        const itemKey = getCustomizationKey(item.customizations);
+        return itemKey === customizationKey;
+      });
 
       if (existingItem) {
-        return currentItems.map(item =>
-          item.product._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+        // Increment quantity of existing item
+        return currentItems.map(item => {
+          if (item.product._id !== product._id) return item;
+          const itemKey = getCustomizationKey(item.customizations);
+          if (itemKey === customizationKey) {
+            return { ...item, quantity: item.quantity + 1 };
+          }
+          return item;
+        });
       }
 
-      return [...currentItems, { product, quantity: 1 }];
+      // Add new item
+      return [...currentItems, {
+        product,
+        quantity: 1,
+        customizations,
+        calculatedPrice
+      }];
     });
   };
 
-  const removeItem = (productId: string) => {
-    setItems(currentItems => currentItems.filter(item => item.product._id !== productId));
+  /**
+   * BUGFIX: Remove item by productId AND customizationKey
+   * Previously only matched by productId, causing wrong items to be removed when multiple
+   * customizations of the same product existed in cart
+   */
+  const removeItem = (productId: string, customizationKey?: string) => {
+    setItems(currentItems => currentItems.filter(item => {
+      if (item.product._id !== productId) return true;
+
+      // If customizationKey provided, match both ID and customizations
+      if (customizationKey !== undefined) {
+        const itemKey = getCustomizationKey(item.customizations);
+        return itemKey !== customizationKey;
+      }
+
+      // If no customizationKey, remove all items with this productId (backward compat)
+      return false;
+    }));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  /**
+   * BUGFIX: Update quantity by productId AND customizationKey
+   * Previously only matched by productId, causing wrong items to be updated
+   */
+  const updateQuantity = (productId: string, quantity: number, customizationKey?: string) => {
     if (quantity <= 0) {
-      removeItem(productId);
+      removeItem(productId, customizationKey);
       return;
     }
 
     setItems(currentItems =>
-      currentItems.map(item =>
-        item.product._id === productId
-          ? { ...item, quantity }
-          : item
-      )
+      currentItems.map(item => {
+        if (item.product._id !== productId) return item;
+
+        // If customizationKey provided, match both ID and customizations
+        if (customizationKey !== undefined) {
+          const itemKey = getCustomizationKey(item.customizations);
+          if (itemKey === customizationKey) {
+            return { ...item, quantity };
+          }
+          return item;
+        }
+
+        // If no customizationKey, update first matching product (backward compat)
+        return { ...item, quantity };
+      })
     );
   };
 
@@ -85,7 +141,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getTotalPrice = () => {
-    return items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+    return items.reduce((total, item) => {
+      const price = item.calculatedPrice || item.product.price;
+      return total + (price * item.quantity);
+    }, 0);
   };
 
   const getTotal = () => {

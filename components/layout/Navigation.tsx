@@ -24,7 +24,7 @@ export default function Navigation() {
   }, [showCartPreview]);
 
   return (
-    <nav className="bg-gradient-to-r from-background-tertiary via-background-secondary to-background-tertiary dark:from-background-secondary dark:via-background-primary dark:to-background-secondary shadow-2xl sticky top-0 z-50 border-b-4 border-brand-gold transition-colors duration-300">
+    <nav className="bg-surface dark:bg-surface shadow-soft-lg sticky top-0 z-50 border-b-2 border-brand-gold transition-colors duration-200">
       {/* Top Bar - Contact Info */}
       <div className="bg-brand-red text-text-on-dark transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 py-2">
@@ -50,10 +50,9 @@ export default function Navigation() {
                 src="/images/branding/logo-badge.png"
                 alt="Pizza Falchi Logo"
                 fill
-                className="object-contain relative z-10 transition-transform duration-300 group-hover:scale-110"
+                className="object-contain relative z-10 transition-transform duration-200 group-hover:scale-105"
                 priority
               />
-              <span className="absolute inset-0 bg-gradient-to-r from-brand-red to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-black text-brand-red dark:text-text-primary tracking-tight transition-colors">
@@ -65,38 +64,44 @@ export default function Navigation() {
             </div>
           </Link>
 
-          {/* Menu Desktop */}
+          {/* Menu Desktop - Enhanced with visual effects */}
           <div className="hidden lg:flex items-center space-x-1">
             <Link
               href="/"
-              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
+              className="group relative px-5 py-2 text-text-primary dark:text-text-primary font-bold tracking-wide transition-all duration-300 uppercase text-sm hover:text-brand-red dark:hover:text-brand-gold rounded-lg overflow-hidden"
             >
-              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Accueil</span>
-              <span className="absolute inset-0 bg-gradient-to-r from-brand-red to-brand-gold opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
+              <span className="relative z-10">Accueil</span>
+              {/* Animated underline */}
+              <span className="absolute bottom-1 left-1/2 w-0 h-0.5 bg-brand-red dark:bg-brand-gold transition-all duration-300 ease-out group-hover:w-3/4 group-hover:left-[12.5%]" />
+              {/* Subtle glow effect */}
+              <span className="absolute inset-0 bg-brand-red/0 dark:bg-brand-gold/0 transition-all duration-300 group-hover:bg-brand-red/5 dark:group-hover:bg-brand-gold/10 rounded-lg" />
             </Link>
             <Link
               href="/menu"
-              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
+              className="group relative px-5 py-2 text-text-primary dark:text-text-primary font-bold tracking-wide transition-all duration-300 uppercase text-sm hover:text-brand-red dark:hover:text-brand-gold rounded-lg overflow-hidden"
             >
-              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Menu</span>
-              <span className="absolute inset-0 bg-gradient-to-r from-brand-gold to-brand-red opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
+              <span className="relative z-10">Menu</span>
+              <span className="absolute bottom-1 left-1/2 w-0 h-0.5 bg-brand-red dark:bg-brand-gold transition-all duration-300 ease-out group-hover:w-3/4 group-hover:left-[12.5%]" />
+              <span className="absolute inset-0 bg-brand-red/0 dark:bg-brand-gold/0 transition-all duration-300 group-hover:bg-brand-red/5 dark:group-hover:bg-brand-gold/10 rounded-lg" />
             </Link>
             <Link
               href="/about"
-              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
+              className="group relative px-5 py-2 text-text-primary dark:text-text-primary font-bold tracking-wide transition-all duration-300 uppercase text-sm hover:text-brand-red dark:hover:text-brand-gold rounded-lg overflow-hidden"
             >
-              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Vision</span>
-              <span className="absolute inset-0 bg-gradient-to-r from-brand-red to-brand-gold opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
+              <span className="relative z-10">Vision</span>
+              <span className="absolute bottom-1 left-1/2 w-0 h-0.5 bg-brand-red dark:bg-brand-gold transition-all duration-300 ease-out group-hover:w-3/4 group-hover:left-[12.5%]" />
+              <span className="absolute inset-0 bg-brand-red/0 dark:bg-brand-gold/0 transition-all duration-300 group-hover:bg-brand-red/5 dark:group-hover:bg-brand-gold/10 rounded-lg" />
             </Link>
             <Link
               href="/contact"
-              className="relative px-5 py-2 text-brand-red dark:text-text-primary font-bold tracking-wide transition-all duration-300 group"
+              className="group relative px-5 py-2 text-text-primary dark:text-text-primary font-bold tracking-wide transition-all duration-300 uppercase text-sm hover:text-brand-red dark:hover:text-brand-gold rounded-lg overflow-hidden"
             >
-              <span className="relative z-10 uppercase text-sm group-hover:text-text-on-dark dark:group-hover:text-text-on-dark transition-colors">Contact</span>
-              <span className="absolute inset-0 bg-gradient-to-r from-brand-gold to-brand-red opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
+              <span className="relative z-10">Contact</span>
+              <span className="absolute bottom-1 left-1/2 w-0 h-0.5 bg-brand-red dark:bg-brand-gold transition-all duration-300 ease-out group-hover:w-3/4 group-hover:left-[12.5%]" />
+              <span className="absolute inset-0 bg-brand-red/0 dark:bg-brand-gold/0 transition-all duration-300 group-hover:bg-brand-red/5 dark:group-hover:bg-brand-gold/10 rounded-lg" />
             </Link>
 
-            {/* Cart Button with Hover Preview */}
+            {/* Cart Button with Hover Preview - REFINED: No gradients, subtle badge pulse */}
             <div
               className="relative ml-3"
               onMouseEnter={() => setShowCartPreview(true)}
@@ -105,16 +110,13 @@ export default function Navigation() {
               <Link
                 href="/cart"
                 suppressHydrationWarning
-                className="relative bg-brand-red px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-2xl flex items-center space-x-2 overflow-visible group text-text-on-dark transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 isolate"
+                className="bg-brand-red px-6 py-3 rounded-full font-bold shadow-soft-md hover:shadow-soft-lg flex items-center space-x-2 text-text-on-dark transition-all duration-200 hover:bg-brand-red-hover active:scale-98 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2"
                 aria-label={`Panier ${getTotalItems() > 0 ? `avec ${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''}` : 'vide'}`}
               >
-                <span className="relative z-[5] flex items-center space-x-2 group-hover:text-charcoal transition-colors duration-300 uppercase text-sm tracking-wide">
-                  <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                  <span>Panier</span>
-                </span>
-                <span className="absolute inset-0 z-[1] bg-gradient-to-r from-brand-gold via-primary-yellow to-brand-gold bg-[length:200%_100%] bg-left group-hover:bg-right opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out rounded-full"></span>
+                <ShoppingCart className="w-5 h-5" />
+                <span className="uppercase text-sm tracking-wide">Panier</span>
                 {getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 z-[30] bg-brand-gold text-charcoal rounded-full w-7 h-7 text-sm font-black flex items-center justify-center shadow-xl ring-2 ring-white dark:ring-gray-900 animate-pulse group-hover:scale-110 transition-transform duration-300">
+                  <span className="absolute -top-2 -right-2 bg-brand-gold text-gray-900 rounded-full w-7 h-7 text-sm font-black flex items-center justify-center shadow-soft-md ring-2 ring-white dark:ring-gray-900 animate-badge-pulse">
                     {getTotalItems()}
                   </span>
                 )}
@@ -142,15 +144,14 @@ export default function Navigation() {
                       <p className="text-text-secondary dark:text-text-secondary mb-4 transition-colors">Ajoutez des pizzas délicieuses !</p>
                       <Link
                         href="/menu"
-                        className="relative inline-block px-6 py-3 rounded-xl font-bold overflow-hidden group bg-brand-red text-text-on-dark"
+                        className="inline-block px-6 py-3 rounded-xl font-bold bg-brand-red text-text-on-dark hover:bg-brand-red-hover transition-colors duration-200"
                       >
-                        <span className="relative z-10 group-hover:text-text-primary transition-colors duration-300">Voir le Menu</span>
-                        <span className="absolute inset-0 bg-gradient-to-r from-brand-gold to-primary-yellow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        Voir le Menu
                       </Link>
                     </div>
                   ) : (
                     <>
-                      <div className="p-4 bg-gradient-to-r from-brand-red to-brand-gold transition-colors">
+                      <div className="p-4 bg-brand-red transition-colors">
                         <h3 className="text-text-on-dark font-bold text-lg transition-colors">Mon Panier ({getTotalItems()} articles)</h3>
                       </div>
                       <div className="max-h-96 overflow-y-auto p-4 space-y-3">
@@ -213,44 +214,55 @@ export default function Navigation() {
             <div className="flex flex-col space-y-2">
               <Link
                 href="/"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
+                className="group relative px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all duration-300 font-bold tracking-wide uppercase text-sm overflow-hidden"
                 onClick={() => setIsOpen(false)}
               >
-                Accueil
+                <span className="relative z-10 flex items-center gap-2">
+                  <span className="w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-4" />
+                  Accueil
+                </span>
               </Link>
               <Link
                 href="/menu"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
+                className="group relative px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all duration-300 font-bold tracking-wide uppercase text-sm overflow-hidden"
                 onClick={() => setIsOpen(false)}
               >
-                Menu
+                <span className="relative z-10 flex items-center gap-2">
+                  <span className="w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-4" />
+                  Menu
+                </span>
               </Link>
               <Link
                 href="/about"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
+                className="group relative px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all duration-300 font-bold tracking-wide uppercase text-sm overflow-hidden"
                 onClick={() => setIsOpen(false)}
               >
-                Vision
+                <span className="relative z-10 flex items-center gap-2">
+                  <span className="w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-4" />
+                  Vision
+                </span>
               </Link>
               <Link
                 href="/contact"
-                className="px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all font-bold tracking-wide uppercase text-sm"
+                className="group relative px-4 py-3 text-brand-red dark:text-text-primary hover:bg-brand-red hover:text-text-on-dark rounded-lg transition-all duration-300 font-bold tracking-wide uppercase text-sm overflow-hidden"
                 onClick={() => setIsOpen(false)}
               >
-                Contact
+                <span className="relative z-10 flex items-center gap-2">
+                  <span className="w-0 h-0.5 bg-brand-gold transition-all duration-300 group-hover:w-4" />
+                  Contact
+                </span>
               </Link>
               <Link
                 href="/cart"
-                className="relative px-4 py-3 rounded-lg font-bold tracking-wide flex items-center justify-between overflow-hidden group bg-brand-red text-text-on-dark"
+                className="px-4 py-3 rounded-lg font-bold tracking-wide flex items-center justify-between bg-brand-red text-text-on-dark hover:bg-brand-red-hover transition-colors duration-200"
                 onClick={() => setIsOpen(false)}
               >
-                <span className="relative z-10 flex items-center space-x-2 group-hover:text-text-primary transition-colors duration-300 uppercase text-sm">
+                <span className="flex items-center space-x-2 uppercase text-sm">
                   <ShoppingCart className="w-5 h-5" />
                   <span>Panier</span>
                 </span>
-                <span className="absolute inset-0 bg-gradient-to-r from-brand-gold to-primary-yellow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 {getTotalItems() > 0 && (
-                  <span className="relative z-10 bg-brand-gold text-text-primary px-3 py-1 rounded-full font-black text-sm">
+                  <span className="bg-brand-gold text-gray-900 px-3 py-1 rounded-full font-black text-sm">
                     {getTotalItems()}
                   </span>
                 )}
@@ -262,12 +274,7 @@ export default function Navigation() {
 
       {/* Fixed Theme Toggle - Bottom Right */}
       <div className="fixed bottom-6 right-6 z-50">
-        <div className="relative group">
-          <div className="relative z-10">
-            <ThemeToggle />
-          </div>
-          <span className="absolute inset-0 bg-gradient-to-r from-brand-red to-brand-gold opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full blur-md"></span>
-        </div>
+        <ThemeToggle />
       </div>
     </nav>
   );

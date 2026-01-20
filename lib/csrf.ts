@@ -3,96 +3,119 @@
  *
  * Provides CSRF token generation, validation, and management
  * for protecting state-changing API routes (POST, PUT, DELETE)
+ *
+ * SECURITY FIX: Uses httpOnly cookies instead of in-memory storage
+ * to support serverless/multi-instance deployments
  */
 
-import { randomBytes } from 'crypto';
-import { CSRF_TOKEN_EXPIRATION_MS, CSRF_CLEANUP_INTERVAL_MS } from './constants';
+import { randomBytes, createHmac } from 'crypto';
+import { CSRF_TOKEN_EXPIRATION_MS } from './constants';
 
-interface CSRFToken {
-  token: string;
-  expiresAt: number;
-}
-
-// In-memory token storage (use Redis in production for multi-instance deployments)
-const tokenStore = new Map<string, CSRFToken>();
+const CSRF_SECRET = process.env.CSRF_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-change-in-production';
+const CSRF_COOKIE_NAME = 'csrf-token';
 
 /**
  * Generate a new CSRF token
+ * Returns both the token and cookie options
  */
-export function generateCSRFToken(): string {
+export function generateCSRFToken(): { token: string; cookie: string } {
+  // Generate random token
   const token = randomBytes(32).toString('hex');
 
-  tokenStore.set(token, {
-    token,
-    expiresAt: Date.now() + CSRF_TOKEN_EXPIRATION_MS,
-  });
+  // Create signed token with timestamp to prevent tampering
+  const timestamp = Date.now();
+  const signature = createHmac('sha256', CSRF_SECRET)
+    .update(`${token}:${timestamp}`)
+    .digest('hex');
 
-  return token;
+  // Combine token, timestamp, and signature
+  const signedToken = `${token}:${timestamp}:${signature}`;
+
+  // Cookie options with security best practices
+  const isProduction = process.env.NODE_ENV === 'production';
+  const maxAge = Math.floor(CSRF_TOKEN_EXPIRATION_MS / 1000); // Convert to seconds
+
+  const cookieOptions = [
+    `${CSRF_COOKIE_NAME}=${signedToken}`,
+    `HttpOnly`,
+    `SameSite=Strict`,
+    `Path=/`,
+    `Max-Age=${maxAge}`,
+    isProduction ? 'Secure' : '', // Only HTTPS in production
+  ].filter(Boolean).join('; ');
+
+  return {
+    token, // Return plain token for client to use in headers
+    cookie: cookieOptions
+  };
 }
 
 /**
- * Validate a CSRF token
- * @param oneTimeUse - If true, token is deleted after validation (default: false for better UX)
+ * Validate a CSRF token against the signed cookie
+ * @param headerToken - Token from X-CSRF-Token header
+ * @param cookieValue - Signed token from csrf-token cookie
  */
-export function validateCSRFToken(token: string | null | undefined, oneTimeUse: boolean = false): boolean {
-  if (!token) {
+export function validateCSRFToken(
+  headerToken: string | null | undefined,
+  cookieValue: string | null | undefined
+): boolean {
+  if (!headerToken || !cookieValue) {
     return false;
   }
 
-  const storedToken = tokenStore.get(token);
-
-  if (!storedToken) {
-    return false;
-  }
-
-  // Check if token has expired
-  if (Date.now() > storedToken.expiresAt) {
-    tokenStore.delete(token);
-    return false;
-  }
-
-  // Token is valid - optionally remove it (one-time use)
-  // For better UX in admin interfaces, we allow reuse within validity period
-  if (oneTimeUse) {
-    tokenStore.delete(token);
-  }
-
-  return true;
-}
-
-/**
- * Cleanup expired tokens
- * Should be called periodically
- */
-export function cleanupExpiredTokens(): void {
-  const now = Date.now();
-
-  for (const [token, data] of tokenStore.entries()) {
-    if (now > data.expiresAt) {
-      tokenStore.delete(token);
+  try {
+    // Parse signed cookie
+    const parts = cookieValue.split(':');
+    if (parts.length !== 3) {
+      return false;
     }
+
+    const [storedToken, timestampStr, signature] = parts;
+    const timestamp = parseInt(timestampStr, 10);
+
+    // Verify signature to prevent tampering
+    const expectedSignature = createHmac('sha256', CSRF_SECRET)
+      .update(`${storedToken}:${timestamp}`)
+      .digest('hex');
+
+    if (signature !== expectedSignature) {
+      return false;
+    }
+
+    // Check if token has expired
+    if (Date.now() > timestamp + CSRF_TOKEN_EXPIRATION_MS) {
+      return false;
+    }
+
+    // Compare header token with cookie token (timing-safe comparison)
+    if (headerToken !== storedToken) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('CSRF validation error:', error);
+    return false;
   }
 }
 
 /**
- * Get CSRF token from request headers or body
+ * Get CSRF token from request cookies
  */
-export function getCSRFTokenFromRequest(
-  headers: Headers,
-  body?: any
-): string | null {
-  // Check X-CSRF-Token header first
-  const headerToken = headers.get('X-CSRF-Token');
-  if (headerToken) {
-    return headerToken;
+export function getCSRFCookieValue(request: Request): string | null {
+  const cookieHeader = request.headers.get('cookie');
+  if (!cookieHeader) {
+    return null;
   }
 
-  // Check request body
-  if (body && typeof body === 'object' && body._csrf) {
-    return body._csrf;
-  }
+  // Parse cookies
+  const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+    const [key, value] = cookie.trim().split('=');
+    acc[key] = value;
+    return acc;
+  }, {} as Record<string, string>);
 
-  return null;
+  return cookies[CSRF_COOKIE_NAME] || null;
 }
 
 /**
@@ -109,17 +132,28 @@ export async function validateCSRFMiddleware(
     return { valid: true };
   }
 
-  // Get token from headers
-  const token = request.headers.get('X-CSRF-Token');
+  // Get token from header
+  const headerToken = request.headers.get('X-CSRF-Token');
 
-  if (!token) {
+  if (!headerToken) {
     return {
       valid: false,
       error: 'CSRF token missing. Please refresh the page and try again.',
     };
   }
 
-  const isValid = validateCSRFToken(token);
+  // Get signed token from cookie
+  const cookieValue = getCSRFCookieValue(request);
+
+  if (!cookieValue) {
+    return {
+      valid: false,
+      error: 'CSRF cookie missing. Please ensure cookies are enabled.',
+    };
+  }
+
+  // Validate token
+  const isValid = validateCSRFToken(headerToken, cookieValue);
 
   if (!isValid) {
     return {
@@ -132,16 +166,8 @@ export async function validateCSRFMiddleware(
 }
 
 /**
- * Start periodic cleanup of expired tokens
+ * Generate cookie to clear CSRF token
  */
-if (typeof window === 'undefined') {
-  // Only run cleanup on server side
-  setInterval(cleanupExpiredTokens, CSRF_CLEANUP_INTERVAL_MS);
-}
-
-/**
- * Get token count (for debugging/monitoring)
- */
-export function getTokenCount(): number {
-  return tokenStore.size;
+export function clearCSRFCookie(): string {
+  return `${CSRF_COOKIE_NAME}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0`;
 }

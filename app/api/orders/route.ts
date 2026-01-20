@@ -132,6 +132,24 @@ export async function POST(request: NextRequest) {
 
     const validatedData = validationResult.data;
 
+    // Calculate pizza count from order items BEFORE creating customer
+    // We need to fetch product categories to count pizzas
+    const Product = (await import('@/models/Product')).default;
+    const productIds = validatedData.items.map((item: any) => item.product);
+    const productCategories = await Product.find({
+      _id: { $in: productIds }
+    }).select('_id category').lean().exec();
+    const categoryMap = new Map(productCategories.map((p: any) => [p._id.toString(), p.category]));
+
+    // Calculate pizza count for loyalty tracking
+    let orderPizzaCount = 0;
+    for (const item of validatedData.items) {
+      const category = categoryMap.get(item.product.toString());
+      if (category === 'pizza') {
+        orderPizzaCount += item.quantity;
+      }
+    }
+
     // Find or create customer
     let customer = await Customer.findOne({ phone: validatedData.phone });
 
@@ -144,12 +162,15 @@ export async function POST(request: NextRequest) {
         address: validatedData.deliveryAddress || {},
         totalOrders: 1,
         totalSpent: validatedData.total,
+        totalPizzas: orderPizzaCount,
+        loyaltyPizzasRedeemed: 0,
         lastOrderDate: new Date(),
       });
     } else {
       // Update existing customer stats
       customer.totalOrders += 1;
       customer.totalSpent += validatedData.total;
+      customer.totalPizzas = (customer.totalPizzas || 0) + orderPizzaCount;
       customer.lastOrderDate = new Date();
 
       // Update customer info if provided and different
@@ -217,37 +238,17 @@ export async function POST(request: NextRequest) {
           throw new Error('Time slot not found');
         }
 
-        // PERFORMANCE FIX: Use single query with $in instead of loop
-        const Product = (await import('@/models/Product')).default;
-        const productIds = validatedData.items.map((item: any) => item.product);
-
-        // Fetch all products in ONE query instead of N queries
-        const products = await Product.find({
-          _id: { $in: productIds }
-        }).select('_id category').lean().exec();
-
-        // Create a Map for O(1) lookups
-        const productMap = new Map(products.map((p: any) => [p._id.toString(), p.category]));
-
-        // Calculate pizza count
-        let actualPizzaCount = 0;
-        for (const item of validatedData.items) {
-          const category = productMap.get(item.product.toString());
-          if (category === 'pizza') {
-            actualPizzaCount += item.quantity;
-          }
-        }
-
+        // Reuse orderPizzaCount calculated earlier (no need to re-fetch products)
         // Check if slot can accept the order (atomically)
-        if (!timeSlot.canAcceptOrder(actualPizzaCount)) {
+        if (!timeSlot.canAcceptOrder(orderPizzaCount)) {
           throw new Error(
-            `Time slot is full or cannot accept ${actualPizzaCount} pizza(s). ` +
+            `Time slot is full or cannot accept ${orderPizzaCount} pizza(s). ` +
             `Current: ${timeSlot.pizzaCount}/${timeSlot.capacity} pizzas.`
           );
         }
 
         // Add order with accurate pizza count
-        await timeSlot.addOrder(order._id, actualPizzaCount);
+        await timeSlot.addOrder(order._id, orderPizzaCount);
       }
 
       // Commit transaction - all or nothing

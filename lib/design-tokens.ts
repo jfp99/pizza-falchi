@@ -192,11 +192,17 @@ export const shadows = {
   '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
   inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
 
-  // Hover shadows (more pronounced)
-  hoverBase: '0 4px 8px 0 rgb(0 0 0 / 0.12)',
-  hoverMd: '0 8px 16px -2px rgb(0 0 0 / 0.15)',
-  hoverLg: '0 16px 32px -4px rgb(0 0 0 / 0.18)',
-  hoverXl: '0 24px 48px -8px rgb(0 0 0 / 0.22)',
+  // NEW: Warm shadows (for elegant Italian aesthetic)
+  soft: {
+    sm: '0 1px 2px 0 rgba(28, 20, 16, 0.04)',
+    base: '0 2px 8px -2px rgba(28, 20, 16, 0.08)',
+    md: '0 4px 12px -4px rgba(28, 20, 16, 0.10)',
+    lg: '0 8px 24px -6px rgba(28, 20, 16, 0.12)',
+    xl: '0 16px 40px -8px rgba(28, 20, 16, 0.15)',
+  },
+
+  // Card hover shadow (standardized)
+  cardHover: '0 12px 32px -8px rgba(28, 20, 16, 0.16)',
 } as const;
 
 // ============================================================================
@@ -220,13 +226,13 @@ export const borderRadius = {
 // ============================================================================
 
 export const transitions = {
-  // Duration
+  // Duration - REFINED: Faster, more professional
   duration: {
     instant: '100ms',
-    fast: '150ms',
-    base: '300ms',
-    slow: '500ms',
-    slower: '700ms',
+    fast: '150ms',     // Micro-interactions
+    base: '200ms',     // Standard hover (CHANGED from 300ms)
+    slow: '300ms',     // Complex animations (CHANGED from 500ms)
+    slower: '400ms',   // Page transitions (CHANGED from 700ms)
   },
 
   // Easing functions
@@ -236,13 +242,41 @@ export const transitions = {
     easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
     easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
     sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
-    spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    // REMOVED: spring - too playful
   },
 
-  // Common combinations
-  default: '300ms cubic-bezier(0.4, 0, 0.2, 1)',
-  smooth: '500ms cubic-bezier(0.4, 0, 0.2, 1)',
-  bounce: '500ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+  // Common combinations - REFINED
+  default: '200ms cubic-bezier(0.4, 0, 0.2, 1)',
+  smooth: '300ms cubic-bezier(0.4, 0, 0.2, 1)',
+  // REMOVED: bounce - too playful
+} as const;
+
+// ============================================================================
+// INTERACTIONS (NEW - Standardized hover/active states)
+// ============================================================================
+
+export const interactions = {
+  // Standardized hover scales - 3 tiers ONLY
+  hover: {
+    scale: {
+      card: 1.02,      // Cards, list items
+      button: 1.03,    // Buttons, CTAs
+      icon: 1.05,      // Icon buttons (reduced from 1.10)
+    },
+    lift: {
+      card: '-4px',    // Standard card lift
+    },
+  },
+
+  // Active/tap state
+  active: {
+    scale: 0.98,
+  },
+
+  // Disabled state
+  disabled: {
+    opacity: 0.5,
+  },
 } as const;
 
 // Framer Motion variants
@@ -466,6 +500,7 @@ export type SpacingToken = typeof spacing;
 export type ShadowToken = typeof shadows;
 export type BorderRadiusToken = typeof borderRadius;
 export type TransitionToken = typeof transitions;
+export type InteractionToken = typeof interactions;
 export type BreakpointToken = typeof breakpoints;
 export type ZIndexToken = typeof zIndex;
 export type ComponentToken = typeof components;

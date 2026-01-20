@@ -35,11 +35,11 @@ export const easing = {
 
 export const transitionPresets = {
   fast: { duration: 0.15, ease: easing.easeOut },
-  base: { duration: 0.3, ease: easing.easeInOut },
-  slow: { duration: 0.5, ease: easing.smooth },
-  spring: { type: 'spring' as const, stiffness: 300, damping: 25 },
-  springBouncy: { type: 'spring' as const, stiffness: 400, damping: 10 },
-  springSmooth: { type: 'spring' as const, stiffness: 200, damping: 30 },
+  base: { duration: 0.2, ease: easing.easeInOut },  // REFINED: 0.2s instead of 0.3s
+  slow: { duration: 0.3, ease: easing.smooth },     // REFINED: 0.3s instead of 0.5s
+  spring: { type: 'spring' as const, stiffness: 300, damping: 30 }, // Increased damping
+  // REMOVED: springBouncy - Too playful for premium brand
+  springSmooth: { type: 'spring' as const, stiffness: 200, damping: 35 }, // Calmer
 } as const;
 
 // ============================================================================
@@ -131,7 +131,7 @@ export const scaleInBounce: Variants = {
   animate: {
     opacity: 1,
     scale: 1,
-    transition: transitionPresets.springBouncy,
+    transition: transitionPresets.spring,
   },
   exit: {
     opacity: 0,
@@ -283,50 +283,70 @@ export const staggerItemScale: Variants = {
 };
 
 // ============================================================================
-// HOVER EFFECTS
+// HOVER EFFECTS - STANDARDIZED (3 tiers only)
 // ============================================================================
 
-export const hoverLift: Variants = {
-  rest: { y: 0, scale: 1 },
+/**
+ * Card hover - For product cards, list items, clickable containers
+ * Scale: 1.02, Lift: -4px
+ */
+export const hoverCard: Variants = {
+  rest: {
+    y: 0,
+    scale: 1,
+    boxShadow: '0 4px 12px -4px rgba(28, 20, 16, 0.10)',
+  },
   hover: {
     y: -4,
     scale: 1.02,
-    transition: { ...transitionPresets.fast, ease: easing.easeOut },
+    boxShadow: '0 12px 32px -8px rgba(28, 20, 16, 0.16)',
+    transition: { duration: 0.2, ease: easing.easeOut },
   },
   tap: {
-    y: 0,
     scale: 0.98,
     transition: { duration: 0.1 },
   },
 };
 
-export const hoverScale: Variants = {
+/**
+ * Button hover - For CTAs and interactive buttons
+ * Scale: 1.03
+ */
+export const hoverButton: Variants = {
   rest: { scale: 1 },
   hover: {
-    scale: 1.05,
-    transition: { ...transitionPresets.fast, ease: easing.easeOut },
+    scale: 1.03,
+    transition: { duration: 0.15, ease: easing.easeOut },
   },
   tap: {
-    scale: 0.95,
+    scale: 0.98,
     transition: { duration: 0.1 },
   },
 };
 
-export const hoverGlow: Variants = {
-  rest: { boxShadow: '0 0 0 0 rgba(255, 175, 80, 0)' },
+/**
+ * Icon hover - For icon buttons and small interactive elements
+ * Scale: 1.05 (reduced from 1.10)
+ */
+export const hoverIcon: Variants = {
+  rest: { scale: 1 },
   hover: {
-    boxShadow: '0 0 20px 4px rgba(255, 175, 80, 0.3)',
-    transition: transitionPresets.base,
+    scale: 1.05,
+    transition: { duration: 0.15, ease: easing.easeOut },
+  },
+  tap: {
+    scale: 0.98,
+    transition: { duration: 0.1 },
   },
 };
 
-export const hoverRotate: Variants = {
-  rest: { rotate: 0 },
-  hover: {
-    rotate: 5,
-    transition: transitionPresets.spring,
-  },
-};
+// DEPRECATED ALIASES - For backward compatibility
+/** @deprecated Use hoverCard instead */
+export const hoverLift = hoverCard;
+/** @deprecated Use hoverIcon instead */
+export const hoverScale = hoverIcon;
+// REMOVED: hoverGlow - Too flashy for premium brand
+// REMOVED: hoverRotate - Too playful for premium brand
 
 // ============================================================================
 // BUTTON ANIMATIONS
@@ -335,7 +355,7 @@ export const hoverRotate: Variants = {
 export const buttonPress: Variants = {
   rest: { scale: 1 },
   hover: {
-    scale: 1.02,
+    scale: 1.03,  // STANDARDIZED
     transition: transitionPresets.fast,
   },
   tap: {
@@ -344,33 +364,24 @@ export const buttonPress: Variants = {
   },
 };
 
-export const buttonPulse: Variants = {
-  rest: { scale: 1 },
-  animate: {
-    scale: [1, 1.05, 1],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: 'easeInOut',
-    },
-  },
-};
+// REMOVED: buttonPulse - Too playful for premium brand
 
 // ============================================================================
 // CARD ANIMATIONS
 // ============================================================================
 
+/** @deprecated Use hoverCard instead - standardized hover system */
 export const cardHover: Variants = {
   rest: {
     y: 0,
     scale: 1,
-    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+    boxShadow: '0 4px 12px -4px rgba(28, 20, 16, 0.10)',
   },
   hover: {
-    y: -8,
+    y: -4,      // REFINED: -4px instead of -8px
     scale: 1.02,
-    boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.15)',
-    transition: { ...transitionPresets.base, ease: easing.easeOut },
+    boxShadow: '0 12px 32px -8px rgba(28, 20, 16, 0.16)',
+    transition: { duration: 0.2, ease: easing.easeOut },
   },
 };
 
@@ -475,7 +486,7 @@ export const successCheck: Variants = {
     scale: 1,
     rotate: 0,
     opacity: 1,
-    transition: transitionPresets.springBouncy,
+    transition: transitionPresets.spring,
   },
 };
 
@@ -632,31 +643,13 @@ export const toastSlideIn: Variants = {
   },
 };
 
-export const badgePulse: Variants = {
-  animate: {
-    scale: [1, 1.2, 1],
-    transition: {
-      duration: 1.5,
-      repeat: Infinity,
-      ease: 'easeInOut',
-    },
-  },
-};
+// REMOVED: badgePulse - Too playful, use CSS animate-badge-pulse instead (opacity only)
 
 // ============================================================================
 // SPECIAL EFFECTS
 // ============================================================================
 
-export const floatAnimation: Variants = {
-  animate: {
-    y: [-10, 10, -10],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: 'easeInOut',
-    },
-  },
-};
+// REMOVED: floatAnimation - Too playful for premium brand
 
 export const rippleEffect: Variants = {
   initial: { scale: 0, opacity: 0.5 },

@@ -8,6 +8,7 @@ import {
   Coffee, Cake, Utensils
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface Product {
   _id: string;
@@ -35,6 +36,10 @@ export default function AdminProducts() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // PERFORMANCE: Debounce search term to reduce filter re-runs
+  // Waits 300ms after user stops typing before filtering
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -49,9 +54,11 @@ export default function AdminProducts() {
     fetchProducts();
   }, [session, status, router]);
 
+  // PERFORMANCE: Filter only when debounced search term changes
+  // This prevents filtering on every keystroke (was causing performance issues)
   useEffect(() => {
     filterProducts();
-  }, [products, searchTerm, selectedCategory]);
+  }, [products, debouncedSearchTerm, selectedCategory]);
 
   const fetchProducts = async () => {
     try {
@@ -68,10 +75,12 @@ export default function AdminProducts() {
   const filterProducts = () => {
     let filtered = products;
 
-    if (searchTerm) {
+    // PERFORMANCE: Use debouncedSearchTerm instead of searchTerm
+    // This ensures filtering only happens after user stops typing
+    if (debouncedSearchTerm) {
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        product.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
       );
     }
 

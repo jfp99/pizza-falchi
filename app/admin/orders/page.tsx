@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import { Order } from '@/types';
 import { Package, Truck, Clock, Phone, Mail, MapPin, CheckCircle, XCircle, ChefHat, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useCSRF } from '@/hooks/useCSRF';
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const { getHeaders: getCSRFHeaders } = useCSRF();
 
   useEffect(() => {
     fetchOrders();
@@ -37,15 +39,21 @@ export default function AdminOrders() {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          ...getCSRFHeaders(),
         },
         body: JSON.stringify({ status: newStatus }),
       });
 
       if (response.ok) {
+        toast.success(`Statut mis à jour: ${newStatus}`);
         fetchOrders(); // Refresh orders
+      } else {
+        const data = await response.json();
+        toast.error(data.error || 'Erreur lors de la mise à jour');
       }
     } catch (error) {
       console.error('Error updating order:', error);
+      toast.error('Erreur lors de la mise à jour du statut');
     }
   };
 
@@ -55,6 +63,9 @@ export default function AdminOrders() {
 
       const response = await fetch(`/api/orders/${orderId}/notify`, {
         method: 'POST',
+        headers: {
+          ...getCSRFHeaders(),
+        },
       });
 
       const data = await response.json();

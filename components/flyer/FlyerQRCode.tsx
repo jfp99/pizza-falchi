@@ -21,12 +21,23 @@ export default function FlyerQRCode({
     <div className={className}>
       <img
         src="/images/qr-code-google-maps.png"
-        alt="QR Code vers Google Maps"
+        alt="QR Code vers Google Maps - Scannez pour l'itinéraire"
         width={size}
         height={size}
+        // Critical for export - forces proper rendering
+        data-no-compress="true"
+        loading="eager"
+        decoding="sync"
+        crossOrigin="anonymous"
         style={{
           display: 'block',
-          imageRendering: 'pixelated',
+          // crisp-edges is better for export than pixelated
+          imageRendering: 'crisp-edges',
+          width: `${size}px`,
+          height: `${size}px`,
+          // Prevent any scaling artifacts
+          WebkitTransform: 'translateZ(0)',
+          transform: 'translateZ(0)',
         }}
       />
     </div>

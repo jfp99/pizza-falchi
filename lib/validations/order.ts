@@ -18,11 +18,25 @@ export const deliveryAddressSchema = z.object({
     .string()
     .regex(/^\d{5}$/, 'Code postal invalide (format: 12345)')
     .trim(),
+  country: z
+    .string()
+    .max(100, 'Nom de pays trop long')
+    .optional(),
   additionalInfo: z
     .string()
     .max(500, 'Informations additionnelles trop longues')
     .optional(),
 });
+
+/**
+ * Validation schema for pizza customizations
+ */
+export const customizationsSchema = z.object({
+  size: z.enum(['medium', 'large']).optional(),
+  extras: z.array(z.string().max(100)).max(20).optional(),
+  cut: z.boolean().optional(),
+  notes: z.string().max(500).optional(),
+}).optional();
 
 /**
  * Validation schema for order item
@@ -45,6 +59,7 @@ export const orderItemSchema = z.object({
     .number()
     .positive('Le total doit être positif')
     .max(50000, 'Total maximum dépassé'),
+  customizations: customizationsSchema,
 });
 
 /**
@@ -69,9 +84,11 @@ export const orderSchema = z
       .or(z.literal('')),
     phone: z
       .string()
+      .min(10, 'Numéro de téléphone trop court (minimum 10 chiffres)')
+      .max(20, 'Numéro de téléphone trop long')
       .regex(
-        /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
-        'Numéro de téléphone français invalide (ex: 06 12 34 56 78)'
+        /^[+]?[\d\s.-]{10,20}$/,
+        'Format de téléphone invalide (ex: 06 12 34 56 78 ou +33 6 12 34 56 78)'
       )
       .trim(),
     deliveryType: z.enum(['delivery', 'pickup']),

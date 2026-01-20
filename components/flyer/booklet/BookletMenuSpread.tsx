@@ -50,7 +50,7 @@ function MenuItem({ item, showDualBase = false }: { item: FlyerProduct; showDual
           {showDualBase && isDualBase && (
             <span
               className="text-[8px] font-bold px-1 rounded"
-              style={{ backgroundColor: 'rgba(184, 134, 11, 0.2)', color: COLORS.text }}
+              style={{ backgroundColor: 'rgba(184, 134, 11, 0.2)', color: COLORS.text, paddingTop: '2px', paddingBottom: '3px' }}
             >
               T/C
             </span>
@@ -91,27 +91,19 @@ function DrinkItem({ name, price }: { name: string; price: number }) {
   );
 }
 
-// Best-seller card - Compact
+// Best-seller card - Simplifié (sans étoile positionnée en absolute)
 function BestSellerCard({ item }: { item: FlyerProduct }) {
   const isDualBase = item.hasDualBase || DUAL_BASE_PIZZAS.includes(item.name);
 
   return (
     <div
-      className="p-2 rounded-lg relative"
+      className="p-2 rounded-lg"
       style={{
         background: `linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, rgba(218, 165, 32, 0.12) 100%)`,
         border: `1px solid ${COLORS.gold}`,
       }}
     >
-      {/* Star icon */}
-      <div
-        className="absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center rounded-full"
-        style={{ background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldLight})` }}
-      >
-        <span className="text-[9px] text-white">★</span>
-      </div>
-
-      <div className="flex items-start justify-between pr-2">
+      <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-1">
             <span
@@ -123,7 +115,7 @@ function BestSellerCard({ item }: { item: FlyerProduct }) {
             {isDualBase && (
               <span
                 className="text-[8px] font-bold px-1 rounded"
-                style={{ backgroundColor: 'rgba(184, 134, 11, 0.25)', color: COLORS.text }}
+                style={{ backgroundColor: 'rgba(184, 134, 11, 0.25)', color: COLORS.text, paddingTop: '2px', paddingBottom: '3px' }}
               >
                 T/C
               </span>
@@ -250,10 +242,12 @@ export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSp
 
             {/* Fait Maison badge */}
             <div
-              className="ml-auto px-2 py-0.5 rounded-full"
+              className="ml-auto px-2 rounded-full"
               style={{
                 background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldLight})`,
                 boxShadow: '0 2px 6px rgba(184, 134, 11, 0.3)',
+                paddingTop: '3px',
+                paddingBottom: '5px',
               }}
             >
               <span className="text-[10px] font-black tracking-wide text-white uppercase">
@@ -266,10 +260,10 @@ export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSp
           <div className="mb-9">
             <div className="flex items-center gap-1.5 mb-2">
               <div
-                className="px-1.5 py-0.5 rounded"
-                style={{ background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldLight})` }}
+                className="px-1.5 rounded"
+                style={{ background: `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldLight})`, paddingTop: '3px', paddingBottom: '5px' }}
               >
-                <span className="text-[12px] font-black text-white tracking-wide">★ NOS BEST-SELLERS</span>
+                <span className="text-[12px] font-black text-white tracking-wide">NOS BEST-SELLERS</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-1">
@@ -289,10 +283,10 @@ export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSp
             </div>
           </div>
 
-          {/* LEFT FOOTER - Legend + Supplement */}
+          {/* LEFT FOOTER - Legend (centered) */}
           <footer className="mt-auto pt-3 border-t-2" style={{ borderColor: 'rgba(184, 134, 11, 0.3)' }}>
-            <div className="flex items-center justify-between h-[52px]">
-              {/* Legend - Bigger */}
+            <div className="flex items-center justify-center h-[52px]">
+              {/* Legend - Centered */}
               <div className="flex items-center gap-6">
                 <span className="flex items-center gap-2">
                   <span className="font-bold text-[16px]" style={{ color: COLORS.green }}>V</span>
@@ -304,22 +298,12 @@ export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSp
                 </span>
                 <span className="flex items-center gap-2">
                   <span
-                    className="text-[10px] font-bold px-1.5 py-0.5 rounded"
-                    style={{ backgroundColor: 'rgba(184, 134, 11, 0.25)', color: COLORS.text }}
+                    className="text-[10px] font-bold px-1.5 rounded"
+                    style={{ backgroundColor: 'rgba(184, 134, 11, 0.25)', color: COLORS.text, paddingTop: '3px', paddingBottom: '5px' }}
                   >
                     T/C
                   </span>
                   <span className="text-[14px] font-medium" style={{ color: COLORS.text }}>Tomate ou Crème</span>
-                </span>
-              </div>
-
-              {/* Supplement */}
-              <div
-                className="px-4 py-2 rounded-lg"
-                style={{ backgroundColor: 'rgba(185, 28, 28, 0.08)', border: `1px solid ${COLORS.primary}` }}
-              >
-                <span className="text-[14px] font-bold" style={{ color: COLORS.primary }}>
-                  Ingrédient supplémentaire +1€
                 </span>
               </div>
             </div>
@@ -379,45 +363,82 @@ export default function BookletMenuSpread({ showFoldLine = true }: BookletMenuSp
           {/* Spacer */}
           <div className="flex-1" />
 
-          {/* RIGHT FOOTER - Pizza Sizes */}
+          {/* RIGHT FOOTER - Pizza Sizes + Supplement */}
           <footer className="mt-auto pt-3 border-t-2" style={{ borderColor: 'rgba(184, 134, 11, 0.3)' }}>
-            <div className="flex items-center justify-center gap-10 h-[52px]">
-              {/* Moyenne */}
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full border-3 flex items-center justify-center"
-                  style={{ borderColor: COLORS.primary, borderWidth: '3px' }}
-                >
-                  <span className="text-[12px] font-bold" style={{ color: COLORS.primary }}>M</span>
-                </div>
-                <div>
-                  <p className="text-[15px] font-bold" style={{ color: COLORS.text }}>
-                    {PIZZA_SIZES.moyenne.label}
-                  </p>
-                  <p className="text-[13px] font-medium" style={{ color: COLORS.textMuted }}>
-                    {PIZZA_SIZES.moyenne.size}
-                  </p>
-                </div>
+            <div className="flex items-center justify-between h-[52px] px-16">
+              {/* Supplement */}
+              <div
+                className="px-2 py-1 rounded-lg whitespace-nowrap"
+                style={{ backgroundColor: 'rgba(185, 28, 28, 0.08)', border: `1px solid ${COLORS.primary}` }}
+              >
+                <span className="text-[11px] font-bold" style={{ color: COLORS.primary }}>
+                  Ingrédient suppl. +1€
+                </span>
               </div>
 
-              {/* Grande */}
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-12 h-12 rounded-full border-3 flex items-center justify-center"
-                  style={{ borderColor: COLORS.gold, borderWidth: '3px' }}
-                >
-                  <span className="text-[13px] font-bold" style={{ color: COLORS.gold }}>G</span>
+              {/* Pizza Sizes Group - Closer together */}
+              <div className="flex items-center gap-4">
+                {/* Moyenne */}
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-7 h-7 rounded-full"
+                    style={{
+                      borderColor: COLORS.primary,
+                      borderWidth: '2px',
+                      borderStyle: 'solid',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      color: COLORS.primary,
+                      lineHeight: 1,
+                    }}>M</span>
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-bold leading-tight" style={{ color: COLORS.text }}>
+                      {PIZZA_SIZES.moyenne.label}
+                    </p>
+                    <p className="text-[10px] font-medium" style={{ color: COLORS.textMuted }}>
+                      {PIZZA_SIZES.moyenne.size}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[15px] font-bold" style={{ color: COLORS.text }}>
-                    {PIZZA_SIZES.grande.label}
-                  </p>
-                  <p className="text-[13px] font-medium" style={{ color: COLORS.textMuted }}>
-                    {PIZZA_SIZES.grande.size}
-                  </p>
-                  <p className="text-[14px] font-bold" style={{ color: COLORS.gold }}>
-                    +{PIZZA_SIZES.grande.supplement.toFixed(2)}€
-                  </p>
+
+                {/* Grande */}
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-9 h-9 rounded-full"
+                    style={{
+                      borderColor: COLORS.gold,
+                      borderWidth: '2px',
+                      borderStyle: 'solid',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span style={{
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      color: COLORS.gold,
+                      lineHeight: 1,
+                    }}>G</span>
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-bold leading-tight" style={{ color: COLORS.text }}>
+                      {PIZZA_SIZES.grande.label}
+                    </p>
+                    <p className="text-[10px] font-medium" style={{ color: COLORS.textMuted }}>
+                      {PIZZA_SIZES.grande.size}
+                    </p>
+                    <p className="text-[11px] font-bold" style={{ color: COLORS.gold }}>
+                      +{PIZZA_SIZES.grande.supplement.toFixed(2)}€
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

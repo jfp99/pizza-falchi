@@ -13,11 +13,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // S-tier compliant: 200ms transition duration
     const baseStyles = 'rounded-2xl font-bold transition-all duration-200 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red dark:focus-visible:ring-brand-gold focus-visible:ring-offset-2';
 
+    // REFINED: Solid colors, no gradients, standardized interactions
     const variants = {
-      primary: 'bg-gradient-to-r from-primary-red to-soft-red text-white hover:from-primary-red-dark hover:to-primary-red hover:shadow-xl active:scale-95',
-      secondary: 'border-2 border-charcoal dark:border-gray-300 bg-transparent hover:bg-charcoal dark:hover:bg-gray-100 hover:text-white dark:hover:text-charcoal text-charcoal dark:text-gray-100',
-      ghost: 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 hover:shadow-md',
-      outline: 'border-2 border-primary-red dark:border-primary-red-light text-primary-red dark:text-primary-red-light hover:bg-primary-red hover:text-white dark:hover:text-white hover:shadow-lg',
+      primary: 'bg-brand-red text-white shadow-soft-md hover:bg-brand-red-hover hover:shadow-soft-lg active:scale-98',
+      secondary: 'bg-brand-gold text-gray-900 shadow-soft-md hover:bg-brand-gold-hover hover:shadow-soft-lg active:scale-98',
+      ghost: 'bg-background-secondary dark:bg-surface text-text-primary dark:text-text-primary hover:bg-background-tertiary dark:hover:bg-surface-elevated',
+      outline: 'border-2 border-brand-red text-brand-red dark:text-brand-red bg-transparent hover:bg-brand-red hover:text-white active:scale-98',
     };
 
     const sizes = {

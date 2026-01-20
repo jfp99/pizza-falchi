@@ -29,6 +29,14 @@ const CustomerSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    totalPizzas: {
+      type: Number,
+      default: 0,
+    },
+    loyaltyPizzasRedeemed: {
+      type: Number,
+      default: 0,
+    },
     lastOrderDate: {
       type: Date,
     },

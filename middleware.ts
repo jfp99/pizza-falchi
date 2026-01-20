@@ -25,11 +25,11 @@ function addSecurityHeaders(response: NextResponse) {
   // Content Security Policy
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://tarteaucitron.io;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://tarteaucitron.io https://cdn.jsdelivr.net;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: https: blob:;
     font-src 'self' data:;
-    connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com;
+    connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://vitals.vercel-insights.com;
     frame-src 'self' https://www.google.com https://js.stripe.com;
     object-src 'none';
     base-uri 'self';

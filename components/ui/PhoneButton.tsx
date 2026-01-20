@@ -31,14 +31,14 @@ export default function PhoneButton({
     interactionAnalytics.phoneCall(location, phoneNumber);
   };
 
-  const baseStyles = 'inline-flex items-center justify-center gap-2 font-bold transition-all duration-300 rounded-xl';
+  const baseStyles = 'inline-flex items-center justify-center gap-2 font-bold transition-all duration-200 rounded-xl';
 
   const variantStyles = {
     primary:
-      'bg-gradient-to-r from-primary-red to-primary-yellow text-white hover:from-primary-yellow hover:to-primary-red hover:scale-105 shadow-lg hover:shadow-2xl px-6 py-3',
+      'bg-brand-red text-white hover:bg-brand-red-hover shadow-soft-md hover:shadow-soft-lg active:scale-98 px-6 py-3',
     secondary:
-      'bg-white text-primary-red border-2 border-primary-red hover:bg-primary-red hover:text-white hover:scale-105 px-6 py-3',
-    link: 'text-white hover:text-primary-yellow underline decoration-2 underline-offset-4',
+      'bg-surface dark:bg-surface text-brand-red border-2 border-brand-red hover:bg-brand-red hover:text-white active:scale-98 px-6 py-3',
+    link: 'text-white hover:text-brand-gold underline decoration-2 underline-offset-4',
   };
 
   const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${className}`;

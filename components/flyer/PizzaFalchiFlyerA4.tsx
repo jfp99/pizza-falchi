@@ -94,11 +94,15 @@ const PizzaFalchiFlyerA4 = forwardRef<HTMLDivElement, PizzaFalchiFlyerA4Props>(
           </div>
         )}
 
-        {/* Corner trim marks (for print reference) */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
-        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
+        {/* Corner trim marks (for preview only - hidden in export) */}
+        {showFoldLine && (
+          <>
+            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r opacity-20" style={{ borderColor: COLORS.gold }} aria-hidden="true" />
+          </>
+        )}
       </article>
     );
   }

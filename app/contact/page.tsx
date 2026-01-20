@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Calendar, Instagram, Facebook, Twitter, X, ExternalLink, Pizza, Gift } from 'lucide-react';
 import { CheckIcon, PizzaSliceIcon } from '@/components/icons/CategoryIcons';
 import CompactLoyaltyBanner from '@/components/promotions/CompactLoyaltyBanner';
+import HeroBadge from '@/components/ui/HeroBadge';
 
 export default function Contact() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
@@ -29,37 +30,13 @@ export default function Contact() {
         </div>
 
         {/* Badge in top-right corner - Clickable to open map */}
-        <button
-          onClick={() => setIsMapModalOpen(true)}
-          className="absolute top-8 right-8 z-20 cursor-pointer"
-        >
-          <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-border dark:border-border transition-all duration-300 overflow-hidden group hover:scale-105">
-            <div className="relative z-10 flex items-center gap-3">
-              <div className="relative w-12 h-12 flex-shrink-0">
-                <Image
-                  src="/images/branding/logo-badge.png"
-                  alt="Pizza Falchi Logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold text-primary-red uppercase tracking-wider group-hover:text-white transition-colors duration-300 flex items-center gap-1">
-                  Contact
-                  <ExternalLink className="w-3 h-3" />
-                </span>
-                <h1 className="text-lg font-black text-charcoal dark:text-gray-100 leading-tight group-hover:text-white transition-colors duration-300">
-                  PIZZA FALCHI
-                </h1>
-                <span className="text-xs text-text-secondary dark:text-text-secondary group-hover:text-white/90 transition-colors duration-300 flex items-center gap-1 mt-1">
-                  <MapPin className="w-3 h-3" />
-                  Voir l'itinéraire
-                </span>
-              </div>
-            </div>
-            <span className="absolute inset-0 bg-gradient-to-r from-brand-red to-brand-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-          </div>
-        </button>
+        <div className="absolute top-4 sm:top-8 right-4 sm:right-8 z-20">
+          <HeroBadge
+            categoryBadge="Contact"
+            size="compact"
+            onClick={() => setIsMapModalOpen(true)}
+          />
+        </div>
       </section>
 
       {/* Map Modal */}

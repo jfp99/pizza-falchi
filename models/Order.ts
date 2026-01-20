@@ -130,12 +130,14 @@ const OrderSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Add indexes for frequently queried fields
+// PERFORMANCE FIX: Optimized indexes for common query patterns
 OrderSchema.index({ status: 1, createdAt: -1 }); // For filtering orders by status and sorting by date
 OrderSchema.index({ phone: 1 }); // For customer lookup by phone
 OrderSchema.index({ customer: 1, createdAt: -1 }); // For customer order history
-OrderSchema.index({ orderId: 1 }); // For quick order ID lookup
+// Note: orderId index is automatically created by unique: true constraint on the field
 OrderSchema.index({ createdAt: -1 }); // For recent orders (already have timestamps, but explicit)
 OrderSchema.index({ timeSlot: 1 }); // For time slot management queries
+OrderSchema.index({ timeSlot: 1, status: 1 }); // ADDED: For slot history filtering by status
 OrderSchema.index({ scheduledTime: 1 }); // For querying orders by scheduled time
 OrderSchema.index({ deliveryStatus: 1 }); // For delivery tracking queries
 OrderSchema.index({ kdsStatus: 1 }); // For kitchen display system queries

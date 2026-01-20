@@ -2,6 +2,8 @@
  * Flyer Export Utilities - Pizza Falchi
  * PDF and PNG export functionality using html2canvas and jspdf
  * Supports both A5 portrait and A4 landscape formats
+ *
+ * IMPORTANT: Uses proper DPI calculations and image preloading for print quality
  */
 
 import html2canvas from 'html2canvas';
@@ -19,6 +21,12 @@ const A4_HEIGHT_MM = 210;
 const A4_WIDTH_PX = 1118; // at 96 DPI
 const A4_HEIGHT_PX = 794; // at 96 DPI
 
+// DPI scale factors for true print quality
+// 96 DPI is standard screen, 300 DPI is standard print
+// Scale = Target DPI / Base DPI = 300/96 ≈ 3.125
+const SCALE_300_DPI = 3.125;
+const SCALE_HIGH_QUALITY = 4; // For extra crisp exports
+
 export interface ExportOptions {
   format: 'pdf' | 'png';
   quality: 'print' | 'web';
@@ -29,6 +37,88 @@ export interface ExportResult {
   success: boolean;
   filename?: string;
   error?: string;
+}
+
+/**
+ * Pre-load all images in a DOM element to ensure they're ready for export
+ * This prevents blank/missing images in the exported PDF/PNG
+ */
+async function preloadFlyerImages(element: HTMLElement): Promise<void> {
+  // Get all img elements
+  const imageElements = element.querySelectorAll('img');
+  const backgroundImages = getAllBackgroundImages(element);
+
+  const allImageSrcs = [
+    ...Array.from(imageElements).map(img => img.src),
+    ...backgroundImages,
+  ];
+
+  const imagePromises = allImageSrcs.map(src => {
+    return new Promise<void>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve();
+      img.onerror = () => resolve(); // Don't fail, just continue
+      img.crossOrigin = 'anonymous';
+      img.src = src;
+    });
+  });
+
+  // Wait for all images with timeout
+  await Promise.race([
+    Promise.all(imagePromises),
+    new Promise<void>((resolve) => setTimeout(resolve, 10000)), // 10s timeout
+  ]);
+
+  // Additional delay to ensure rendering is complete
+  await new Promise(resolve => setTimeout(resolve, 300));
+}
+
+/**
+ * Extract all background image URLs from computed styles
+ */
+function getAllBackgroundImages(element: HTMLElement): string[] {
+  const images: string[] = [];
+  const allElements = element.querySelectorAll('*');
+
+  allElements.forEach((el) => {
+    const style = window.getComputedStyle(el);
+    const bgImage = style.backgroundImage;
+    if (bgImage && bgImage !== 'none') {
+      const matches = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+      if (matches?.[1]) {
+        images.push(matches[1]);
+      }
+    }
+  });
+
+  return images;
+}
+
+/**
+ * Apply font smoothing and text rendering optimizations to cloned document
+ * This ensures crisp text in the exported canvas
+ */
+function applyFontSmoothingToClone(clonedDocument: Document): void {
+  const style = clonedDocument.createElement('style');
+  style.innerHTML = `
+    * {
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      text-rendering: geometricPrecision !important;
+      font-feature-settings: "kern" 1 !important;
+    }
+    img {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+  `;
+  clonedDocument.head.appendChild(style);
+
+  // Ensure all images have crossOrigin set
+  const images = clonedDocument.querySelectorAll('img');
+  images.forEach((img) => {
+    img.crossOrigin = 'anonymous';
+  });
 }
 
 /**
@@ -176,12 +266,12 @@ export async function exportFlyer(
 }
 
 // ============================================
-// A4 LANDSCAPE EXPORT FUNCTIONS
+// A4 LANDSCAPE EXPORT FUNCTIONS (HIGH QUALITY)
 // ============================================
 
 /**
  * Export A4 landscape flyer to PDF format
- * Optimized for print quality (300 DPI)
+ * Optimized for print quality with image preloading and font smoothing
  */
 export async function exportFlyerA4ToPDF(
   element: HTMLElement,
@@ -193,8 +283,11 @@ export async function exportFlyerA4ToPDF(
   } = options;
 
   try {
-    // Scale factor for quality (4 = ~400 DPI for high quality print)
-    const scale = quality === 'print' ? 4 : 2;
+    // Pre-load all images before capture
+    await preloadFlyerImages(element);
+
+    // Scale factor: 4x gives ~384 DPI (high quality print)
+    const scale = quality === 'print' ? SCALE_HIGH_QUALITY : 2;
 
     const canvas = await html2canvas(element, {
       scale,
@@ -204,8 +297,12 @@ export async function exportFlyerA4ToPDF(
       logging: false,
       windowWidth: A4_WIDTH_PX,
       windowHeight: A4_HEIGHT_PX,
-      imageTimeout: 15000, // Wait for images to load
+      imageTimeout: 20000, // Extended timeout for images
       removeContainer: true,
+      // Critical: Apply font smoothing to the cloned document
+      onclone: (clonedDoc) => {
+        applyFontSmoothingToClone(clonedDoc);
+      },
     });
 
     const pdf = new jsPDF({
@@ -232,7 +329,7 @@ export async function exportFlyerA4ToPDF(
 
 /**
  * Export A4 landscape flyer to PNG format
- * High resolution for web and social media
+ * High resolution for web and social media with image preloading
  */
 export async function exportFlyerA4ToPNG(
   element: HTMLElement,
@@ -244,8 +341,11 @@ export async function exportFlyerA4ToPNG(
   } = options;
 
   try {
-    // Scale factor for quality (4 = ~400 DPI for high quality)
-    const scale = quality === 'print' ? 4 : 2;
+    // Pre-load all images before capture
+    await preloadFlyerImages(element);
+
+    // Scale factor: 4x gives ~384 DPI (high quality)
+    const scale = quality === 'print' ? SCALE_HIGH_QUALITY : 2;
 
     const canvas = await html2canvas(element, {
       scale,
@@ -255,8 +355,12 @@ export async function exportFlyerA4ToPNG(
       logging: false,
       windowWidth: A4_WIDTH_PX,
       windowHeight: A4_HEIGHT_PX,
-      imageTimeout: 15000, // Wait for images to load
+      imageTimeout: 20000, // Extended timeout for images
       removeContainer: true,
+      // Critical: Apply font smoothing to the cloned document
+      onclone: (clonedDoc) => {
+        applyFontSmoothingToClone(clonedDoc);
+      },
     });
 
     // Convert canvas to blob for reliable download

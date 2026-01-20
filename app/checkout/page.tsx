@@ -14,7 +14,10 @@ import { checkoutAnalytics } from '@/lib/analytics';
 import { useCSRF } from '@/hooks/useCSRF';
 import type { TimeSlot } from '@/types';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+// Only load Stripe if a valid publishable key is configured
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const isStripeConfigured = stripeKey && !stripeKey.includes('your_stripe') && stripeKey.startsWith('pk_');
+const stripePromise = isStripeConfigured ? loadStripe(stripeKey) : null;
 
 export default function Checkout() {
   const router = useRouter();
@@ -50,6 +53,14 @@ export default function Checkout() {
       checkoutAnalytics.beginCheckout(getTotal(), items.length);
     }
   }, [items, router]);
+
+  // Calculate total number of pizzas in the cart
+  const totalPizzas = items.reduce((total, item) => {
+    if (item.product.category === 'pizza') {
+      return total + item.quantity;
+    }
+    return total;
+  }, 0);
 
   const subtotal = getTotal();
   const total = subtotal;
@@ -183,7 +194,9 @@ export default function Checkout() {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la création de la commande');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Order creation failed:', { status: response.status, errorData });
+        throw new Error(errorData.message || errorData.error || 'Erreur lors de la création de la commande');
       }
 
       const order = await response.json();
@@ -231,7 +244,7 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-warm-cream via-white to-primary-yellow/5 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-12 transition-colors duration-300">
+    <div className="min-h-screen bg-background dark:bg-background py-12 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -242,8 +255,8 @@ export default function Checkout() {
             <ArrowLeft className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" />
             Retour au panier
           </Link>
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
-            Finaliser la <span className="bg-gradient-to-r from-primary-red to-soft-red bg-clip-text text-transparent">Commande</span>
+          <h1 className="text-4xl md:text-5xl font-black text-text-primary dark:text-text-primary mb-2 transition-colors duration-200">
+            Finaliser la <span className="text-brand-red">Commande</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 transition-colors duration-300">
             Plus qu'une étape avant de déguster vos délicieuses pizzas !
@@ -267,8 +280,8 @@ export default function Checkout() {
                   onClick={() => setDeliveryType('pickup')}
                   className={`relative p-6 rounded-2xl border-2 transition-all duration-200 ${
                     deliveryType === 'pickup'
-                      ? 'border-primary-red bg-gradient-to-br from-primary-red/5 to-primary-red/10 shadow-md'
-                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                      ? 'border-brand-red bg-brand-red/10 shadow-soft-md'
+                      : 'border-border dark:border-border hover:border-brand-red/50 hover:shadow-soft-sm'
                   }`}
                 >
                   {deliveryType === 'pickup' && (
@@ -305,6 +318,7 @@ export default function Checkout() {
               <TimeSlotSelector
                 onSlotSelect={setSelectedSlot}
                 selectedSlot={selectedSlot}
+                pizzaCount={totalPizzas}
               />
             )}
 
@@ -494,8 +508,8 @@ export default function Checkout() {
                   onClick={() => handlePaymentMethodChange('cash')}
                   className={`relative p-5 rounded-2xl border-2 transition-all duration-200 ${
                     formData.paymentMethod === 'cash'
-                      ? 'border-primary-red bg-gradient-to-br from-primary-red/5 to-primary-red/10 shadow-md'
-                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                      ? 'border-brand-red bg-brand-red/10 shadow-soft-md'
+                      : 'border-border dark:border-border hover:border-brand-red/50 hover:shadow-soft-sm'
                   }`}
                 >
                   {formData.paymentMethod === 'cash' && (
@@ -515,8 +529,8 @@ export default function Checkout() {
                   onClick={() => handlePaymentMethodChange('card')}
                   className={`relative p-5 rounded-2xl border-2 transition-all duration-200 ${
                     formData.paymentMethod === 'card'
-                      ? 'border-primary-red bg-gradient-to-br from-primary-red/5 to-primary-red/10 shadow-md'
-                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                      ? 'border-brand-red bg-brand-red/10 shadow-soft-md'
+                      : 'border-border dark:border-border hover:border-brand-red/50 hover:shadow-soft-sm'
                   }`}
                 >
                   {formData.paymentMethod === 'card' && (
@@ -547,14 +561,14 @@ export default function Checkout() {
                 </button>
               </div>
 
-              {/* Stripe Payment Form */}
-              {formData.paymentMethod === 'online' && (
+              {/* Stripe Payment Form - Only shown if Stripe is properly configured */}
+              {formData.paymentMethod === 'online' && isStripeConfigured && (
                 <div>
                   {isLoadingPayment ? (
                     <div className="flex items-center justify-center py-12">
                       <Loader2 className="w-8 h-8 animate-spin text-primary-red" />
                     </div>
-                  ) : clientSecret ? (
+                  ) : clientSecret && stripePromise ? (
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                       <StripePaymentForm onSuccess={handleStripeSuccess} total={total} />
                     </Elements>
@@ -613,9 +627,9 @@ export default function Checkout() {
                   <span>Sous-total (TTC)</span>
                   <span className="font-semibold">{subtotal.toFixed(2)}€</span>
                 </div>
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between items-center transition-colors duration-300">
-                  <span className="text-xl font-black text-gray-900 dark:text-gray-100 transition-colors duration-300">Total TTC</span>
-                  <span className="text-3xl font-black bg-gradient-to-r from-primary-red to-soft-red bg-clip-text text-transparent">
+                <div className="border-t border-border dark:border-border pt-3 flex justify-between items-center transition-colors duration-200">
+                  <span className="text-xl font-black text-text-primary dark:text-text-primary transition-colors duration-200">Total TTC</span>
+                  <span className="text-3xl font-black text-brand-red">
                     {total.toFixed(2)}€
                   </span>
                 </div>
@@ -657,7 +671,7 @@ export default function Checkout() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !acceptedTerms}
-                  className="w-full bg-gradient-to-r from-primary-red to-soft-red hover:from-primary-red-dark hover:to-primary-red text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all duration-300 transform hover:scale-105 hover:shadow-xl text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="w-full bg-brand-red hover:bg-brand-red-hover text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all duration-200 shadow-soft-md hover:shadow-soft-lg active:scale-98 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>

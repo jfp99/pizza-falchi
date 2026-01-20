@@ -4,8 +4,14 @@
 
 import * as Sentry from '@sentry/nextjs';
 
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+
+// Only initialize Sentry if a valid DSN is provided
+const isValidDsn = dsn && dsn.startsWith('https://') && dsn.includes('.sentry.io');
+
+if (isValidDsn) {
+  Sentry.init({
+    dsn,
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,
@@ -72,4 +78,5 @@ Sentry.init({
     }
     return event;
   },
-});
+  });
+}

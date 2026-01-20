@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { Calendar, Clock, Plus, RefreshCw, AlertCircle, CheckCircle2, XCircle, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { TimeSlot } from '@/types';
+import { useCSRF } from '@/hooks/useCSRF';
 
 export default function AdminTimeSlots() {
+  const { getHeaders } = useCSRF();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
@@ -72,7 +74,10 @@ export default function AdminTimeSlots() {
     try {
       const response = await fetch('/api/time-slots', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getHeaders(),
+        },
         body: JSON.stringify({
           startDate: new Date().toISOString(),
           numberOfDays: days,
@@ -96,7 +101,10 @@ export default function AdminTimeSlots() {
     try {
       const response = await fetch(`/api/time-slots/${slotId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getHeaders(),
+        },
         body: JSON.stringify({ action: 'updateStatus', status }),
       });
 

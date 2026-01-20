@@ -182,8 +182,13 @@ export async function getSlotsByDateRange(
 
 /**
  * Get available time slots for a specific date
+ * @param date Target date
+ * @param pizzaCount Number of pizzas to fit in the slot (optional)
  */
-export async function getAvailableSlotsForDate(date: Date): Promise<ITimeSlot[]> {
+export async function getAvailableSlotsForDate(
+  date: Date,
+  pizzaCount?: number
+): Promise<ITimeSlot[]> {
   await connectDB();
 
   const targetDate = new Date(date);
@@ -203,7 +208,17 @@ export async function getAvailableSlotsForDate(date: Date): Promise<ITimeSlot[]>
   }
 
   // Get available slots
-  return await TimeSlot.findAvailableSlots(targetDate);
+  const availableSlots = await TimeSlot.findAvailableSlots(targetDate);
+
+  // If pizzaCount is specified, filter slots by remaining capacity
+  if (pizzaCount && pizzaCount > 0) {
+    return availableSlots.filter((slot) => {
+      const remainingCapacity = slot.capacity - slot.pizzaCount;
+      return remainingCapacity >= pizzaCount;
+    });
+  }
+
+  return availableSlots;
 }
 
 /**

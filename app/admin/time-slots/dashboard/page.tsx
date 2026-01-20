@@ -8,9 +8,11 @@ import TimeSlotGrid from '@/components/admin/TimeSlotGrid';
 import QuickPhoneOrderModal from '@/components/admin/QuickPhoneOrderModal';
 import SlotOrderHistoryModal from '@/components/admin/SlotOrderHistoryModal';
 import { AUTO_REFRESH_INTERVAL_MS } from '@/lib/constants';
+import { getUTCToday, addUTCDays, formatUTCDate, isSameUTCDay } from '@/lib/datetime';
 
 export default function TimeSlotDashboard() {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  // TIMEZONE FIX: Initialize with UTC today
+  const [selectedDate, setSelectedDate] = useState<Date>(getUTCToday());
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
@@ -29,16 +31,13 @@ export default function TimeSlotDashboard() {
     utilizationRate: 0,
   });
 
-  // Generate next 3 days for quick selection (today + 2 days)
+  // TIMEZONE FIX: Generate next 3 days using UTC
   const getNextDays = (count: number = 3) => {
     const days: Date[] = [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = getUTCToday();
 
     for (let i = 0; i < count; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      days.push(date);
+      days.push(addUTCDays(today, i));
     }
 
     return days;
@@ -63,7 +62,8 @@ export default function TimeSlotDashboard() {
     if (!silent) setLoading(true);
 
     try {
-      const dateStr = selectedDate.toISOString().split('T')[0];
+      // TIMEZONE FIX: Use formatUTCDate for consistent formatting
+      const dateStr = formatUTCDate(selectedDate);
       const response = await fetch(`/api/time-slots?date=${dateStr}`);
 
       if (!response.ok) throw new Error('Failed to fetch slots');
@@ -115,7 +115,8 @@ export default function TimeSlotDashboard() {
 
   const handleExportDay = async () => {
     try {
-      const dateStr = selectedDate.toISOString().split('T')[0];
+      // TIMEZONE FIX: Use formatUTCDate for consistent formatting
+      const dateStr = formatUTCDate(selectedDate);
 
       // Fetch all orders for the selected date
       const response = await fetch(`/api/orders?date=${dateStr}`);
@@ -243,14 +244,9 @@ export default function TimeSlotDashboard() {
     });
   };
 
+  // TIMEZONE FIX: Use UTC comparison
   const isToday = (date: Date) => {
-    const today = new Date();
-    const checkDate = new Date(date);
-    return (
-      checkDate.getDate() === today.getDate() &&
-      checkDate.getMonth() === today.getMonth() &&
-      checkDate.getFullYear() === today.getFullYear()
-    );
+    return isSameUTCDay(date, getUTCToday());
   };
 
   return (

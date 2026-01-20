@@ -6,9 +6,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-black dark:from-background-secondary dark:to-background-tertiary text-text-on-dark dark:text-text-primary relative overflow-hidden transition-colors">
-      {/* Decorative Top Border */}
-      <div className="h-1 bg-gradient-to-r from-brand-red via-brand-gold to-brand-red transition-colors"></div>
+    <footer className="bg-gray-900 dark:bg-background-secondary text-text-on-dark dark:text-text-primary relative overflow-hidden transition-colors duration-200">
+      {/* Decorative Top Border - REFINED: Solid gold */}
+      <div className="h-1 bg-brand-gold"></div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Main Content - Compact Single Row with Aligned Headers */}
@@ -83,23 +83,23 @@ export default function Footer() {
             <h3 className="text-sm font-bold mb-3 text-brand-gold uppercase tracking-wider transition-colors">Navigation</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
-                  → Accueil
+                <Link href="/" className="text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-colors duration-200 text-sm">
+                  Accueil
                 </Link>
               </li>
               <li>
-                <Link href="/menu" className="text-gray-300 dark:text-text-secondary hover:text-brand-red transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
-                  → Menu
+                <Link href="/menu" className="text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-colors duration-200 text-sm">
+                  Menu
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
-                  → À Propos
+                <Link href="/about" className="text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-colors duration-200 text-sm">
+                  À Propos
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-300 dark:text-text-secondary hover:text-brand-red transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
-                  → Contact
+                <Link href="/contact" className="text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-colors duration-200 text-sm">
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -109,11 +109,11 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <h3 className="text-sm font-bold mb-3 text-brand-gold uppercase tracking-wider transition-colors">Contact</h3>
             <div className="space-y-2 text-sm">
-              <a href="tel:+33442920308" className="flex items-center gap-2 text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-all duration-300 hover:translate-x-1">
+              <a href="tel:+33442920308" className="flex items-center gap-2 text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-colors duration-200">
                 <Phone className="w-3.5 h-3.5" />
                 <span>04 42 92 03 08</span>
               </a>
-              <a href="mailto:pizzafalchipro@gmail.com" className="flex items-center gap-2 text-gray-300 dark:text-text-secondary hover:text-brand-red transition-all duration-300 hover:translate-x-1">
+              <a href="mailto:pizzafalchipro@gmail.com" className="flex items-center gap-2 text-gray-300 dark:text-text-secondary hover:text-brand-gold transition-colors duration-200">
                 <Mail className="w-3.5 h-3.5" />
                 <span>pizzafalchipro@gmail.com</span>
               </a>

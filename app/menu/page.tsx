@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, Suspense, useCallback } from 'react';
+import { useState, useEffect, Suspense, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
@@ -15,6 +15,12 @@ import { SPACING, TYPOGRAPHY, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design
 import { motion, AnimatePresence } from 'framer-motion';
 import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations';
 import Link from 'next/link';
+import HeroBadge from '@/components/ui/HeroBadge';
+// New section-based components
+import SectionHeader from '@/components/menu/SectionHeader';
+import FeaturedProductCard from '@/components/menu/FeaturedProductCard';
+import MenuSectionNav from '@/components/menu/MenuSectionNav';
+import { groupProductsBySection, menuSections, type GroupedProducts } from '@/lib/menuHelpers';
 
 // Dynamically import heavy components for better performance
 const CartSidebar = dynamic(() => import('@/components/cart/CartSidebar'), {
@@ -53,6 +59,238 @@ interface PackageType {
   color: string;
   popular: boolean;
   badge?: string;
+}
+
+// Section-Based Menu Component for Option B - Par Popularite layout
+interface SectionBasedMenuProps {
+  products: Product[];
+  isLoading: boolean;
+  error: { type: 'products' | 'packages' | null; message: string };
+  onAddToCart: (
+    product: Product,
+    customizations?: { size: 'medium' | 'large'; extras: string[]; cut?: boolean },
+    calculatedPrice?: number
+  ) => void;
+  onRetry: () => void;
+}
+
+function SectionBasedMenu({
+  products,
+  isLoading,
+  error,
+  onAddToCart,
+  onRetry,
+}: SectionBasedMenuProps) {
+  // Group products by section
+  const groupedProducts = useMemo(() => {
+    return groupProductsBySection(products);
+  }, [products]);
+
+  if (isLoading) {
+    return (
+      <div id="products-section" className="space-y-12 mb-12">
+        {/* Best-Sellers skeleton */}
+        <div>
+          <div className="h-8 w-48 bg-gray-200 rounded mb-6 animate-pulse" />
+          <div className="grid md:grid-cols-2 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ProductCardSkeleton key={`star-skeleton-${i}`} />
+            ))}
+          </div>
+        </div>
+        {/* Other sections skeleton */}
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={`section-skeleton-${i}`}>
+            <div className="h-6 w-36 bg-gray-200 rounded mb-4 animate-pulse" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 3 }).map((_, j) => (
+                <ProductCardSkeleton key={`product-skeleton-${i}-${j}`} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (error.type === 'products') {
+    return (
+      <div className="col-span-full">
+        <div
+          className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-3xl p-8 md:p-12 text-center max-w-lg mx-auto"
+          role="alert"
+          aria-live="assertive"
+        >
+          <div className="inline-block bg-red-100 dark:bg-red-900/30 rounded-2xl p-4 mb-4" aria-hidden="true">
+            <AlertCircle className="w-12 h-12 text-red-500 dark:text-red-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-red-700 dark:text-red-300 mb-2">
+            Erreur de chargement
+          </h2>
+          <p className="text-red-600 dark:text-red-400 mb-6">
+            {error.message || 'Impossible de charger les produits. Veuillez verifier votre connexion et reessayer.'}
+          </p>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="bg-brand-red hover:bg-brand-red-hover text-white px-8 py-3 rounded-xl font-bold transition-all duration-200 active:scale-98 shadow-soft-md hover:shadow-soft-lg inline-flex items-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Reessayer
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div id="products-section" className="space-y-16 mb-12">
+      {/* Sticky Section Navigation */}
+      <MenuSectionNav className="mb-8" />
+
+      {/* Best-Sellers Section - Golden Triangle */}
+      {groupedProducts.bestSellers.length > 0 && (
+        <section aria-labelledby="best-sellers-title">
+          <SectionHeader
+            id="best-sellers"
+            title="Nos Best-Sellers"
+            subtitle="Les pizzas preferees de nos clients"
+            productCount={groupedProducts.bestSellers.length}
+            className="mb-6"
+          />
+          <div className="grid md:grid-cols-2 gap-6">
+            {groupedProducts.bestSellers.map((product, index) => (
+              <motion.div
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.3 }}
+              >
+                <FeaturedProductCard
+                  product={product}
+                  onAddToCart={onAddToCart}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Les Classiques Section */}
+      {groupedProducts.classiques.length > 0 && (
+        <section aria-labelledby="classiques-title">
+          <SectionHeader
+            id="classiques"
+            title="Les Classiques"
+            subtitle="Base tomate"
+            productCount={groupedProducts.classiques.length}
+            className="mb-6"
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {groupedProducts.classiques.map((product, index) => (
+              <motion.div
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.05, 0.3), duration: 0.2 }}
+              >
+                <ProductCard
+                  product={product}
+                  onAddToCart={onAddToCart}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Les Cremes Fraiches Section */}
+      {groupedProducts.cremes.length > 0 && (
+        <section aria-labelledby="cremes-title">
+          <SectionHeader
+            id="cremes"
+            title="Les Cremes Fraiches"
+            subtitle="Base creme fraiche"
+            productCount={groupedProducts.cremes.length}
+            className="mb-6"
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {groupedProducts.cremes.map((product, index) => (
+              <motion.div
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.05, 0.3), duration: 0.2 }}
+              >
+                <ProductCard
+                  product={product}
+                  onAddToCart={onAddToCart}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Les Specialites Maison Section */}
+      {groupedProducts.specialites.length > 0 && (
+        <section aria-labelledby="specialites-title">
+          <SectionHeader
+            id="specialites"
+            title="Les Specialites Maison"
+            subtitle="Creations originales"
+            productCount={groupedProducts.specialites.length}
+            className="mb-6"
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {groupedProducts.specialites.map((product, index) => (
+              <motion.div
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.05, 0.3), duration: 0.2 }}
+              >
+                <ProductCard
+                  product={product}
+                  onAddToCart={onAddToCart}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Boissons Section */}
+      {groupedProducts.boissons.length > 0 && (
+        <section aria-labelledby="boissons-title">
+          <SectionHeader
+            id="boissons"
+            title="Boissons"
+            subtitle="Vins, bieres et softs"
+            productCount={groupedProducts.boissons.length}
+            className="mb-6"
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {groupedProducts.boissons.map((product, index) => (
+              <motion.div
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.05, 0.3), duration: 0.2 }}
+              >
+                <ProductCard
+                  product={product}
+                  onAddToCart={onAddToCart}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  );
 }
 
 // Component to handle URL search params (needs to be wrapped in Suspense)
@@ -271,34 +509,10 @@ function MenuContent() {
         <div className="relative max-w-7xl mx-auto px-4 py-20 w-full">
           <div className="max-w-3xl mx-auto text-center">
             {/* Info Badge - Main Focus */}
-            <div className="inline-flex items-center gap-6 bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8 border border-white/20 shadow-2xl mb-10 max-w-2xl">
-              {/* Logo */}
-              <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
-                <Image
-                  src="/images/branding/logo-badge.png"
-                  alt="Pizza Falchi Logo"
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                />
-              </div>
-
-              {/* Info */}
-              <div className="flex flex-col gap-1">
-                <div className="inline-block mb-2">
-                  <span className="bg-primary-red text-white px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg">
-                    Menu Complet
-                  </span>
-                </div>
-                <p className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight" aria-label="Pizza Falchi">
-                  PIZZA FALCHI
-                </p>
-                <p className="text-primary-yellow font-bold text-xl md:text-2xl">
-                  depuis 2001
-                </p>
-                <p className="text-white/90 font-medium text-base md:text-lg">
-                  Puyricard Aix-en-Provence
-                </p>
-              </div>
+            <div className="mb-10">
+              <HeroBadge
+                categoryBadge="Menu Complet"
+              />
             </div>
 
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed font-medium">
@@ -413,8 +627,22 @@ function MenuContent() {
           </div>
         )}
 
-        {/* Grille des produits */}
-        {selectedCategory !== 'combo' && (
+        {/* Section-Based Menu Layout */}
+        {selectedCategory !== 'combo' && !searchTerm && selectedCategory === 'all' && (
+          <SectionBasedMenu
+            products={products}
+            isLoading={isLoading}
+            error={error}
+            onAddToCart={handleAddToCart}
+            onRetry={() => {
+              fetchProducts();
+              fetchPackages();
+            }}
+          />
+        )}
+
+        {/* Traditional Grid (for search results or category filters) */}
+        {selectedCategory !== 'combo' && (searchTerm || selectedCategory !== 'all') && (
           <div id="products-section" className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}>
             {isLoading ? (
               // Show skeleton loaders while loading

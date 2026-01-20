@@ -9,9 +9,17 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(npm test:*)",
-      "mcp__*"
+      "mcp__*",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "Bash(npx playwright:*)",
+      "WebSearch",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "voice-mcp"
+  ]
 }

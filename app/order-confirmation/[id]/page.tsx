@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle, Package, Clock, Phone, Mail, MapPin, ArrowRight, Home, Loader, Check, X, Truck } from 'lucide-react';
+import { CheckCircle, Package, Clock, Phone, Mail, MapPin, ArrowRight, Home, Loader, Check, X, Truck, Calendar } from 'lucide-react';
 import { ChefIcon, PizzaSliceIcon } from '@/components/icons/CategoryIcons';
 import { Order } from '@/types';
+import { motion } from 'framer-motion';
 
 export default function OrderConfirmation() {
   const params = useParams();
@@ -79,26 +80,57 @@ export default function OrderConfirmation() {
   const statusDisplay = getStatusDisplay(order.status);
 
   return (
-    <div className="min-h-screen bg-warm-cream py-12">
+    <div className="min-h-screen bg-gradient-to-br from-warm-cream via-white to-soft-yellow-lighter py-12">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Success Header */}
-        <div className="bg-white rounded-3xl p-12 shadow-xl text-center mb-8">
-          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-black text-charcoal mb-4">
+        {/* Success Header with Animation */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="bg-white rounded-3xl p-12 shadow-xl text-center mb-8 border-2 border-green-100"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
+          >
+            <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="text-4xl md:text-5xl font-black text-charcoal mb-4"
+          >
             Commande <span className="text-primary-red">Confirmée !</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-6">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="text-xl text-gray-600 mb-6"
+          >
             Merci {order.customerName} ! Votre commande a été enregistrée avec succès.
-          </p>
-          <div className="inline-block bg-soft-yellow-lighter rounded-2xl px-8 py-4">
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="inline-block bg-gradient-to-r from-soft-yellow-lighter to-soft-yellow rounded-2xl px-8 py-4 shadow-md"
+          >
             <p className="text-sm text-gray-600 mb-1">Numéro de commande</p>
             <p className="text-2xl font-black text-charcoal">#{order._id?.slice(-8).toUpperCase()}</p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           {/* Status Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-lg">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="bg-white rounded-3xl p-8 shadow-lg"
+          >
             <h2 className="text-2xl font-bold text-charcoal mb-6 flex items-center gap-3">
               <Clock className="w-6 h-6 text-primary-red" />
               Statut de la commande
@@ -110,6 +142,29 @@ export default function OrderConfirmation() {
                   {statusDisplay.label}
                 </p>
               </div>
+
+              {/* Time Slot Information */}
+              {order.pickupTimeRange && (
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-2xl p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Calendar className="w-5 h-5 text-green-600" />
+                    <p className="font-bold text-green-900">Créneau de retrait</p>
+                  </div>
+                  <p className="text-lg font-black text-green-700">
+                    {order.pickupTimeRange}
+                  </p>
+                  {order.scheduledTime && (
+                    <p className="text-sm text-green-600 mt-1">
+                      {new Date(order.scheduledTime).toLocaleDateString('fr-FR', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long'
+                      })}
+                    </p>
+                  )}
+                </div>
+              )}
+
               {order.estimatedDelivery && (
                 <div className="bg-warm-cream rounded-2xl p-4">
                   <p className="text-sm text-gray-600 mb-1">
@@ -124,10 +179,15 @@ export default function OrderConfirmation() {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Delivery Info Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-lg">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
+            className="bg-white rounded-3xl p-8 shadow-lg"
+          >
             <h2 className="text-2xl font-bold text-charcoal mb-6 flex items-center gap-3">
               {order.deliveryType === 'delivery' ? (
                 <Truck className="w-6 h-6 text-primary-red" />
@@ -179,11 +239,16 @@ export default function OrderConfirmation() {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Order Details */}
-        <div className="bg-white rounded-3xl p-8 shadow-lg mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          className="bg-white rounded-3xl p-8 shadow-lg mb-8"
+        >
           <h2 className="text-2xl font-bold text-charcoal mb-6">Détails de la commande</h2>
 
           {/* Items */}
@@ -193,8 +258,44 @@ export default function OrderConfirmation() {
                 <div className="flex-1">
                   <p className="font-bold text-charcoal text-lg">{item.product.name}</p>
                   <p className="text-sm text-gray-600">Quantité: {item.quantity}</p>
-                  {item.customizations?.notes && (
-                    <p className="text-sm text-gray-500 italic mt-1">Note: {item.customizations.notes}</p>
+
+                  {/* Pizza Customizations */}
+                  {item.customizations && (
+                    <div className="mt-2 space-y-1">
+                      {item.customizations.size && (
+                        <div className="flex items-center gap-2">
+                          <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
+                            Taille: {item.customizations.size === 'medium' ? 'Medium' : 'Large'}
+                          </span>
+                        </div>
+                      )}
+                      {item.customizations.extras && item.customizations.extras.length > 0 && (
+                        <div className="flex items-start gap-2">
+                          <span className="text-xs text-gray-500 font-medium">Extras:</span>
+                          <div className="flex flex-wrap gap-1">
+                            {item.customizations.extras.map((extra, idx) => (
+                              <span key={idx} className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded capitalize">
+                                {extra}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {item.customizations.cut !== undefined && (
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-block px-2 py-0.5 text-xs font-semibold rounded ${
+                            item.customizations.cut
+                              ? 'bg-purple-100 text-purple-700'
+                              : 'bg-gray-100 text-gray-700'
+                          }`}>
+                            {item.customizations.cut ? '✓ À couper' : '✗ Entière'}
+                          </span>
+                        </div>
+                      )}
+                      {item.customizations.notes && (
+                        <p className="text-sm text-gray-500 italic mt-1">Note: {item.customizations.notes}</p>
+                      )}
+                    </div>
                   )}
                 </div>
                 <p className="font-bold text-charcoal text-lg">
@@ -249,20 +350,28 @@ export default function OrderConfirmation() {
               {order.paymentStatus === 'failed' && 'Échoué'}
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Contact & Actions */}
-        <div className="bg-primary-red rounded-3xl p-8 shadow-xl text-white text-center mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.5 }}
+          className="bg-primary-red rounded-3xl p-8 shadow-xl text-white text-center mb-8"
+        >
           <h2 className="text-2xl font-bold mb-4">Une question ?</h2>
           <p className="mb-6">Contactez-nous au 04 42 92 03 08</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/menu"
-              className="bg-white text-primary-red hover:bg-gray-100 px-8 py-4 rounded-2xl font-bold transition inline-flex items-center justify-center gap-2"
+            <button
+              onClick={() => {
+                const orderId = order._id?.slice(-8).toUpperCase();
+                window.location.href = `/menu?orderSuccess=true&orderId=${orderId}`;
+              }}
+              className="bg-white text-primary-red hover:bg-gray-100 px-8 py-4 rounded-2xl font-bold transition inline-flex items-center justify-center gap-2 cursor-pointer"
             >
               Commander à nouveau
               <ArrowRight className="w-5 h-5" />
-            </Link>
+            </button>
             <Link
               href="/"
               className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-2xl font-bold transition inline-flex items-center justify-center gap-2"
@@ -271,10 +380,15 @@ export default function OrderConfirmation() {
               Retour à l'accueil
             </Link>
           </div>
-        </div>
+        </motion.div>
 
         {/* Thank You Message */}
-        <div className="text-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          className="text-center"
+        >
           <p className="text-xl text-gray-600 mb-2 flex items-center justify-center gap-2">
             Merci d'avoir choisi Pizza Falchi !
             <PizzaSliceIcon size={24} className="text-primary-red" aria-hidden="true" />
@@ -282,7 +396,7 @@ export default function OrderConfirmation() {
           <p className="text-gray-500">
             À très bientôt pour de nouvelles délices italiennes
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

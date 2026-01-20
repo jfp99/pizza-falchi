@@ -140,8 +140,19 @@ TimeSlotSchema.pre('save', function (next) {
  * Instance Methods
  */
 
-// Calculate total pizza count from all orders in this slot
+/**
+ * @deprecated PERFORMANCE: This method causes N+1 queries. Use the `pizzaCount` field instead.
+ * This method is kept only for data reconciliation purposes.
+ *
+ * Calculate total pizza count from all orders in this slot by querying the database.
+ * WARNING: This is expensive and should NEVER be used in regular code paths.
+ */
 TimeSlotSchema.methods.calculatePizzaCount = async function (): Promise<number> {
+  console.warn(
+    '⚠️  DEPRECATED: calculatePizzaCount() causes N+1 queries. ' +
+    'Use the pizzaCount field instead. This method should only be used for data reconciliation.'
+  );
+
   // Populate orders if not already populated
   if (!this.populated('orders')) {
     await this.populate('orders');

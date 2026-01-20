@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Plus, Minus, ShoppingCart } from 'lucide-react';
 import { Product } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,9 +23,16 @@ export default function PizzaCustomizationModal({
   const [selectedSize, setSelectedSize] = useState<'medium' | 'large'>('medium');
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const [cutPizza, setCutPizza] = useState<boolean>(true);
+  const [mounted, setMounted] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const addToCartButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Mount state for portal
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // Handle Escape key to close modal
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -116,29 +124,32 @@ export default function PizzaCustomizationModal({
     setCutPizza(true);
   };
 
-  if (!isOpen) return null;
+  // Don't render on server or if not mounted
+  if (!mounted) return null;
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
         <>
           {/* Backdrop */}
           <motion.div
+            key="pizza-modal-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]"
             aria-hidden="true"
           />
 
           {/* Modal */}
           <motion.div
+            key="pizza-modal-content"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none"
             role="dialog"
             aria-modal="true"
             aria-labelledby="pizza-modal-title"
@@ -146,7 +157,8 @@ export default function PizzaCustomizationModal({
           >
             <div
               ref={modalRef}
-              className="bg-surface dark:bg-surface rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border-2 border-border dark:border-border"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-surface dark:bg-surface rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border-2 border-border dark:border-border pointer-events-auto"
             >
               {/* Header */}
               <div className="sticky top-0 bg-surface dark:bg-surface border-b border-border dark:border-border p-6 flex items-center justify-between z-10">
@@ -408,4 +420,8 @@ export default function PizzaCustomizationModal({
       )}
     </AnimatePresence>
   );
+
+  // Use portal to render modal at document body level
+  // This fixes z-index issues when modal is rendered inside overflow:hidden containers
+  return createPortal(modalContent, document.body);
 }
