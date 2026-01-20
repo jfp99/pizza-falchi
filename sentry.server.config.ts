@@ -12,31 +12,21 @@ const isValidDsn = dsn && dsn.startsWith('https://') && dsn.includes('.sentry.io
 if (isValidDsn) {
   Sentry.init({
     dsn,
-
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1.0,
-
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
-
-  // Ignore common errors that aren't actionable
-  ignoreErrors: [
-    // MongoDB connection errors (already handled)
-    'MongooseError',
-    // Expected API errors
-    'NotFoundError',
-    'ValidationError',
-  ],
-
-  beforeSend(event, hint) {
-    // Don't send errors for rate limiting (expected behavior)
-    if (event.exception) {
-      const exception = event.exception.values?.[0];
-      if (exception?.value?.includes('Rate limit exceeded')) {
-        return null;
+    tracesSampleRate: 1.0,
+    debug: false,
+    ignoreErrors: [
+      'MongooseError',
+      'NotFoundError',
+      'ValidationError',
+    ],
+    beforeSend(event) {
+      if (event.exception) {
+        const exception = event.exception.values?.[0];
+        if (exception?.value?.includes('Rate limit exceeded')) {
+          return null;
+        }
       }
-    }
-    return event;
-  },
+      return event;
+    },
   });
 }
