@@ -6,7 +6,7 @@
 
 'use client';
 
-import { Plus, Star, Flame, Leaf, Settings } from 'lucide-react';
+import { Plus, Star, Flame, Leaf, Settings, Droplets } from 'lucide-react';
 import { Product } from '@/types';
 import Link from 'next/link';
 import { useState, memo, useEffect, useRef, useCallback } from 'react';
@@ -14,8 +14,13 @@ import { ProductImage } from '@/components/menu/ProductImage';
 import { motion, useReducedMotion } from 'framer-motion';
 import Badge from '@/components/ui/Badge';
 import PizzaCustomizationModal from './PizzaCustomizationModal';
-import { formatPrice } from '@/lib/menuHelpers';
+import { formatPrice, STAR_PIZZA_NAMES } from '@/lib/menuHelpers';
 import { colors } from '@/lib/design-tokens';
+
+// Pizzas that can be ordered with tomato OR cream base (dual base)
+const DUAL_BASE_PIZZAS = STAR_PIZZA_NAMES;
+
+type BaseType = 'tomato' | 'cream';
 
 interface FeaturedProductCardProps {
   product: Product;
@@ -32,6 +37,7 @@ const FeaturedProductCard = memo(function FeaturedProductCard({
 }: FeaturedProductCardProps) {
   const [isAdded, setIsAdded] = useState(false);
   const [isCustomizationOpen, setIsCustomizationOpen] = useState(false);
+  const [selectedBase, setSelectedBase] = useState<BaseType>('tomato');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -40,6 +46,9 @@ const FeaturedProductCard = memo(function FeaturedProductCard({
     isPizza &&
     (product.sizeOptions ||
       (product.availableExtras && product.availableExtras.length > 0));
+
+  // Check if this pizza supports dual base (tomate/crème)
+  const hasDualBase = DUAL_BASE_PIZZAS.includes(product.name.toLowerCase());
 
   // Cleanup timeout on unmount to prevent memory leaks
   useEffect(() => {
@@ -82,6 +91,31 @@ const FeaturedProductCard = memo(function FeaturedProductCard({
     animate: shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 },
   };
 
+  // Dynamic card styling based on selected base
+  const getCardStyle = () => {
+    if (!hasDualBase) {
+      // Default golden style for non-dual-base best-sellers
+      return {
+        backgroundColor: colors.soft.yellowLighter,
+        border: `2px solid ${colors.accent.gold}`,
+        boxShadow: '0 0 20px rgba(212, 175, 55, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08)',
+      };
+    }
+    if (selectedBase === 'cream') {
+      return {
+        backgroundColor: '#FDF8F3',
+        border: '2px solid #D4C4B0',
+        boxShadow: '0 0 20px rgba(212, 196, 176, 0.25), 0 4px 12px rgba(0, 0, 0, 0.08)',
+      };
+    }
+    // Tomato base - subtle red accent
+    return {
+      backgroundColor: '#FEF5F5',
+      border: '2px solid #E6898E',
+      boxShadow: '0 0 20px rgba(230, 137, 142, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08)',
+    };
+  };
+
   return (
     <motion.article
       initial="initial"
@@ -92,9 +126,7 @@ const FeaturedProductCard = memo(function FeaturedProductCard({
         shouldReduceMotion ? '' : 'hover:-translate-y-1'
       }`}
       style={{
-        backgroundColor: colors.soft.yellowLighter,
-        border: `2px solid ${colors.accent.gold}`,
-        boxShadow: '0 0 20px rgba(212, 175, 55, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08)',
+        ...getCardStyle(),
         transitionDuration: shouldReduceMotion ? '0ms' : '300ms',
       }}
     >
@@ -182,25 +214,63 @@ const FeaturedProductCard = memo(function FeaturedProductCard({
           </h3>
         </Link>
 
-        {/* Description - longer for Stars (menu psychology) - improved contrast */}
-        {product.description && (
-          <p
-            className="text-sm leading-relaxed mb-3 line-clamp-2"
-            style={{ color: colors.gray[700] }}
-          >
-            {product.description}
-          </p>
+        {/* Base Toggle for Dual-Base Pizzas */}
+        {hasDualBase && (
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-medium text-gray-500">Base:</span>
+            <div className="flex rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedBase('tomato');
+                }}
+                className={`px-3 py-1.5 text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 ${
+                  selectedBase === 'tomato'
+                    ? 'bg-[#E63946] text-white'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                aria-pressed={selectedBase === 'tomato'}
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                Tomate
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedBase('cream');
+                }}
+                className={`px-3 py-1.5 text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 ${
+                  selectedBase === 'cream'
+                    ? 'bg-[#D4C4B0] text-[#5C4D3C]'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                aria-pressed={selectedBase === 'cream'}
+              >
+                <Droplets className="w-3.5 h-3.5" />
+                Crème
+              </button>
+            </div>
+          </div>
         )}
 
-        {/* Ingredients List - improved contrast */}
-        {product.ingredients && product.ingredients.length > 0 && (
-          <p
-            className="text-xs mb-4 line-clamp-2"
-            style={{ color: colors.gray[600] }}
-          >
-            {product.ingredients.join(', ')}
-          </p>
-        )}
+        {/* Description with base info */}
+        <p
+          className="text-sm leading-relaxed mb-3 line-clamp-2"
+          style={{ color: colors.gray[700] }}
+        >
+          {hasDualBase && (
+            <span className="font-medium" style={{ color: selectedBase === 'tomato' ? '#E63946' : '#8B7355' }}>
+              Base {selectedBase === 'tomato' ? 'tomate' : 'crème fraîche'} •{' '}
+            </span>
+          )}
+          {product.ingredients?.join(', ') || product.description}
+        </p>
 
         {/* Add to Cart Button */}
         <div className="mt-auto">

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'success' | 'warning' | 'error' | 'info' | 'popular' | 'spicy' | 'vegetarian' | 'star' | 'default';
+  variant?: 'success' | 'warning' | 'error' | 'info' | 'popular' | 'spicy' | 'vegetarian' | 'star' | 'tomato' | 'cream' | 'default';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
   icon?: React.ReactNode;
@@ -21,6 +21,8 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       spicy: 'bg-brand-red text-white shadow-soft-sm',
       vegetarian: 'bg-basil-green text-white shadow-soft-sm',
       star: 'bg-[#D4AF37] text-[#1A1410] shadow-[0_0_12px_rgba(212,175,55,0.4)]',  // Golden star for best-sellers
+      tomato: 'bg-[#E63946] text-white shadow-soft-sm',  // Tomato red for base tomate
+      cream: 'bg-[#F5E6D3] text-[#8B7355] shadow-soft-sm border border-[#D4C4B0]',  // Cream for base crème
       default: 'bg-background-tertiary dark:bg-surface text-text-secondary dark:text-text-secondary border border-border',
     };
 
